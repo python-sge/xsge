@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9"
+__version__ = "0.9.1a0"
 
 import os
 
@@ -418,6 +418,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
 
+            row = []
+
             for i in six.moves.range(len(layer.tiles)):
                 tile = layer.tiles[i]
                 if tile.gid:
@@ -435,17 +437,23 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     for j in tile_kwargs.setdefault(tile.gid, {}):
                         kwargs[j] = tile_kwargs[tile.gid][j]
 
-                    x = i % tilemap.width
-                    y = i // tilemap.width
-                    if tilemap.renderorder.startswith("left"):
-                        x = tilemap.width - x - 1
-                    if tilemap.renderorder.endswith("up"):
-                        y = tilemap.height - y - 1
-
-                    x *= tilemap.tilewidth
-                    y *= tilemap.tileheight
+                    x = (i % tilemap.width) * tilemap.tilewidth
+                    y = (i // tilemap.width) * tilemap.tileheight
                     y += tilemap.tileheight - kwargs["sprite"].height
-                    objects.append(cls(x, y, **kwargs))
+
+                    obj = cls(x, y, **kwargs)
+                    if i % tilemap.width:
+                        if tilemap.renderorder.startswith("left"):
+                            row.insert(obj)
+                        else:
+                            row.append(obj)
+                    else:
+                        if tilemap.renderorder.endswith("up"):
+                            objects = row + objects
+                        else:
+                            objects.extend(row)
+
+                        row = [obj]
                     
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {"z": z}
