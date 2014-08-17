@@ -1971,7 +1971,7 @@ class TextEntryDialog(Dialog):
         if key == "escape":
             self.destroy()
         else:
-            super(MessageDialog, self).event_key_press(key, char)
+            super(TextEntryDialog, self).event_key_press(key, char)
 
 
 def init():

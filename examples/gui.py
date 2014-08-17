@@ -42,18 +42,18 @@ class Room(sge.Room):
         button2 = gui.Button(window, 16, 100, 5, "Another button", width=150)
 
         def event_press(handler=self.handler):
-            gui.show_message(handler, "You just pressed my buttons!")
+            gui.show_message("You just pressed my buttons!", parent=handler)
 
         button.event_press = event_press
 
         def event_press(handler=self.handler):
-            name = gui.get_text_entry(handler, "Who are you?!")
+            name = gui.get_text_entry("Who are you?!", parent=handler)
             if name:
                 m = "{}? That's a suspicious name!".format(name)
             else:
                 m = "Won't talk, eh? I've got my eye on you!"
 
-            gui.show_message(handler, m)
+            gui.show_message(m, parent=handler)
 
         button2.event_press = event_press
 
