@@ -1,5 +1,0 @@
-****************
-SGE Fundamentals
-****************
-
-.. automodule:: sge
