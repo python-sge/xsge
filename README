@@ -17,7 +17,7 @@ INSTALLATION
 First, install the dependencies:
 
 - Python <http://www.python.org>
-- SGE Game Engine <http://stellarengine.nongnu.org>
+- SGE Game Engine 0.11.0 or later <http://stellarengine.nongnu.org>
 
 Once you have all the dependencies, install xSGE with the included
 setup.py script, e.g.:
