@@ -23,7 +23,7 @@ installed already, you can obtain it here:
 
 http://stellarengine.nongnu.org
 
-This version of xSGE needs version 0.10 of the SGE.
+This version of xSGE needs version 0.11 of the SGE.
 
 Once the SGE is installed, you can install xSGE with the included
 setup.py script, e.g.:
