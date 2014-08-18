@@ -36,7 +36,7 @@ specification.
 """.strip()
 
 setup(name="xsge",
-      version="0.1.0",
+      version="0.2.0",
       description="A 2-D game engine for Python",
       long_description=long_description,
       author="Julian Marchant",
