@@ -37,7 +37,7 @@ specification.
 
 setup(name="xsge",
       version="0.2.0",
-      description="A 2-D game engine for Python",
+      description="Extensions for the SGE",
       long_description=long_description,
       author="Julian Marchant",
       author_email="onpon4@riseup.net",
