@@ -1,65 +1,34 @@
-Copyright (C) 2013, 2014 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
-are permitted in any medium without royalty provided the copyright
-notice and this notice are preserved.  This file is offered as-is,
-without any warranty.
+are permitted in any medium without royalty.  This file is offered
+as-is, without any warranty.
 
 ========================================================================
 
+This is an explanation of the xSGE's version numbering, in particular
+how it indicates compatibility between various xSGE releases.
 
-Introduction
-------------------------------------------------------------------------
+xSGE version numbers have two or three components.  The components are
+the major version, the minor version, and the release version.
 
-This document describes how version numbering works for the SGE as of
-May 10, 2013.
+Two versions of xSGE with different major versions can be expected to be
+incompatible.  For example, there is no guarantee that a program
+designed for version 1.0 of xSGE will work on version 2.0 of xSGE.
 
-This version numbering system is also used for xSGE.  However, the
-version number of an xSGE release is not connected to the version number
-of any SGE release.  xSGE documentation should indicate what version(s)
-of the SGE it is compatible with.
+A version of xSGE with the same major version number, but a higher minor
+version number, than another version of xSGE can be assumed to be
+backward-compatible.  This number is used to indicate things like
+unintrusive feature additions and module additions.  For example, it can
+be expected that a program designed for version 1.0 of xSGE will work
+with version 1.1 of xSGE.
 
+As a special exception, two versions of xSGE with the major version
+number 0, but a different minor version number, can be expected to be
+incompatible (i.e. the minor version number is treated as the major
+version number).  The major version number 0 is to be used until xSGE
+is reasonably complete.
 
-Components
-------------------------------------------------------------------------
-
-The version number is divided into three main components: the major
-version number, the minor version number, and the bugfix number.  The
-components are separated by a dot (".") in the form:
-"major.minor.bugfix".
-
-Note: The dot which separates the version number components is not a
-decimal point.  Any of the components can increase to any amount.  For
-example, the version after "1.3.9" might be "1.3.10".
-
-The major and minor version numbers indicate features and compatibility.
-All variations of the major and minor version numbers are expected to
-originate in the SGE specification, and SGE implementations are expected
-to inheret the major and minor version numbers of the specificaiton
-version they follow.  There are two kinds of releases: unstable
-releases, and stable releases.
-
-Unstable releases have the major version number 0 and only increment the
-minor version and bugfix numbers. Unstable releases have no guarantee of
-compatibility with each other; for example, version 0.13 might be
-incompatible with version 0.12.
-
-Stable releases increment both the major and minor version numbers.
-Changes in the major version number indicate compatibility breakage; for
-example, a program designed for version 1.0 of the SGE can be expected
-to not work with version 2.0 of the SGE.  Changes in the minor version
-number indicate feature additions and other changes which are not likely
-to affect compatibility, meaning that a program designed for version 1.0
-of the SGE can be expected to also work with version 1.3.
-
-The bugfix version number indicates only bug fixes.  In the case of the
-SGE specification, this includes typo corrections to docstrings and
-comments as well as fixes to code supplied by the template.  For SGE
-implementations, this includes any bug introduced by the implementation.
-Unlike the major and minor version numbers, this number is not the same
-between implementations and the specifications they follow.
-
-Within the source repository, the SGE specification and all SGE
-implementations should be given the special version number
-"bleeding-edge", unless they are identical to a release, in which case
-they should have the same version number as that release.
+The release version is used to indicate very small changes, such as
+bugfixes.  In general, this should never break compatibility, unless a
+program was depending on a bug in xSGE.
