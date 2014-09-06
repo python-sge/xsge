@@ -55,4 +55,5 @@ setup(name="xsge",
       package_dir={"xsge": "xsge"},
       package_data={"xsge": ["COPYING", "gui_data/*"]},
       requires=["sge (>= 0.11.0)"],
+      provides=["xsge"],
      )
