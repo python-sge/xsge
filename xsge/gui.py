@@ -1876,7 +1876,9 @@ class MessageDialog(Dialog):
 
             button.event_press = event_press
 
-        self.keyboard_focused_widget = button
+            if i in (default, len(buttons) + default):
+                self.keyboard_focused_widget = button
+
         self.choice = None
 
     def _return_button(self, x):
