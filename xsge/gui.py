@@ -97,9 +97,10 @@ except ImportError:
 import sge
 
 
-__all__ = ["Handler", "Window", "Dialog", "Widget", "Button", "CheckBox",
-           "RadioButton", "ProgressBar", "TextBox", "MessageDialog",
-           "TextEntryDialog", "FileSelectionDialog"]
+__all__ = ["Handler", "Window", "Dialog", "Widget", "Label", "Button",
+           "CheckBox", "RadioButton", "ProgressBar", "TextBox",
+           "MessageDialog", "TextEntryDialog", "init", "show_message",
+           "get_text_entry"]
 
 DATADIR = os.path.join(os.path.dirname(__file__), "gui_data")
 TEXTBOX_MIN_EDGE = 4
