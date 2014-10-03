@@ -1848,18 +1848,19 @@ class MessageDialog(Dialog):
     def __init__(self, parent, message="", title="Message", buttons=("Ok",),
                  default=-1, width=320, height=None):
         """See :func:`xsge.gui.show_message`."""
+        button_w = max(1, int(round((width - DIALOG_PADDING *
+                                     (len(buttons) + 1)) / len(buttons))))
+        button_h = button_sprite.height
+        label_w = max(1, width - DIALOG_PADDING * 2)
+
         if height is None:
-            height = (default_font.get_height(message, width=width) +
-                      button_sprite.height + DIALOG_PADDING * 3)
+            height = (default_font.get_height(message, width=label_w) +
+                      button_h + DIALOG_PADDING * 3)
 
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super(MessageDialog, self).__init__(parent, x, y, width, height,
                                             title=title)
-        button_w = max(1, int(round((width - DIALOG_PADDING *
-                                     (len(buttons) + 1)) / len(buttons))))
-        button_h = button_sprite.height
-        label_w = max(1, width - DIALOG_PADDING * 2)
         label_h = max(1, height - button_h - DIALOG_PADDING * 3)
         Label(self, DIALOG_PADDING, DIALOG_PADDING, 0, message, width=label_w,
               height=label_h)
@@ -1915,20 +1916,20 @@ class TextEntryDialog(Dialog):
     def __init__(self, parent, message="", title="Text Entry", text="",
                  width=320, height=None):
         """See :func:`xsge.gui.get_text_entry`."""
-        if height is None:
-            height = (default_font.get_height(message, width=width) +
-                      button_sprite.height + textbox_sprite.height +
-                      DIALOG_PADDING * 4)
-
-        x = sge.game.width / 2 - width / 2
-        y = sge.game.height / 2 - height / 2
-        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
-                                              title=title)
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = button_sprite.height
         textbox_w = max(1, width - DIALOG_PADDING * 2)
         textbox_h = textbox_sprite.height
         label_w = textbox_w
+
+        if height is None:
+            height = (default_font.get_height(message, width=label_w) +
+                      button_h + textbox_h + DIALOG_PADDING * 4)
+
+        x = sge.game.width / 2 - width / 2
+        y = sge.game.height / 2 - height / 2
+        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
+                                              title=title)
         label_h = max(1, height - button_h - textbox_h - DIALOG_PADDING * 4)
 
         x = DIALOG_PADDING
