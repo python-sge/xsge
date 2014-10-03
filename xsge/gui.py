@@ -1845,9 +1845,13 @@ class MessageDialog(Dialog):
 
     """
 
-    def __init__(self, parent, message, buttons=("Ok",), width=320, height=120,
-                 title="Message"):
+    def __init__(self, parent, message="", title="Message", buttons=("Ok",),
+                 default=-1, width=320, height=None):
         """See :func:`xsge.gui.show_message`."""
+        if height is None:
+            height = (default_font.get_height(message, width=width) +
+                      button_sprite.height + DIALOG_PADDING * 3)
+
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super(MessageDialog, self).__init__(parent, x, y, width, height,
@@ -1906,9 +1910,14 @@ class TextEntryDialog(Dialog):
 
     """
 
-    def __init__(self, parent, message="", width=320, height=152, text="",
-                 title="Text Entry"):
+    def __init__(self, parent, message="", title="Text Entry", text="",
+                 width=320, height=None):
         """See :func:`xsge.gui.get_text_entry`."""
+        if height is None:
+            height = (default_font.get_height(message, width=width) +
+                      button_sprite.height + textbox_sprite.height +
+                      DIALOG_PADDING * 4)
+
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
         super(TextEntryDialog, self).__init__(parent, x, y, width, height,
@@ -2127,25 +2136,28 @@ def init():
     sge.font_directories = orig_font_directories
 
 
-def show_message(message, buttons=("Ok",), parent=None, width=320, height=120,
-                 title="Message"):
+def show_message(parent=None, message="", title="Message", buttons=("Ok",),
+                 default=-1, width=320, height=None):
     """Show a message and return the button pressed.
 
     Arguments:
 
-    - ``message`` -- The message shown to the user.
-    - ``buttons`` -- A list of strings to put inside the buttons, from
-      left to right.
     - ``parent`` -- The parent handler of the
       :class:`xsge.gui.MessageDialog` object created.  Set to
       :const:`None` to create a new handler and then destroy it after
       the dialog is shown.
+    - ``message`` -- The message shown to the user.
+    - ``title`` -- The window title of the
+      :class:`xsge.gui.MessageDialog` object created.
+    - ``buttons`` -- A list of strings to put inside the buttons, from
+      left to right.
+    - ``default`` -- The index of the default button selected by the
+      keyboard (i.e. the default choice).
     - ``width`` -- The width of the :class:`xsge.gui.MessageDialog`
       object created.
     - ``height`` -- The height of the :class:`xsge.gui.MessageDialog`
-      object created.
-    - ``title`` -- The window title of the
-      :class:`xsge.gui.MessageDialog` object created.
+      object created.  If set to :const:`None`, set the height
+      automatically based on the space needed for the text.
 
     Value returned is the index of the button pressed, where ``0`` is
     the leftmost button, or :const:`None` if no button was pressed (i.e.
@@ -2161,8 +2173,8 @@ def show_message(message, buttons=("Ok",), parent=None, width=320, height=120,
     else:
         destroy_parent = False
 
-    w = MessageDialog(parent, message, buttons=buttons, width=width,
-                      height=height, title=title)
+    w = MessageDialog(parent, message=message, title=title, buttons=buttons,
+                      default=default, width=width, height=height)
     w.show()
     w.destroy()
 
@@ -2172,24 +2184,25 @@ def show_message(message, buttons=("Ok",), parent=None, width=320, height=120,
     return w.choice
 
 
-def get_text_entry(message="", text="", parent=None, width=320, height=152,
-                   title="Text Entry"):
+def get_text_entry(parent=None, message="", title="Text Entry", text="",
+                   width=320, height=None):
     """Return text entered by the user.
 
     Arguments:
 
-    - ``message`` -- The message shown to the user.
-    - ``text`` -- The text in the text box by default.
     - ``parent`` -- The parent handler of the
       :class:`xsge.gui.MessageDialog` object created.  Set to
       :const:`None` to create a new handler and then destroy it after
       the dialog is shown.
+    - ``message`` -- The message shown to the user.
+    - ``title`` -- The window title of the
+      :class:`xsge.gui.TextEntryDialog` object created.
+    - ``text`` -- The text in the text box by default.
     - ``width`` -- The width of the :class:`xsge.gui.TextEntryDialog`
       object created.
     - ``height`` -- The height of the :class:`xsge.gui.TextEntryDialog`
-      object created.
-    - ``title`` -- The window title of the
-      :class:`xsge.gui.TextEntryDialog` object created.
+      object created.  If set to :const:`None`, set the height
+      automatically based on the space needed for the text.
 
     Value returned is the text entered if the "Ok" button is pressed, or
     :const:`None` otherwise.
@@ -2204,8 +2217,8 @@ def get_text_entry(message="", text="", parent=None, width=320, height=152,
     else:
         destroy_parent = False
 
-    w = TextEntryDialog(parent, message=message, width=width, height=height,
-                        text=text, title=title)
+    w = TextEntryDialog(parent, message=message, title=title, text=text,
+                        width=width, height=height)
     w.show()
     w.destroy()
 
