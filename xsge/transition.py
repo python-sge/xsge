@@ -28,6 +28,8 @@ import random
 
 import sge
 
+from xsge import six
+
 
 __all__ = ["Room"]
 
@@ -204,8 +206,8 @@ class Room(sge.Room):
             remaining = self.transition_variables["remaining"]
         else:
             remaining = []
-            for x in range(mw):
-                for y in range(mh):
+            for x in six.moves.range(mw):
+                for y in six.moves.range(mh):
                     remaining.append((x, y))
 
         diff = complete - self.transition_complete_last

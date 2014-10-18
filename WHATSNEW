@@ -16,6 +16,7 @@ Additions:
 Misc changes:
 * Arguments for xsge.gui message boxes and text entry dialogs reordered.
 * Height for dialog boxes can be set to None to size automatically.
+* Python 2 compatibility is now better and more explicit.
 
 Bugfixes:
 - Incomplete __all__ specification in xsge.gui
