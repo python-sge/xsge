@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # setup.py
 # Copyright (C) 2012, 2013, 2014 Julian Marchant <onpon4@riseup.net>
 #
@@ -36,7 +34,7 @@ specification.
 """.strip()
 
 setup(name="xsge",
-      version="0.3a4",
+      version="0.3a5",
       description="Extensions for the SGE",
       long_description=long_description,
       author="Julian Marchant",
@@ -47,7 +45,8 @@ setup(name="xsge",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
                    "Operating System :: OS Independent",
-                   "Programming Language :: Python",
+                   "Programming Language :: Python :: 2",
+                   "Programming Language :: Python :: 3",
                    "Topic :: Games/Entertainment",
                    "Topic :: Software Development"],
       license="GNU General Public License",
