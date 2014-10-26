@@ -34,7 +34,7 @@ specification.
 """.strip()
 
 setup(name="xsge",
-      version="0.3",
+      version="0.3.1a0",
       description="Extensions for the SGE",
       long_description=long_description,
       author="Julian Marchant",
@@ -53,6 +53,6 @@ setup(name="xsge",
       packages=["xsge"],
       package_dir={"xsge": "xsge"},
       package_data={"xsge": ["COPYING", "gui_data/*"]},
-      requires=["sge (>= 0.13)"],
+      requires=["sge (>= 0.14)"],
       provides=["xsge"],
      )

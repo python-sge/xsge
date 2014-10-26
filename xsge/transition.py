@@ -146,12 +146,11 @@ class Room(sge.Room):
     def _update_wipe_topleft(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
-        dw = math.hypot(w, h)
-        lw = int(round(2 * dw * complete))
-        eraser = sge.Sprite(width=self.transition_sprite.width,
-                            height=self.transition_sprite.height)
-        eraser.draw_line(-w, h, w, -h, sge.Color((0, 0, 0, 255)), thickness=lw,
-                         anti_alias=True)
+        x = w * complete * 2
+        y = h * complete * 2
+        eraser = sge.Sprite(width=w, height=h)
+        eraser.draw_polygon([(0, 0), (x, 0), (0, y)],
+                            fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -159,12 +158,11 @@ class Room(sge.Room):
     def _update_wipe_topright(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
-        dw = math.hypot(w, h)
-        lw = int(round(2 * dw * complete))
-        eraser = sge.Sprite(width=self.transition_sprite.width,
-                            height=self.transition_sprite.height)
-        eraser.draw_line(0, -h, w + w, h, sge.Color((0, 0, 0, 255)),
-                         thickness=lw, anti_alias=True)
+        x = w - w * complete * 2
+        y = h * complete * 2
+        eraser = sge.Sprite(width=w, height=h)
+        eraser.draw_polygon([(w, 0), (x, 0), (w, y)],
+                            fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -172,12 +170,11 @@ class Room(sge.Room):
     def _update_wipe_bottomleft(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
-        dw = math.hypot(w, h)
-        lw = int(round(2 * dw * complete))
-        eraser = sge.Sprite(width=self.transition_sprite.width,
-                            height=self.transition_sprite.height)
-        eraser.draw_line(-w, 0, w, h + h, sge.Color((0, 0, 0, 255)),
-                         thickness=lw, anti_alias=True)
+        x = w * complete * 2
+        y = h - h * complete * 2
+        eraser = sge.Sprite(width=w, height=h)
+        eraser.draw_polygon([(0, h), (x, h), (0, y)],
+                            fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
@@ -185,12 +182,11 @@ class Room(sge.Room):
     def _update_wipe_bottomright(self, complete):
         w = self.transition_sprite.width
         h = self.transition_sprite.height
-        dw = math.hypot(w, h)
-        lw = int(round(2 * dw * complete))
-        eraser = sge.Sprite(width=self.transition_sprite.width,
-                            height=self.transition_sprite.height)
-        eraser.draw_line(0, h + h, w + w, 0, sge.Color((0, 0, 0, 255)),
-                         thickness=lw, anti_alias=True)
+        x = w - w * complete * 2
+        y = h - h * complete * 2
+        eraser = sge.Sprite(width=w, height=h)
+        eraser.draw_polygon([(w, h), (x, h), (w, y)],
+                            fill=sge.Color((0, 0, 0, 255)), anti_alias=True)
         self.transition_sprite.draw_sprite(eraser, 0, 0, 0,
                                            blend_mode=sge.BLEND_RGBA_SUBTRACT)
         eraser.destroy()
