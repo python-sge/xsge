@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Multiple Rooms Example
+# Transitions example
 # Written in 2012, 2013, 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
