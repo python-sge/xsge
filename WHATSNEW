@@ -7,8 +7,11 @@ without any warranty.
 
 ========================================================================
 
-0.3.1
+0.4
 ------------------------------------------------------------------------
+
+Additions:
++ xsge.physics
 
 Misc changes:
 * Better method of diagonal wipe transitions using polygons.
