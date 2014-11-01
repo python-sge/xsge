@@ -93,6 +93,10 @@ def main():
     background = sge.Background([], sge.Color("black"))
 
     # Create objects
+    physics.SlopeTopLeft.xsticky = True
+    physics.SlopeTopRight.xsticky = True
+    physics.SlopeBottomLeft.xsticky = True
+    physics.SlopeBottomRight.xsticky = True
     player = Player(400, 300, 5, sprite=square_sprite)
     bottom_1 = physics.SolidTop(400, 500, 0, sprite=solid_sprite)
     bottom_2 = physics.SolidTop(416, 500, 0, sprite=solid_sprite)
