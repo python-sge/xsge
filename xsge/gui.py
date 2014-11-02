@@ -84,7 +84,7 @@ from __future__ import unicode_literals
 import os
 import weakref
 
-from xsge import six
+import six
 
 try:
     from six.moves.tkinter import Tk

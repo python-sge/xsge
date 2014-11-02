@@ -27,8 +27,6 @@ from __future__ import unicode_literals
 
 import sge
 
-from xsge import six
-
 
 __all__ = ["Collider", "SolidLeft", "SolidRight", "SolidTop", "SolidBottom",
            "Solid", "SlopeTopLeft", "SlopeTopRight", "SlopeBottomLeft",

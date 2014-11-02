@@ -15,6 +15,7 @@ Additions:
 
 Misc changes:
 * Better method of diagonal wipe transitions using polygons.
+* Made Six an external dependency.
 
 
 0.3.0

@@ -27,8 +27,7 @@ import math
 import random
 
 import sge
-
-from xsge import six
+import six
 
 
 __all__ = ["Room"]
