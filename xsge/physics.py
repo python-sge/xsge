@@ -30,228 +30,9 @@ import sge
 from xsge import six
 
 
-__all__ = []
-
-
-class SolidLeft(sge.Object):
-
-    """
-    Class for walls which stop movement of :class:`Collider` objects
-    from the top.
-    """
-
-
-class SolidRight(sge.Object):
-
-    """
-    Class for walls which stop movement of :class:`Collider` objects
-    from the right.
-    """
-
-
-class SolidTop(sge.Object):
-
-    """
-    Class for walls which stop movement of :class:`Collider` objects
-    from the top.
-    """
-
-
-class SolidBottom(sge.Object):
-
-    """
-    Class for walls which stop movement of :class:`Collider` objects
-    from the bottom.
-    """
-
-
-class Solid(SolidLeft, SolidRight, SolidTop, SolidBottom):
-
-    """
-    Inherits :class:`SolidLeft`, :class:`SolidRight`, :class:`SolidTop`,
-    and :class:`SolidBottom`.  Meant to be a convenient parent class for
-    walls that should stop movement in all directions.
-    """
-
-
-class SlopeTopLeft(sge.Object):
-
-    """
-    A parent class for slopes which point in some direction upwards and
-    to the left.
-
-    Slopes of this type go from the bottom-left corner to the top-right
-    corner of the bounding box.
-
-    .. attribute:: xsticky
-
-       If set to :const:`True`, a collider that moves to the left while
-       touching the top side of the slope will attempt to keep touching
-       the top side of the slope by moving downward.
-
-    .. attribute:: ysticky
-
-       If set to :const:`True`, a collider that moves upward while
-       touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
-    """
-
-    xsticky = False
-    ysticky = False
-
-    def get_slope_x(self, y):
-        """
-        Get the corresponding y coordinate of a given x coordinate for
-        the slope.
-        """
-        # x = (y - b) / m [b is 0]
-        m = -self.bbox_height / self.bbox_width
-        y -= self.bbox_top
-        return y / m + self.bbox_right
-
-    def get_slope_y(self, x):
-        """
-        Get the corresponding x coordinate of a given y coordinate for
-        the slope.
-        """
-        # y = mx + b [b is 0]
-        m = -self.bbox_height / self.bbox_width
-        x -= self.bbox_left
-        return m * x + self.bbox_bottom
-
-
-class SlopeTopRight(sge.Object):
-
-    """
-    A parent class for slopes which point in some direction upwards and
-    to the right.
-
-    Slopes of this type go from the top-left corner to the bottom-right
-    corner of the bounding box.
-
-    .. attribute:: xsticky
-
-       If set to :const:`True`, a collider that moves to the right while
-       touching the top side of the slope will attempt to keep touching
-       the top side of the slope by moving downward.
-
-    .. attribute:: ysticky
-
-       If set to :const:`True`, a collider that moves upward while
-       touching the right side of the slope will attempt to keep
-       touching the right side of the slope by moving to the left.
-    """
-
-    xsticky = False
-    ysticky = False
-
-    def get_slope_x(self, y):
-        """
-        Get the corresponding y coordinate of a given x coordinate for
-        the slope.
-        """
-        # x = (y - b) / m [b is 0]
-        m = self.bbox_height / self.bbox_width
-        y -= self.bbox_top
-        return y / m + self.bbox_left
-
-    def get_slope_y(self, x):
-        """
-        Get the corresponding x coordinate of a given y coordinate for
-        the slope.
-        """
-        # y = mx + b [b is 0]
-        m = self.bbox_height / self.bbox_width
-        x -= self.bbox_left
-        return m * x + self.bbox_top
-
-
-class SlopeBottomLeft(sge.Object):
-
-    """
-    A parent class for slopes which point in some direction upwards and
-    to the left.
-
-    Slopes of this type go from the top-left corner to the bottom-right
-    corner of the bounding box.
-
-    .. attribute:: xsticky
-
-       If set to :const:`True`, a collider that moves to the left while
-       touching the bottom side of the slope will attempt to keep
-       touching the bottom side of the slope by moving upward.
-
-    .. attribute:: ysticky
-
-       If set to :const:`True`, a collider that moves downward while
-       touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
-    """
-
-    xsticky = False
-    ysticky = False
-
-    def get_slope_x(self, y):
-        """
-        Get the corresponding y coordinate of a given x coordinate for
-        the slope.
-        """
-        # x = (y - b) / m [b is 0]
-        m = self.bbox_height / self.bbox_width
-        y -= self.bbox_top
-        return y / m + self.bbox_left
-
-    def get_slope_y(self, x):
-        """
-        Get the corresponding x coordinate of a given y coordinate for
-        the slope.
-        """
-        # y = mx + b [b is 0]
-        m = self.bbox_height / self.bbox_width
-        x -= self.bbox_left
-        return m * x + self.bbox_top
-
-
-class SlopeBottomRight(sge.Object):
-
-    """
-    A parent class for slopes which point in some direction upwards and
-    to the right.
-
-    Slopes of this type go from the bottom-left corner to the top-right
-    corner of the bounding box.
-
-    .. attribute:: xsticky
-
-       If set to :const:`True`, a collider that moves to the right while
-       touching the bottom side of the slope will attempt to keep
-       touching the bottom side of the slope by moving upward.
-
-    .. attribute:: ysticky
-
-       If set to :const:`True`, a collider that moves downward while
-       touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
-    """
-
-    xsticky = False
-    ysticky = False
-
-    def get_slope_x(self, y):
-        """
-        Get the corresponding y coordinate of a given x coordinate for
-        the slope.
-        """
-        # x = (y - b) / m [b is 0]
-        m = -self.bbox_height / self.bbox_width
-        y -= self.bbox_top
-        return y / m + self.bbox_right
-
-    def get_slope_y(self, x):
-        # y = mx + b [b is 0]
-        m = -self.bbox_height / self.bbox_width
-        x -= self.bbox_left
-        return m * x + self.bbox_bottom
+__all__ = ["Collider", "SolidLeft", "SolidRight", "SolidTop", "SolidBottom",
+           "Solid", "SlopeTopLeft", "SlopeTopRight", "SlopeBottomLeft",
+           "SlopeBottomRight"]
 
 
 class Collider(sge.Object):
@@ -708,3 +489,224 @@ class Collider(sge.Object):
         ymove = self.yvelocity * delta_mult
         self.move_x(xmove)
         self.move_y(ymove)
+
+
+class SolidLeft(sge.Object):
+
+    """
+    Class for walls which stop movement of :class:`Collider` objects
+    from the top.
+    """
+
+
+class SolidRight(sge.Object):
+
+    """
+    Class for walls which stop movement of :class:`Collider` objects
+    from the right.
+    """
+
+
+class SolidTop(sge.Object):
+
+    """
+    Class for walls which stop movement of :class:`Collider` objects
+    from the top.
+    """
+
+
+class SolidBottom(sge.Object):
+
+    """
+    Class for walls which stop movement of :class:`Collider` objects
+    from the bottom.
+    """
+
+
+class Solid(SolidLeft, SolidRight, SolidTop, SolidBottom):
+
+    """
+    Inherits :class:`SolidLeft`, :class:`SolidRight`, :class:`SolidTop`,
+    and :class:`SolidBottom`.  Meant to be a convenient parent class for
+    walls that should stop movement in all directions.
+    """
+
+
+class SlopeTopLeft(sge.Object):
+
+    """
+    A parent class for slopes which point in some direction upwards and
+    to the left.
+
+    Slopes of this type go from the bottom-left corner to the top-right
+    corner of the bounding box.
+
+    .. attribute:: xsticky
+
+       If set to :const:`True`, a collider that moves to the left while
+       touching the top side of the slope will attempt to keep touching
+       the top side of the slope by moving downward.
+
+    .. attribute:: ysticky
+
+       If set to :const:`True`, a collider that moves upward while
+       touching the left side of the slope will attempt to keep touching
+       the left side of the slope by moving to the right.
+    """
+
+    xsticky = False
+    ysticky = False
+
+    def get_slope_x(self, y):
+        """
+        Get the corresponding y coordinate of a given x coordinate for
+        the slope.
+        """
+        # x = (y - b) / m [b is 0]
+        m = -self.bbox_height / self.bbox_width
+        y -= self.bbox_top
+        return y / m + self.bbox_right
+
+    def get_slope_y(self, x):
+        """
+        Get the corresponding x coordinate of a given y coordinate for
+        the slope.
+        """
+        # y = mx + b [b is 0]
+        m = -self.bbox_height / self.bbox_width
+        x -= self.bbox_left
+        return m * x + self.bbox_bottom
+
+
+class SlopeTopRight(sge.Object):
+
+    """
+    A parent class for slopes which point in some direction upwards and
+    to the right.
+
+    Slopes of this type go from the top-left corner to the bottom-right
+    corner of the bounding box.
+
+    .. attribute:: xsticky
+
+       If set to :const:`True`, a collider that moves to the right while
+       touching the top side of the slope will attempt to keep touching
+       the top side of the slope by moving downward.
+
+    .. attribute:: ysticky
+
+       If set to :const:`True`, a collider that moves upward while
+       touching the right side of the slope will attempt to keep
+       touching the right side of the slope by moving to the left.
+    """
+
+    xsticky = False
+    ysticky = False
+
+    def get_slope_x(self, y):
+        """
+        Get the corresponding y coordinate of a given x coordinate for
+        the slope.
+        """
+        # x = (y - b) / m [b is 0]
+        m = self.bbox_height / self.bbox_width
+        y -= self.bbox_top
+        return y / m + self.bbox_left
+
+    def get_slope_y(self, x):
+        """
+        Get the corresponding x coordinate of a given y coordinate for
+        the slope.
+        """
+        # y = mx + b [b is 0]
+        m = self.bbox_height / self.bbox_width
+        x -= self.bbox_left
+        return m * x + self.bbox_top
+
+
+class SlopeBottomLeft(sge.Object):
+
+    """
+    A parent class for slopes which point in some direction upwards and
+    to the left.
+
+    Slopes of this type go from the top-left corner to the bottom-right
+    corner of the bounding box.
+
+    .. attribute:: xsticky
+
+       If set to :const:`True`, a collider that moves to the left while
+       touching the bottom side of the slope will attempt to keep
+       touching the bottom side of the slope by moving upward.
+
+    .. attribute:: ysticky
+
+       If set to :const:`True`, a collider that moves downward while
+       touching the left side of the slope will attempt to keep touching
+       the left side of the slope by moving to the right.
+    """
+
+    xsticky = False
+    ysticky = False
+
+    def get_slope_x(self, y):
+        """
+        Get the corresponding y coordinate of a given x coordinate for
+        the slope.
+        """
+        # x = (y - b) / m [b is 0]
+        m = self.bbox_height / self.bbox_width
+        y -= self.bbox_top
+        return y / m + self.bbox_left
+
+    def get_slope_y(self, x):
+        """
+        Get the corresponding x coordinate of a given y coordinate for
+        the slope.
+        """
+        # y = mx + b [b is 0]
+        m = self.bbox_height / self.bbox_width
+        x -= self.bbox_left
+        return m * x + self.bbox_top
+
+
+class SlopeBottomRight(sge.Object):
+
+    """
+    A parent class for slopes which point in some direction upwards and
+    to the right.
+
+    Slopes of this type go from the bottom-left corner to the top-right
+    corner of the bounding box.
+
+    .. attribute:: xsticky
+
+       If set to :const:`True`, a collider that moves to the right while
+       touching the bottom side of the slope will attempt to keep
+       touching the bottom side of the slope by moving upward.
+
+    .. attribute:: ysticky
+
+       If set to :const:`True`, a collider that moves downward while
+       touching the left side of the slope will attempt to keep touching
+       the left side of the slope by moving to the right.
+    """
+
+    xsticky = False
+    ysticky = False
+
+    def get_slope_x(self, y):
+        """
+        Get the corresponding y coordinate of a given x coordinate for
+        the slope.
+        """
+        # x = (y - b) / m [b is 0]
+        m = -self.bbox_height / self.bbox_width
+        y -= self.bbox_top
+        return y / m + self.bbox_right
+
+    def get_slope_y(self, x):
+        # y = mx + b [b is 0]
+        m = -self.bbox_height / self.bbox_width
+        x -= self.bbox_left
+        return m * x + self.bbox_bottom
