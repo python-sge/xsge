@@ -34,6 +34,7 @@ class Game(sge.Game):
 class Player(physics.Collider):
 
     def event_step(self, time_passed, delta_mult):
+        sge.game.window_text = "({}, {})".format(self.x, self.y)
         self.xvelocity = (sge.keyboard.get_pressed("right") -
                           sge.keyboard.get_pressed("left")) * 4
         self.yvelocity = (sge.keyboard.get_pressed("down") -
@@ -97,6 +98,10 @@ def main():
     physics.SlopeTopRight.xsticky = True
     physics.SlopeBottomLeft.xsticky = True
     physics.SlopeBottomRight.xsticky = True
+    physics.SlopeTopLeft.ysticky = True
+    physics.SlopeTopRight.ysticky = True
+    physics.SlopeBottomLeft.ysticky = True
+    physics.SlopeBottomRight.ysticky = True
     player = Player(400, 300, 5, sprite=square_sprite)
     bottom_1 = physics.SolidTop(400, 500, 0, sprite=solid_sprite)
     bottom_2 = physics.SolidTop(416, 500, 0, sprite=solid_sprite)

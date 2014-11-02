@@ -379,6 +379,10 @@ class Collider(sge.Object):
                     not self.get_bottom_touching_wall()):
                 new_bbox_bottom = None
                 for other in sge.game.current_room.objects:
+                    if (other.bbox_left >= self.bbox_right or
+                            other.bbox_right <= self.bbox_left):
+                        continue
+
                     if isinstance(other, SolidTop):
                         y = other.bbox_top
                     elif isinstance(other, SlopeTopLeft):
@@ -400,6 +404,10 @@ class Collider(sge.Object):
                     not self.get_top_touching_wall()):
                 new_bbox_top = None
                 for other in sge.game.current_room.objects:
+                    if (other.bbox_left >= self.bbox_right or
+                            other.bbox_right <= self.bbox_left):
+                        continue
+
                     if isinstance(other, SolidBottom):
                         y = other.bbox_bottom
                     elif isinstance(other, SlopeBottomLeft):
@@ -527,6 +535,10 @@ class Collider(sge.Object):
                     not self.get_right_touching_wall()):
                 new_bbox_right = None
                 for other in sge.game.current_room.objects:
+                    if (other.bbox_top >= self.bbox_bottom or
+                            other.bbox_bottom <= self.bbox_top):
+                        continue
+
                     if isinstance(other, SolidLeft):
                         x = other.bbox_left
                     elif isinstance(other, SlopeTopLeft):
@@ -547,6 +559,10 @@ class Collider(sge.Object):
                     not self.get_left_touching_wall()):
                 new_bbox_left = None
                 for other in sge.game.current_room.objects:
+                    if (other.bbox_top >= self.bbox_bottom or
+                            other.bbox_bottom <= self.bbox_top):
+                        continue
+
                     if isinstance(other, SolidRight):
                         x = other.bbox_right
                     elif isinstance(other, SlopeTopRight):
