@@ -18,6 +18,9 @@
 This module provides a simple toolkit for adding GUIs to a SGE game as
 well as support for modal dialog boxes.
 
+To use this module, you must call :func:`xsge.gui.init` sometime between
+the creation of the :class:`sge.Game` object and the start of the game.
+
 .. data:: window_background_color
           keyboard_focused_box_color
           text_color

@@ -18,6 +18,10 @@
 This module provides an easy-to-use framework for collision physics.
 This is especially useful for platformers, though it can also be useful
 for other types of games.
+
+To use this module, you must call :func:`xsge.physics.init` sometime
+between the creation of the :class:`sge.Game` object and the start of
+the game.
 """
 
 from __future__ import division
@@ -177,7 +181,9 @@ class Collider(sge.Object):
             if (not self.get_bottom_touching_slope() and
                     not self.get_bottom_touching_wall()):
                 new_bbox_bottom = None
-                for other in sge.game.current_room.objects:
+                obc = sge.game.current_room.objects_by_class
+                for other in (obc[SolidTop] + obc[SlopeTopLeft] +
+                              obc[SlopeTopRight]):
                     if (other.bbox_left >= self.bbox_right or
                             other.bbox_right <= self.bbox_left):
                         continue
@@ -186,10 +192,8 @@ class Collider(sge.Object):
                         y = other.bbox_top
                     elif isinstance(other, SlopeTopLeft):
                         y = other.get_slope_y(self.bbox_right)
-                    elif isinstance(other, SlopeTopRight):
+                    else: # isinstance(other, SlopeTopRight)
                         y = other.get_slope_y(self.bbox_left)
-                    else:
-                        continue
 
                     if (y >= self.bbox_bottom and
                             (new_bbox_bottom is None or
@@ -202,7 +206,9 @@ class Collider(sge.Object):
             if (not self.get_top_touching_slope() and
                     not self.get_top_touching_wall()):
                 new_bbox_top = None
-                for other in sge.game.current_room.objects:
+                obc = sge.game.current_room.objects_by_class
+                for other in (obc[SolidBottom] + obc[SlopeBottomLeft] +
+                              obc[SlopeBottomRight]):
                     if (other.bbox_left >= self.bbox_right or
                             other.bbox_right <= self.bbox_left):
                         continue
@@ -211,10 +217,8 @@ class Collider(sge.Object):
                         y = other.bbox_bottom
                     elif isinstance(other, SlopeBottomLeft):
                         y = other.get_slope_y(self.bbox_right)
-                    elif isinstance(other, SlopeBottomRight):
+                    else: # isinstance(other, SlopeBottomRight)
                         y = other.get_slope_y(self.bbox_left)
-                    else:
-                        continue
 
                     if y <= self.bbox_top and (new_bbox_top is None or
                                                y > new_bbox_top):
@@ -355,7 +359,9 @@ class Collider(sge.Object):
             if (not self.get_right_touching_slope() and
                     not self.get_right_touching_wall()):
                 new_bbox_right = None
-                for other in sge.game.current_room.objects:
+                obc = sge.game.current_room.objects_by_class
+                for other in (obc[SolidLeft] + obc[SlopeTopLeft] +
+                              obc[SlopeBottomLeft]):
                     if (other.bbox_top >= self.bbox_bottom or
                             other.bbox_bottom <= self.bbox_top):
                         continue
@@ -364,10 +370,8 @@ class Collider(sge.Object):
                         x = other.bbox_left
                     elif isinstance(other, SlopeTopLeft):
                         x = other.get_slope_x(self.bbox_bottom)
-                    elif isinstance(other, SlopeBottomLeft):
+                    else: # isinstance(other, SlopeBottomLeft)
                         x = other.get_slope_x(self.bbox_top)
-                    else:
-                        continue
 
                     if x >= self.bbox_right and (new_bbox_right is None or
                                                  x < new_bbox_right):
@@ -379,7 +383,9 @@ class Collider(sge.Object):
             if (not self.get_left_touching_slope() and
                     not self.get_left_touching_wall()):
                 new_bbox_left = None
-                for other in sge.game.current_room.objects:
+                obc = sge.game.current_room.objects_by_class
+                for other in (obc[SolidRight] + obc[SlopeTopRight] +
+                              obc[SolidBottomRight]):
                     if (other.bbox_top >= self.bbox_bottom or
                             other.bbox_bottom <= self.bbox_top):
                         continue
@@ -388,10 +394,8 @@ class Collider(sge.Object):
                         x = other.bbox_right
                     elif isinstance(other, SlopeTopRight):
                         x = other.get_slope_x(self.bbox_bottom)
-                    elif isinstance(other, SlopeBottomRight):
+                    else: # isinstance(other, SlopeBottomRight)
                         x = other.get_slope_x(self.bbox_top)
-                    else:
-                        continue
 
                     if x <= self.bbox_left and (new_bbox_left is None or
                                                 x > new_bbox_left):
@@ -737,7 +741,7 @@ class SlopeBottomRight(sge.Object):
 
     def get_slope_x(self, y):
         """
-        Get the corresponding y coordinate of a given x coordinate for
+        Get the corresponding x coordinate of a given y coordinate for
         the slope.
         """
         # x = (y - b) / m [b is 0]
@@ -746,7 +750,21 @@ class SlopeBottomRight(sge.Object):
         return y / m + self.bbox_right
 
     def get_slope_y(self, x):
+        """
+        Get the corresponding y coordinate of a given x coordinate for
+        the slope.
+        """
         # y = mx + b [b is 0]
         m = -self.bbox_height / self.bbox_width
         x -= self.bbox_left
         return m * x + self.bbox_bottom
+
+
+def init():
+    """
+    Initialize the module.  Must be called after the creation of a
+    :class:`sge.Game` object.
+    """
+    for cls in [SolidLeft, SolidRight, SolidTop, SolidBottom, SlopeTopLeft,
+                SlopeTopRight, SlopeBottomLeft, SlopeBottomRight]:
+        sge.game.register_class(cls)
