@@ -385,7 +385,7 @@ class Collider(sge.Object):
                 new_bbox_left = None
                 obc = sge.game.current_room.objects_by_class
                 for other in (obc[SolidRight] + obc[SlopeTopRight] +
-                              obc[SolidBottomRight]):
+                              obc[SlopeBottomRight]):
                     if (other.bbox_top >= self.bbox_bottom or
                             other.bbox_bottom <= self.bbox_top):
                         continue
