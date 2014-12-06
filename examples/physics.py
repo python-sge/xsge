@@ -134,7 +134,7 @@ def main():
                slope3_1, slope3_2, slope3_3, slope4_1, slope4_2, slope4_3]
 
     # Create room
-    sge.Room(objects, background=background)
+    sge.game.start_room = sge.Room(objects, background=background)
 
     sge.game.start()
 

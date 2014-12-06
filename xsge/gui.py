@@ -158,8 +158,7 @@ window_border_topright_sprite = None
 
 class Handler(sge.Object):
 
-    """GUI handler class.
-
+    """
     An object of this class needs to exist in any room where windows are
     to be used.  It feeds SGE events to the windows so they can react to
     user input.  It also refreshes all windows every frame.
@@ -171,7 +170,6 @@ class Handler(sge.Object):
        You don't need to modify this list manually. Instead, use
        :meth:`xsge.gui.Window.show` and :meth:`xsge.gui.Window.hide` to
        add and remove windows from this list, respectively.
-
     """
 
     def __init__(self):
@@ -180,13 +178,12 @@ class Handler(sge.Object):
         self.keyboard_focused_window = None
 
     def get_mouse_focused_window(self):
-        """Return the window that currently has mouse focus.
-
-        The window with mouse focus is the one which is closest to the front
-        that is touching the mouse cursor.
+        """
+        Return the window that currently has mouse focus.  The window
+        with mouse focus is the one which is closest to the front that
+        is touching the mouse cursor.
 
         Return :const:`None` if no window has focus.
-
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
@@ -273,8 +270,7 @@ class Handler(sge.Object):
 
 class Window(object):
 
-    """Window class.
-
+    """
     Window objects are used to contain widgets.  They can be moved
     around the game window by the user.
 
@@ -332,7 +328,6 @@ class Window(object):
     .. attribute:: sprite
 
        The sprite this window currently displays as itself.
-
     """
 
     @property
@@ -408,17 +403,16 @@ class Window(object):
                 parent.windows.insert(0, parent.windows.pop(i))
 
     def destroy(self):
-        """Destroy this window."""
+        """An alias for :meth:`xsge.gui.Window.hide`."""
         self.hide()
-        self.sprite.destroy()
 
     def redraw(self):
-        """Re-draw this window's sprite.
+        """
+        Re-draw this window's sprite.
 
         Call this method if you change any variables that should affect
         this window's appearance. For performance reasons, the changes
         won't show up in an existing window until this method is called.
-
         """
         if self.border:
             self.sprite.width = (self.width + window_border_left_sprite.width +
@@ -487,11 +481,11 @@ class Window(object):
                                        fill=self.background_color)
 
     def refresh(self):
-        """Project this window onto the game window.
+        """
+        Project this window onto the game window.
 
         This method must be called every frame for the window to be
         visible.
-
         """
         if self.border:
             target_width = (self.width + window_border_left_sprite.width +
@@ -543,13 +537,12 @@ class Window(object):
             return False
 
     def get_mouse_focused_widget(self):
-        """Return the widget in this window with mouse focus.
+        """
+        Return the widget in this window with mouse focus.  The widget
+        with mouse focus is the one which is closest to the front that
+        is touching the mouse cursor.
 
-        The widget with mouse focus is the one which is closest to the
-        front that is touching the mouse cursor.
-
-        Return :const:`None` if no window has focus.
-
+        Return :const:`None` if no widget has focus.
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
@@ -563,22 +556,18 @@ class Window(object):
         return None
 
     def event_step(self, time_passed, delta_mult):
-        """Step event.
-
+        """
         Called once every frame, before refreshing.  See the
         documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         pass
 
     def event_key_press(self, key, char):
-        """Key press event.
-
+        """
         Called when a key is pressed while this window has keyboard
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
-
         """
         if key == "tab":
             if self.widgets:
@@ -598,42 +587,34 @@ class Window(object):
                         break
 
     def event_key_release(self, key):
-        """Key release event.
-
+        """
         Called when a key is released while this window has keyboard
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
-
         """
         pass
 
     def event_mouse_button_press(self, button):
-        """Mouse button press event.
-
+        """
         Called when a mouse button is pressed while this window has
         mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonPress` for more information.
-
         """
         pass
 
     def event_mouse_button_release(self, button):
-        """Mouse button release event.
-
+        """
         Called when a mouse button is released while this window has
         mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
-
         """
         pass
 
     def event_titlebar_mouse_button_press(self, button):
-        """Mouse button press event.
-
+        """
         Called when a mouse button is pressed on top of this window's
         title bar (top border).  See the documentation for
         :class:`sge.input.MouseButtonPress` for more information.
-
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
@@ -650,12 +631,10 @@ class Window(object):
                 self.move_to_back()
 
     def event_titlebar_mouse_button_release(self, button):
-        """Mouse button release event.
-
+        """
         Called when a mouse button is released on top of this window's
         title bar (top border).  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
-
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
@@ -675,55 +654,45 @@ class Window(object):
         self.event_global_mouse_button_release(button)
 
     def event_global_key_press(self, key, char):
-        """Global key press event.
-
+        """
         Called when a key is pressed, regardless of which window has
         keyboard focus.  See the documentation for
         :class:`sge.input.KeyPress` for more information.
-
         """
         pass
 
     def event_global_key_release(self, key):
-        """Global key release event.
-
+        """
         Called when a key is released, regardless of which window has
         keyboard focus.  See the documentation for
         :class:`sge.input.KeyRelease` for more information.
-
         """
         pass
 
     def event_global_mouse_button_press(self, button):
-        """Global mouse button press event.
-
+        """
         Called when a mouse button is pressed, regardless of which
         window has mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonPress` for more information.
-
         """
         pass
 
     def event_global_mouse_button_release(self, button):
-        """Global mouse button release event.
-
+        """
         Called when a mouse button is released, regardless of which
         window has mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
-
         """
         if button == "left":
             self._close_button_pressed = False
             self._border_grab = None
 
     def event_close(self):
-        """Close event.
-
+        """
         Called when the "X" button in the top-right corner of the window
         is pressed.
 
         By default, this calls :meth:`xsge.gui.Window.destroy`.
-
         """
         self.destroy()
 
@@ -841,8 +810,7 @@ class Dialog(Window):
 
 class Widget(object):
 
-    """Widget class.
-
+    """
     Widget objects are things like controls and decorations that exist
     on windows.
 
@@ -872,7 +840,6 @@ class Widget(object):
     .. attribute:: sprite
 
        The sprite this widget displays as itself.
-
     """
 
     tab_focus = True
@@ -904,7 +871,6 @@ class Widget(object):
             self.sprite = sprite
         else:
             self.sprite = sge.Sprite(width=1, height=1)
-            self.sprite.destroy()
 
     def destroy(self):
         """Destroy this widget."""
@@ -913,21 +879,21 @@ class Widget(object):
             parent.widgets.remove(self)
 
     def redraw(self):
-        """Re-draw this widget's sprite.
+        """
+        Re-draw this widget's sprite.
 
         Call this method if you change any variables that should affect
         this widget's appearance.  This method automatically makes any
         changes necessary to :attr:`self.sprite`.
-
         """
         pass
 
     def refresh(self):
-        """Project this widget onto the game window.
+        """
+        Project this widget onto the game window.
 
         This method must be called every frame for the widget to be
         visible.
-
         """
         parent = self.parent()
         if parent is not None:
@@ -941,100 +907,81 @@ class Widget(object):
             self.destroy()
 
     def event_step(self, time_passed, delta_mult):
-        """Step event.
-
+        """
         Called once every frame, before refreshing.  See the
         documentation for :meth:`sge.Game.event_step` for more
         information.
-
         """
         pass
 
     def event_key_press(self, key, char):
-        """Key press event.
-
+        """
         Called when a key is pressed while this widget has keyboard
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
-
         """
         pass
 
     def event_key_release(self, key):
-        """Key release event.
-
+        """
         Called when a key is released while this widget has keyboard
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
-
         """
         pass
 
     def event_mouse_button_press(self, button):
-        """Mouse button press event.
-
+        """
         Called when a mouse button is pressed while this widget has
         mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonPress` for more information.
-
         """
         pass
 
     def event_mouse_button_release(self, button):
-        """Mouse button release event.
-
+        """
         Called when a mouse button is released while this widget has
         mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
-
         """
         pass
 
     def event_global_key_press(self, key, char):
-        """Global key press event.
-
+        """
         Called when a key is pressed, regardless of which widget has
         keyboard focus.  See the documentation for
         :class:`sge.input.KeyPress` for more information.
-
         """
         pass
 
     def event_global_key_release(self, key):
-        """Global key release event.
-
+        """
         Called when a key is released, regardless of which widget has
         keyboard focus.  See the documentation for
         :class:`sge.input.KeyRelease` for more information.
-
         """
         pass
 
     def event_global_mouse_button_press(self, button):
-        """Global mouse button press event.
-
+        """
         Called when a mouse button is pressed, regardless of which
         widget has mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonPress` for more information.
-
         """
         pass
 
     def event_global_mouse_button_release(self, button):
-        """Global mouse button release event.
-
+        """
         Called when a mouse button is released, regardless of which
         widget has mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
-
         """
         pass
 
 
 class Label(Widget):
 
-    """Label widget.
-
+    """
     This widget simply displays some text.
 
     .. attribute:: text
@@ -1071,7 +1018,6 @@ class Label(Widget):
 
     See the documentation for :class:`xsge.gui.Widget` for more
     information.
-
     """
 
     tab_focus = False
@@ -1117,8 +1063,7 @@ class Label(Widget):
 
 class Button(Widget):
 
-    """Button widget.
-
+    """
     This widget contains some text and can be clicked on by the user.
 
     .. attribute:: text
@@ -1137,7 +1082,6 @@ class Button(Widget):
 
     See the documentation for :class:`xsge.gui.Widget` for more
     information.
-
     """
 
     def __init__(self, parent, x, y, z, text, width=None,
@@ -1269,19 +1213,16 @@ class Button(Widget):
             self._pressed = False
 
     def event_press(self):
-        """Press event.
-
+        """
         Called when this button is clicked on, or when the Enter key is
         pressed while this button is selected.
-
         """
         pass
 
 
 class CheckBox(Widget):
 
-    """Check box widget.
-
+    """
     This widget can be toggled "on" or "off" by clicking on it.
 
     .. attribute:: enabled
@@ -1290,7 +1231,6 @@ class CheckBox(Widget):
 
     See the documentation for :class:`xsge.gui.Widget` for more
     information.
-
     """
 
     def __init__(self, parent, x, y, z, enabled=False):
@@ -1333,18 +1273,15 @@ class CheckBox(Widget):
             self._pressed = False
 
     def event_toggle(self):
-        """Toggle event.
-
+        """
         Called when the state of the checkbox is toggled by the user.
-
         """
         pass
 
 
 class RadioButton(CheckBox):
 
-    """Radio button widget.
-
+    """
     This widget is mostly like :class:`xsge.gui.CheckBox`, but clicking
     on it while it is on will not turn it off, and only one radio button
     can be on at any given time (i.e. enabling one radio button on a
@@ -1352,7 +1289,6 @@ class RadioButton(CheckBox):
 
     See the documentation for :class:`xsge.gui.CheckBox` for more
     information.
-
     """
 
     def event_step(self, time_passed, delta_mult):
@@ -1387,18 +1323,15 @@ class RadioButton(CheckBox):
                 self._enable()
 
     def event_toggle(self):
-        """Toggle event.
-
+        """
         Called when the state of the radiobutton is toggled by the user.
-
         """
         pass
 
 
 class ProgressBar(Widget):
 
-    """Progress bar widget.
-
+    """
     This widget displays a bar which can be used to show progress (e.g.
     of some task being done).
 
@@ -1411,7 +1344,6 @@ class ProgressBar(Widget):
        The progress indicated by the progress bar as a factor (i.e.
        ``0`` is no completion, ``1`` is full completion, and ``0.5`` is
        half completion).
-
     """
 
     tab_focus = False
@@ -1463,8 +1395,7 @@ class ProgressBar(Widget):
 
 class TextBox(Widget):
 
-    """Text box widget.
-
+    """
     This widget provides a place for the user to enter text.
 
     .. attribute:: width
@@ -1481,7 +1412,6 @@ class TextBox(Widget):
 
     See the documentation for :class:`xsge.gui.Widget` for more
     information.
-
     """
 
     def __init__(self, parent, x, y, z, width=32, text="", text_limit=1000):
@@ -1839,8 +1769,7 @@ class TextBox(Widget):
 
 class MessageDialog(Dialog):
 
-    """Message dialog.
-
+    """
     This dialog shows a message box and accepts button input.  All
     buttons cause the dialog to close and set :attr:`choice` to the
     button pressed.
@@ -1853,7 +1782,6 @@ class MessageDialog(Dialog):
 
     See the documentation for :class:`xsge.gui.Dialog` for more
     information.
-
     """
 
     def __init__(self, parent, message="", title="Message", buttons=("Ok",),
@@ -1907,8 +1835,7 @@ class MessageDialog(Dialog):
 
 class TextEntryDialog(Dialog):
 
-    """Text entry dialog.
-
+    """
     This dialog shows a message and has the user enter some text.  Two
     buttons are shown: a "Cancel" button that closes the dialog, and an
     "Ok" button that sets :attr:`text` to the text entered and then
@@ -1921,7 +1848,6 @@ class TextEntryDialog(Dialog):
 
     See the documentation for :class:`xsge.gui.Dialog` for more
     information.
-
     """
 
     def __init__(self, parent, message="", title="Text Entry", text="",
@@ -1999,11 +1925,11 @@ class TextEntryDialog(Dialog):
 
 
 def init():
-    """Prepare this module for use.
-
-    This function in particular creates the sprites and fonts it uses
-    for windows and widgets.  Because of this, it must not be called
-    until after a :class:`sge.Game` object has been created.
+    """
+    Prepare this module for use.  This function in particular creates
+    the sprites and fonts it uses for windows and widgets.  Because of
+    this, it must not be called until after a :class:`sge.Game` object
+    has been created.
 
     """
     global default_font
@@ -2152,7 +2078,8 @@ def init():
 
 def show_message(parent=None, message="", title="Message", buttons=("Ok",),
                  default=-1, width=320, height=None):
-    """Show a message and return the button pressed.
+    """
+    Show a message and return the button pressed.
 
     Arguments:
 
@@ -2179,7 +2106,6 @@ def show_message(parent=None, message="", title="Message", buttons=("Ok",),
 
     See the documentation for :class:`xsge.gui.MessageDialog` for more
     information.
-
     """
     if parent is None:
         parent = Handler.create()
@@ -2200,7 +2126,8 @@ def show_message(parent=None, message="", title="Message", buttons=("Ok",),
 
 def get_text_entry(parent=None, message="", title="Text Entry", text="",
                    width=320, height=None):
-    """Return text entered by the user.
+    """
+    Return text entered by the user.
 
     Arguments:
 
@@ -2223,7 +2150,6 @@ def get_text_entry(parent=None, message="", title="Text Entry", text="",
 
     See the documentation for :class:`xsge.gui.TextEntryDialog` for more
     information.
-
     """
     if parent is None:
         parent = Handler.create()

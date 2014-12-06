@@ -74,9 +74,7 @@ class Room(sge.Room):
 def main():
     Game(width=800, height=600)
     gui.init()
-
-    Room()
-
+    sge.game.start_room = Room()
     sge.game.start()
 
 
