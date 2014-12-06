@@ -31,7 +31,7 @@ from __future__ import unicode_literals
 
 __version__ = "0.4a9"
 
-from xsge import gui, physics, transition
+from xsge import gui, physics
 
 
-__all__ = ["gui", "physics", "transition"]
+__all__ = ["gui", "physics"]

@@ -71,7 +71,6 @@ class Player(physics.Collider):
 def main():
     # Create Game object
     Game(800, 600)
-    physics.init()
 
     # Load sprites
     square_sprite = sge.Sprite(width=32, height=32)

@@ -1096,12 +1096,6 @@ class Button(Widget):
         self.sprite_pressed = None
         self.redraw()
 
-    def destroy(self):
-        super(Button, self).destroy()
-        self.sprite_normal.destroy()
-        self.sprite_selected.destroy()
-        self.sprite_pressed.destroy()
-
     def redraw(self):
         h = button_sprite.height
         if self.width is None:
@@ -1355,10 +1349,6 @@ class ProgressBar(Widget):
         self.progress = progress
         self.redraw()
 
-    def destroy(self):
-        super(ProgressBar, self).destroy()
-        self.sprite.destroy()
-
     def redraw(self):
         self.progress = max(0, min(self.progress, 1))
         self.sprite.width = self.width
@@ -1427,10 +1417,6 @@ class TextBox(Widget):
         self._cursor_shown = True
         self._cursor_blink_time = TEXTBOX_CURSOR_BLINK_TIME
         self.redraw()
-
-    def destroy(self):
-        super(TextBox, self).destroy()
-        self.sprite.destroy()
 
     def redraw(self):
         self.sprite.width = self.width
@@ -1532,7 +1518,6 @@ class TextBox(Widget):
             sge.game.project_sprite(
                 text_sprite, 0, parent.x + self.x + textbox_left_sprite.width,
                 parent.y + self.y)
-            text_sprite.destroy()
         else:
             self.destroy()
 
