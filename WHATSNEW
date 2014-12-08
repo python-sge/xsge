@@ -17,7 +17,6 @@ Removals:
 - xsge.transition
 
 Misc changes:
-* Better method of diagonal wipe transitions using polygons.
 * Made Six an external dependency.
 
 

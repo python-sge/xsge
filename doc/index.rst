@@ -18,7 +18,6 @@ Contents:
 
    gui
    physics
-   transition
    
 
 Indices and tables
