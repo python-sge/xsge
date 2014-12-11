@@ -48,12 +48,12 @@ class Collider(sge.Object):
     """
 
     def move_x(self, move):
-        """Move the object horizontally, handling physics.
+        """
+        Move the object horizontally, handling physics.
 
         Arguments:
 
         - ``move`` -- The amount to add to :attr:`x`.
-
         """
         sticky = False
         old_x = self.x
@@ -67,7 +67,7 @@ class Collider(sge.Object):
         if move > 0:
             for slope in self.collision(SlopeTopRight, x=(old_x - 1)):
                 y = slope.get_slope_y(old_bbox_left)
-                if (slope.xsticky and old_bbox_bottom >= y and
+                if (slope.xsticky_top and old_bbox_bottom >= y and
                         (not self.collision(slope, x=old_x) or
                          old_bbox_bottom - 1 < y)):
                     sticky = 1
@@ -75,7 +75,7 @@ class Collider(sge.Object):
             else:
                 for slope in self.collision(SlopeBottomRight, x=(old_x - 1)):
                     y = slope.get_slope_y(old_bbox_left)
-                    if (slope.xsticky and old_bbox_top <= y and
+                    if (slope.xsticky_bottom and old_bbox_top <= y and
                             (not self.collision(slope, x=old_x) or
                              old_bbox_top + 1 > y)):
                         sticky = 2
@@ -120,7 +120,7 @@ class Collider(sge.Object):
         elif move < 0:
             for slope in self.collision(SlopeTopLeft, x=(old_x + 1)):
                 y = slope.get_slope_y(old_bbox_right)
-                if (slope.xsticky and old_bbox_bottom >= y and
+                if (slope.xsticky_top and old_bbox_bottom >= y and
                         (not self.collision(slope, x=old_x) or
                          old_bbox_bottom - 1 < y)):
                     sticky = 1
@@ -128,7 +128,7 @@ class Collider(sge.Object):
             else:
                 for slope in self.collision(SlopeBottomLeft, x=(old_x + 1)):
                     y = slope.get_slope_y(old_bbox_right)
-                    if (slope.xsticky and old_bbox_top <= y and
+                    if (slope.xsticky_bottom and old_bbox_top <= y and
                             (not self.collision(slope, x=old_x) or
                              old_bbox_top + 1 > y)):
                         sticky = 2
@@ -224,12 +224,12 @@ class Collider(sge.Object):
                     self.bbox_top = new_bbox_top
 
     def move_y(self, move):
-        """Move the object vertically, handling physics.
+        """
+        Move the object vertically, handling physics.
 
         Arguments:
 
         - ``move`` -- The amount to add to :attr:`y`.
-
         """
         sticky = False
         old_x = self.x
@@ -243,7 +243,7 @@ class Collider(sge.Object):
         if move > 0:
             for slope in self.collision(SlopeBottomLeft, y=(old_y - 1)):
                 x = slope.get_slope_x(old_bbox_top)
-                if (slope.ysticky and old_bbox_right >= x and
+                if (slope.ysticky_left and old_bbox_right >= x and
                         (not self.collision(slope, y=old_y) or
                          old_bbox_right - 1 < x)):
                     sticky = 1
@@ -251,7 +251,7 @@ class Collider(sge.Object):
             else:
                 for slope in self.collision(SlopeBottomRight, y=(old_y - 1)):
                     x = slope.get_slope_x(old_bbox_top)
-                    if (slope.ysticky and old_bbox_left <= x and
+                    if (slope.ysticky_right and old_bbox_left <= x and
                             (not self.collision(slope, y=old_y) or
                              old_bbox_left + 1 > x)):
                         sticky = 2
@@ -298,7 +298,7 @@ class Collider(sge.Object):
         elif move < 0:
             for slope in self.collision(SlopeTopLeft, y=(old_y + 1)):
                 x = slope.get_slope_x(old_bbox_bottom)
-                if (slope.ysticky and old_bbox_right >= x and
+                if (slope.ysticky_left and old_bbox_right >= x and
                         (not self.collision(slope, y=old_y) or
                          old_bbox_right - 1 < x)):
                     sticky = 1
@@ -306,7 +306,7 @@ class Collider(sge.Object):
             else:
                 for slope in self.collision(SlopeTopRight, y=(old_y + 1)):
                     x = slope.get_slope_x(old_bbox_bottom)
-                    if (slope.ysticky and old_bbox_left <= x and
+                    if (slope.ysticky_right and old_bbox_left <= x and
                             (not self.collision(slope, y=old_y) or
                              old_bbox_left + 1 > x)):
                         sticky = 2
@@ -581,21 +581,21 @@ class SlopeTopLeft(sge.Object):
     Slopes of this type go from the bottom-left corner to the top-right
     corner of the bounding box.
 
-    .. attribute:: xsticky
+    .. attribute:: xsticky_top
 
        If set to :const:`True`, a collider that moves to the left while
        touching the top side of the slope will attempt to keep touching
        the top side of the slope by moving downward.
 
-    .. attribute:: ysticky
+    .. attribute:: ysticky_left
 
        If set to :const:`True`, a collider that moves upward while
        touching the left side of the slope will attempt to keep touching
        the left side of the slope by moving to the right.
     """
 
-    xsticky = False
-    ysticky = False
+    xsticky_top = False
+    ysticky_left = False
 
     def get_slope_x(self, y):
         """
@@ -627,21 +627,21 @@ class SlopeTopRight(sge.Object):
     Slopes of this type go from the top-left corner to the bottom-right
     corner of the bounding box.
 
-    .. attribute:: xsticky
+    .. attribute:: xsticky_top
 
        If set to :const:`True`, a collider that moves to the right while
        touching the top side of the slope will attempt to keep touching
        the top side of the slope by moving downward.
 
-    .. attribute:: ysticky
+    .. attribute:: ysticky_right
 
        If set to :const:`True`, a collider that moves upward while
        touching the right side of the slope will attempt to keep
        touching the right side of the slope by moving to the left.
     """
 
-    xsticky = False
-    ysticky = False
+    xsticky_top = False
+    ysticky_right = False
 
     def get_slope_x(self, y):
         """
@@ -673,21 +673,21 @@ class SlopeBottomLeft(sge.Object):
     Slopes of this type go from the top-left corner to the bottom-right
     corner of the bounding box.
 
-    .. attribute:: xsticky
+    .. attribute:: xsticky_bottom
 
        If set to :const:`True`, a collider that moves to the left while
        touching the bottom side of the slope will attempt to keep
        touching the bottom side of the slope by moving upward.
 
-    .. attribute:: ysticky
+    .. attribute:: ysticky_left
 
        If set to :const:`True`, a collider that moves downward while
        touching the left side of the slope will attempt to keep touching
        the left side of the slope by moving to the right.
     """
 
-    xsticky = False
-    ysticky = False
+    xsticky_bottom = False
+    ysticky_left = False
 
     def get_slope_x(self, y):
         """
@@ -719,21 +719,21 @@ class SlopeBottomRight(sge.Object):
     Slopes of this type go from the bottom-left corner to the top-right
     corner of the bounding box.
 
-    .. attribute:: xsticky
+    .. attribute:: xsticky_bottom
 
        If set to :const:`True`, a collider that moves to the right while
        touching the bottom side of the slope will attempt to keep
        touching the bottom side of the slope by moving upward.
 
-    .. attribute:: ysticky
+    .. attribute:: ysticky_right
 
        If set to :const:`True`, a collider that moves downward while
-       touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
+       touching the right side of the slope will attempt to keep
+       touching the right side of the slope by moving to the right.
     """
 
-    xsticky = False
-    ysticky = False
+    xsticky_bottom = False
+    ysticky_right = False
 
     def get_slope_x(self, y):
         """
@@ -754,3 +754,318 @@ class SlopeBottomRight(sge.Object):
         m = -self.bbox_height / self.bbox_width
         x -= self.bbox_left
         return m * x + self.bbox_bottom
+
+
+class MobileWall(sge.Object):
+
+    """
+    A parent class for walls and slopes that can move.  When an object
+    of this class moves, it "pushes" any appropriate colliders, as a
+    real wall might be expected to do.
+
+    .. note::
+
+       For classes derived from this class to be useful, they also need
+       to inherit one or more of the other wall classes.  Objects of
+       this class that are not also objects of other classes will
+       naturally not collide.
+
+    .. note::
+
+       This class depends on use of :meth:`MobileWall.move_x` and
+       :meth:`MobileWall.move_y` to handle physics interactions.
+       :meth:`event_update_position` uses these methods, so speed
+       attributes will work properly, but changing :attr:`x` and
+       :attr:`y` manually will not cause any physics to occur.
+
+    .. attribute:: sticky_left
+
+       If set to :const:`True`, any colliders touching the left side of
+       the wall will move along with it, regardless of the direction of
+       movement.
+
+    .. attribute:: sticky_right
+
+       If set to :const:`True`, any colliders touching the right side of
+       the wall will move along with it, regardless of the direction of
+       movement.
+
+    .. attribute:: sticky_top
+
+       If set to :const:`True`, any colliders touching the top side of
+       the wall will move along with it, regardless of the direction of
+       movement.
+
+    .. attribute:: sticky_left
+
+       If set to :const:`True`, any colliders touching the bottom side
+       of the wall will move along with it, regardless of the direction
+       of movement.
+    """
+
+    sticky_left = False
+    sticky_right = False
+    sticky_top = False
+    sticky_bottom = False
+
+    def get_stuck_colliders(self):
+        """
+        Return a list of :class:`Collider` objects which are "stuck" to
+        this wall (i.e. will move along with the wall regardless of
+        direction).
+        """
+        stuck = []
+
+        if self.sticky_left:
+            if isinstance(self, SolidLeft):
+                for other in self.collision(Collider, x=(self.x - 1)):
+                    if not self.collision(other):
+                        stuck.append(other)
+            if isinstance(self, SlopeTopLeft):
+                for other in self.collision(Collider, x=(self.x - 1)):
+                    x = self.get_slope_x(other.bbox_bottom)
+                    if other.bbox_right >= x and (not self.collision(other) or
+                                                  other.bbox_right - 1 < x):
+                        stuck.append(other)
+            if isinstance(self, SlopeBottomLeft):
+                for other in self.collision(Collider, x=(self.x - 1)):
+                    x = self.get_slope_x(other.bbox_top)
+                    if other.bbox_right >= x and (not self.collision(other) or
+                                                  other.bbox_right - 1 < x):
+                        stuck.append(other)
+
+        if self.sticky_right:
+            if isinstance(self, SolidRight):
+                for other in self.collision(Collider, x=(self.x + 1)):
+                    if not self.collision(other):
+                        stuck.append(other)
+            if isinstance(self, SlopeTopRight):
+                for other in self.collision(Collider, x=(self.x + 1)):
+                    x = self.get_slope_x(other.bbox_bottom)
+                    if other.bbox_left <= x and (not self.collision(other) or
+                                                 other.bbox_left + 1 > x):
+                        stuck.append(other)
+            if isinstance(self, SlopeBottomRight):
+                for other in self.collision(Collider, x=(self.x + 1)):
+                    x = self.get_slope_x(other.bbox_top)
+                    if other.bbox_left <= x and (not self.collision(other) or
+                                                 other.bbox_left + 1 > x):
+                        stuck.append(other)
+
+        if self.sticky_top:
+            if isinstance(self, SolidTop):
+                for other in self.collision(Collider, y=(self.y - 1)):
+                    if not self.collision(other):
+                        stuck.append(other)
+            if isinstance(self, SlopeTopLeft):
+                for other in self.collision(Collider, y=(self.y - 1)):
+                    y = self.get_slope_y(other.bbox_right)
+                    if other.bbox_bottom >= y and (not self.collision(other) or
+                                                   other.bbox_bottom - 1 < y):
+                        stuck.append(other)
+            if isinstance(self, SlopeTopRight):
+                for other in self.collision(Collider, y=(self.y - 1)):
+                    y = self.get_slope_y(other.bbox_left)
+                    if other.bbox_bottom >= y and (not self.collision(other) or
+                                                   other.bbox_bottom - 1 < y):
+                        stuck.append(other)
+
+        if self.sticky_bottom:
+            if isinstance(self, SolidBottom):
+                for other in self.collision(Collider, y=(self.y + 1)):
+                    if not self.collision(other):
+                        stuck.append(other)
+            if isinstance(self, SlopeBottomLeft):
+                for other in self.collision(Collider, y=(self.y + 1)):
+                    y = self.get_slope_y(other.bbox_right)
+                    if other.bbox_top <= y and (not self.collision(other) or
+                                                other.bbox_top + 1 > y):
+                        stuck.append(other)
+            if isinstance(self, SlopeBottomRight):
+                for other in self.collision(Collider, y=(self.y + 1)):
+                    y = self.get_slope_y(other.bbox_left)
+                    if other.bbox_top <= y and (not self.collision(other) or
+                                                other.bbox_top + 1 > y):
+                        stuck.append(other)
+
+        return stuck
+
+    def move_x(self, move):
+        """
+        Move the wall horizontally, handling physics.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`x`.
+        """
+        stuck = self.get_stuck_colliders()
+        old_x = self.x
+        self.x += move
+        for other in stuck:
+            other.move_y(move)
+
+        if move > 0:
+            if isinstance(self, SolidRight):
+                for other in self.collision(Collider):
+                    if not self.collision(other, x=old_x):
+                        other.move_x(self.bbox_right - other.bbox_left)
+                        self.event_collision_right(other)
+                        other.event_collision_left(self)
+            if isinstance(self, SlopeTopRight):
+                for other in self.collision(Collider):
+                    x = self.get_slope_x(other.bbox_bottom)
+                    if other.bbox_left < x:
+                        if other.bbox_left >= x - move:
+                            other.move_x(x - other.bbox_left)
+                            y = self.get_slope_y(other.bbox_left)
+                            other.move_y(y - other.bbox_bottom)
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_x(self.bbox_right - other.bbox_left)
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+            if isinstance(self, SlopeBottomRight):
+                for other in self.collision(Collider):
+                    x = self.get_slope_x(other.bbox_top)
+                    if other.bbox_left < x:
+                        if other.bbox_left >= x - move:
+                            other.move_x(x - other.bbox_left)
+                            y = self.get_slope_y(other.bbox_left)
+                            other.move_y(y - other.bbox_top)
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_x(self.bbox_right - other.bbox_left)
+                            self.event_collision_right(other)
+                            other.event_collision_left(self)
+
+        elif move < 0:
+            if isinstance(self, SolidLeft):
+                for other in self.collision(Collider):
+                    if not self.collision(other, x=old_x):
+                        other.move_x(self.bbox_left - other.bbox_right)
+                        self.event_collision_left(other)
+                        other.event_collision_right(self)
+            if isinstance(self, SlopeTopLeft):
+                for other in self.collision(Collider):
+                    x = self.get_slope_x(other.bbox_bottom)
+                    if other.bbox_right > x:
+                        if other.bbox_right <= x - move:
+                            other.move_x(x - other.bbox_right)
+                            y = self.get_slope_y(other.bbox_right)
+                            other.move_y(y - other.bbox_bottom)
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_x(self.bbox_left - other.bbox_right)
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+            if isinstance(self, SlopeBottomLeft):
+                for other in self.collision(Collider):
+                    x = self.get_slope_x(other.bbox_top)
+                    if other.bbox_right > x:
+                        if other.bbox_right <= x - move:
+                            other.move_x(x - other.bbox_right)
+                            y = self.get_slope_y(other.bbox_right)
+                            other.move_y(y - other.bbox_top)
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_x(self.bbox_left - other.bbox_right)
+                            self.event_collision_left(other)
+                            other.event_collision_right(self)
+
+    def move_y(self, move):
+        """
+        Move the wall vertically, handling physics.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`y`.
+        """
+        stuck = self.get_stuck_colliders()
+        old_y = self.y
+        self.y += move
+        for other in stuck:
+            other.move_y(move)
+
+        if move > 0:
+            if isinstance(self, SolidBottom):
+                for other in self.collision(Collider):
+                    if not self.collision(other, y=old_y):
+                        other.move_y(self.bbox_bottom - other.bbox_top)
+                        self.event_collision_bottom(other)
+                        other.event_collision_top(self)
+            if isinstance(self, SlopeBottomLeft):
+                for other in self.collision(Collider):
+                    y = self.get_slope_y(other.bbox_right)
+                    if other.bbox_top < y:
+                        if other.bbox_top >= y - move:
+                            other.move_y(y - other.bbox_top)
+                            x = self.get_slope_x(other.bbox_top)
+                            other.move_x(x - other.bbox_right)
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_y(self.bbox_bottom - other.bbox_top)
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+            if isinstance(self, SlopeBottomRight):
+                for other in self.collision(Collider):
+                    y = self.get_slope_y(other.bbox_left)
+                    if other.bbox_top < y:
+                        if other.bbox_top >= y - move:
+                            other.move_y(y - other.bbox_top)
+                            x = self.get_slope_x(other.bbox_top)
+                            other.move_x(x - other.bbox_left)
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_y(self.bbox_bottom - other.bbox_top)
+                            self.event_collision_bottom(other)
+                            other.event_collision_top(self)
+
+        elif move < 0:
+            if isinstance(self, SolidTop):
+                for other in self.collision(Collider):
+                    if not self.collision(other, y=old_y):
+                        other.move_y(self.bbox_top - other.bbox_bottom)
+                        self.event_collision_top(other)
+                        other.event_collision_bottom(self)
+            if isinstance(self, SlopeTopLeft):
+                for other in self.collision(Collider):
+                    y = self.get_slope_y(other.bbox_right)
+                    if other.bbox_bottom < y:
+                        if other.bbox_bottom >= y - move:
+                            other.move_y(y - other.bbox_bottom)
+                            x = self.get_slope_x(other.bbox_bottom)
+                            other.move_x(x - other.bbox_right)
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_y(self.bbox_top - other.bbox_bottom)
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+            if isinstance(self, SlopeTopRight):
+                for other in self.collision(Collider):
+                    y = self.get_slope_y(other.bbox_left)
+                    if other.bbox_bottom < y:
+                        if other.bbox_bottom >= y - move:
+                            other.move_y(y - other.bbox_bottom)
+                            x = self.get_slope_x(other.bbox_bottom)
+                            other.move_x(x - other.bbox_left)
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+                        elif not self.collision(other, x=old_x):
+                            other.move_y(self.bbox_top - other.bbox_bottom)
+                            self.event_collision_top(other)
+                            other.event_collision_bottom(self)
+
+    def event_update_position(self, delta_mult):
+        xmove = self.xvelocity * delta_mult
+        ymove = self.yvelocity * delta_mult
+        if xmove:
+            self.move_x(xmove)
+        if ymove:
+            self.move_y(ymove)

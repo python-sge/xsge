@@ -7,6 +7,17 @@ without any warranty.
 
 ========================================================================
 
+0.5
+------------------------------------------------------------------------
+
+Additions:
++ xsge.physics.MobileWall
+
+Misc changes:
+* "xsticky" and "ysticky" class attributes of slopes renamed to be more
+  specific and prevent name conflicts.
+
+
 0.4
 ------------------------------------------------------------------------
 

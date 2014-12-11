@@ -79,3 +79,17 @@ xsge.physics.SlopeBottomRight
 -----------------------------
 
 .. autoclass:: xsge.physics.SlopeBottomRight
+
+xsge.physics.MobileWall
+-----------------------
+
+.. autoclass:: xsge.physics.MobileWall
+
+xsge.physics.MobileWall methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.MobileWall.get_stuck_colliders
+
+.. automethod:: xsge.physics.MobileWall.move_x
+
+.. automethod:: xsge.physics.MobileWall.move_y
