@@ -17,6 +17,10 @@ Misc changes:
 * "xsticky" and "ysticky" class attributes of slopes renamed to be more
   specific and prevent name conflicts.
 
+Bugfixes:
+- Incorrect behavior with slope stickiness (prevented it from doing its
+  job and caused other side effects)
+
 
 0.4
 ------------------------------------------------------------------------
