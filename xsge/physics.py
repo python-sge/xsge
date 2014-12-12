@@ -18,6 +18,19 @@
 This module provides an easy-to-use framework for collision physics.
 This is especially useful for platformers, though it can also be useful
 for other types of games.
+
+.. note::
+
+   This collision system supports plain rectangle-based collision
+   detection ONLY.  Attempting to use precise or ellipse collision
+   detection will not work as you expect, and may often not even work at
+   all.  This is because implementing support for such mask-based
+   collision detection would be guaranteed to be slow, unreliable, and
+   needlessly complicated; it's not worth it.
+
+   If you must use precise collision detection, consider doing so with
+   a separate object that follows the appropriate :class:`Collider`
+   object.
 """
 
 from __future__ import division
@@ -30,7 +43,7 @@ import sge
 
 __all__ = ["Collider", "SolidLeft", "SolidRight", "SolidTop", "SolidBottom",
            "Solid", "SlopeTopLeft", "SlopeTopRight", "SlopeBottomLeft",
-           "SlopeBottomRight"]
+           "SlopeBottomRight", "MobileWall"]
 
 
 class Collider(sge.Object):
