@@ -107,7 +107,7 @@ __all__ = ["Handler", "Window", "Dialog", "Widget", "Label", "Button",
            "MessageDialog", "TextEntryDialog", "init", "show_message",
            "get_text_entry"]
 
-DATADIR = os.path.join(os.path.dirname(__file__), "gui_data")
+DATA = os.path.join(os.path.dirname(__file__), "gui_data")
 TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
@@ -1915,7 +1915,6 @@ def init():
     the sprites and fonts it uses for windows and widgets.  Because of
     this, it must not be called until after a :class:`sge.Game` object
     has been created.
-
     """
     global default_font
     global button_font
@@ -1953,52 +1952,53 @@ def init():
     global window_border_topleft_sprite
     global window_border_topright_sprite
 
-    orig_image_directories = sge.image_directories
-    orig_font_directories = sge.font_directories
-    sge.image_directories = [DATADIR]
-    sge.font_directories = [DATADIR]
-
-    default_font = sge.Font(["DroidSans.ttf", "Droid Sans"], size=12)
-    button_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=12)
+    default_font = sge.Font([os.path.join(DATA, "DroidSans.ttf"),
+                             "Droid Sans"], size=12)
+    button_font = sge.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
+                            "Droid Sans"], size=12)
     textbox_font = default_font
-    title_font = sge.Font(["DroidSans-Bold.ttf", "Droid Sans"], size=14)
+    title_font = sge.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
+                           "Droid Sans"], size=14)
 
     try:
-        button_sprite = sge.Sprite("_gui_button")
-        button_left_sprite = sge.Sprite("_gui_button_left")
-        button_right_sprite = sge.Sprite("_gui_button_right")
-        button_pressed_sprite = sge.Sprite("_gui_button_pressed")
-        button_pressed_left_sprite = sge.Sprite("_gui_button_pressed_left")
-        button_pressed_right_sprite = sge.Sprite("_gui_button_pressed_right")
-        button_selected_sprite = sge.Sprite("_gui_button_selected")
-        button_selected_left_sprite = sge.Sprite("_gui_button_selected_left")
-        button_selected_right_sprite = sge.Sprite("_gui_button_selected_right")
-        checkbox_off_sprite = sge.Sprite("_gui_checkbox_off")
-        checkbox_on_sprite = sge.Sprite("_gui_checkbox_on")
-        progressbar_sprite = sge.Sprite("_gui_progressbar")
-        progressbar_left_sprite = sge.Sprite("_gui_progressbar_left")
-        progressbar_right_sprite = sge.Sprite("_gui_progressbar_right")
-        progressbar_container_sprite = sge.Sprite("_gui_progressbar_container")
+        button_sprite = sge.Sprite("button", DATA)
+        button_left_sprite = sge.Sprite("button_left", DATA)
+        button_right_sprite = sge.Sprite("button_right", DATA)
+        button_pressed_sprite = sge.Sprite("button_pressed", DATA)
+        button_pressed_left_sprite = sge.Sprite("button_pressed_left", DATA)
+        button_pressed_right_sprite = sge.Sprite("button_pressed_right", DATA)
+        button_selected_sprite = sge.Sprite("button_selected", DATA)
+        button_selected_left_sprite = sge.Sprite("button_selected_left", DATA)
+        button_selected_right_sprite = sge.Sprite("button_selected_right",
+                                                  DATA)
+        checkbox_off_sprite = sge.Sprite("checkbox_off", DATA)
+        checkbox_on_sprite = sge.Sprite("checkbox_on", DATA)
+        progressbar_sprite = sge.Sprite("progressbar", DATA)
+        progressbar_left_sprite = sge.Sprite("progressbar_left", DATA)
+        progressbar_right_sprite = sge.Sprite("progressbar_right", DATA)
+        progressbar_container_sprite = sge.Sprite("progressbar_container",
+                                                  DATA)
         progressbar_container_left_sprite = sge.Sprite(
-            "_gui_progressbar_container_left")
+            "progressbar_container_left", DATA)
         progressbar_container_right_sprite = sge.Sprite(
-            "_gui_progressbar_container_right")
-        radiobutton_off_sprite = sge.Sprite("_gui_radiobutton_off")
-        radiobutton_on_sprite = sge.Sprite("_gui_radiobutton_on")
-        textbox_sprite = sge.Sprite("_gui_textbox")
-        textbox_left_sprite = sge.Sprite("_gui_textbox_left")
-        textbox_right_sprite = sge.Sprite("_gui_textbox_right")
-        window_border_left_sprite = sge.Sprite("_gui_window_border_left")
-        window_border_right_sprite = sge.Sprite("_gui_window_border_right")
-        window_border_bottom_sprite = sge.Sprite("_gui_window_border_bottom")
+            "progressbar_container_right", DATA)
+        radiobutton_off_sprite = sge.Sprite("radiobutton_off", DATA)
+        radiobutton_on_sprite = sge.Sprite("radiobutton_on", DATA)
+        textbox_sprite = sge.Sprite("textbox", DATA)
+        textbox_left_sprite = sge.Sprite("textbox_left", DATA)
+        textbox_right_sprite = sge.Sprite("textbox_right", DATA)
+        window_border_left_sprite = sge.Sprite("window_border_left", DATA)
+        window_border_right_sprite = sge.Sprite("window_border_right", DATA)
+        window_border_bottom_sprite = sge.Sprite("window_border_bottom", DATA)
         window_border_bottomleft_sprite = sge.Sprite(
-            "_gui_window_border_bottomleft")
+            "window_border_bottomleft", DATA)
         window_border_bottomright_sprite = sge.Sprite(
-            "_gui_window_border_bottomright")
-        window_border_top_sprite = sge.Sprite("_gui_window_border_top")
-        window_border_topleft_sprite = sge.Sprite("_gui_window_border_topleft")
-        window_border_topright_sprite = sge.Sprite(
-            "_gui_window_border_topright")
+            "window_border_bottomright", DATA)
+        window_border_top_sprite = sge.Sprite("window_border_top", DATA)
+        window_border_topleft_sprite = sge.Sprite("window_border_topleft",
+                                                  DATA)
+        window_border_topright_sprite = sge.Sprite("window_border_topright",
+                                                   DATA)
     except IOError:
         button_sprite = sge.Sprite(width=1, height=24)
         button_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
@@ -2056,9 +2056,6 @@ def init():
                                                      fill="black")
         window_border_topright_sprite.draw_line(0, 0, 23, 23, "red")
         window_border_topright_sprite.draw_line(0, 23, 23, 0, "red")
-
-    sge.image_directories = orig_image_directories
-    sge.font_directories = orig_font_directories
 
 
 def show_message(parent=None, message="", title="Message", buttons=("Ok",),
