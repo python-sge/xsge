@@ -12,6 +12,7 @@ without any warranty.
 
 Additions:
 + xsge.physics.MobileWall
++ xsge.tmx
 
 Misc changes:
 * "xsticky" and "ysticky" class attributes of slopes renamed to be more
