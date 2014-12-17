@@ -1,5 +1,5 @@
-# xSGE - Extended Stellar Game Engine
-# Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
+# xSGE Path
+# Copyright (c) 2014 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,13 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-xSGE is a collection of extensions for the SGE licensed under the GNU
-General Public License.  They are designed to give additional features
-to free/libre software games which aren't necessary, but are nice to
-have.
-
-xSGE extensions are not dependent on any particular SGE implementation.
-They should work with any implementation that follows the specification.
+This module provides paths for the SGE.  Paths are used to make objects
+move in a certain way.
 """
 
 from __future__ import division
@@ -29,9 +24,27 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.5a0"
-
-from xsge import gui, path, physics, tmx
+import sge
 
 
-__all__ = ["gui", "path", "physics", "tmx"]
+__all__ = ["Path"]
+
+
+class Path(sge.Object):
+
+    """
+    Class for paths: objects which define movement patterns for other
+    objects.  Paths are defined as a series of points for an object to
+    follow.
+
+    .. attribute:: points
+
+       A list of the points that make up the path.  Each point should be
+       a tuple in the form ``(x, y)``, where x is the horizontal
+       location and y is the vertical location.
+    """
+
+    def __init__(self, points):
+        x, y = points[0] if points else (0, 0)
+        super(Path, self).__init__(x, y, tangible=False)
+        self.points = points
