@@ -187,6 +187,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
     - Image layers have their properties applied to them.
     """
+    room_cls = cls
     if types is None:
         types = {}
 
@@ -194,8 +195,11 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
     tile_sprites = {}
     for tileset in tilemap.tilesets:
-        n = os.path.basename(tileset.source)
-        d = os.path.dirname(tileset.source)
+        if tileset.image.source is None:
+            print("Found a tileset without a source, for some reason...")
+            continue
+        n, e = os.path.splitext(os.path.basename(tileset.image.source))
+        d = os.path.dirname(tileset.image.source)
         fs = sge.Sprite(n, d)
         fwidth = fs.width - tileset.margin
         fheight = fs.height - tileset.margin
@@ -206,7 +210,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     tileset.spacing) / tileset.tileheight)
 
         ts_sprite = sge.Sprite.from_tileset(
-            tileset.source, x=tileset.margin, y=tileset.margin,
+            tileset.image.source, x=tileset.margin, y=tileset.margin,
             columns=columns, rows=rows, xsep=tileset.spacing,
             ysep=tileset.spacing, width=tileset.tilewidth,
             height=tileset.tileheight)
@@ -248,12 +252,12 @@ def load(fname, cls=sge.Room, types=None, z=0):
                 tile = layer.tiles[i]
                 if tile:
                     kwargs["sprite"] = tile_sprites.get(tile)
-                    x = i % tileset.width
-                    if tileset.renderorder.startswith("left"):
-                        x = tileset.width - x - 1
-                    y = i // tileset.height
-                    if tileset.renderorder.endswith("up"):
-                        y = tileset.height - y - 1
+                    x = i % tilemap.width
+                    if tilemap.renderorder.startswith("left"):
+                        x = tilemap.width - x - 1
+                    y = i // tilemap.height
+                    if tilemap.renderorder.endswith("up"):
+                        y = tilemap.height - y - 1
 
                     x *= tileset.tilewidth
                     y *= tileset.tileheight
@@ -349,14 +353,19 @@ def load(fname, cls=sge.Room, types=None, z=0):
             for prop in layer.properties:
                 kwargs[prop.name] = _nconvert(prop.value)
 
-            sprite = sge.Sprite(layer.image.source)
+            if layer.image.source is not None:
+                n, e = os.path.splitext(os.path.basename(layer.image.source))
+                d = os.path.dirname(layer.image.source)
+                sprite = sge.Sprite(n, d)
+            else:
+                sprite = None
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)
             objects.append(sobj)
 
         z += 1
 
-    return cls(objects=objects, width=room_width, height=room_height,
-               views=(views if views else None), background=background)
+    return room_cls(objects=objects, width=room_width, height=room_height,
+                    views=(views if views else None), background=background)
 
 
 def _nconvert(s):
