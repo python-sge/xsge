@@ -259,8 +259,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     if tilemap.renderorder.endswith("up"):
                         y = tilemap.height - y - 1
 
-                    x *= tileset.tilewidth
-                    y *= tileset.tileheight
+                    x *= tilemap.tilewidth
+                    y *= tilemap.tileheight
                     objects.append(cls(x, y, **kwargs))
                     
         elif isinstance(layer, tmx.ObjectGroup):
