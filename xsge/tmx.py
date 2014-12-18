@@ -250,8 +250,16 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
             for i in six.moves.range(len(layer.tiles)):
                 tile = layer.tiles[i]
-                if tile:
-                    kwargs["sprite"] = tile_sprites.get(tile)
+                if tile.gid:
+                    kwargs["sprite"] = tile_sprites.get(tile.gid)
+                    if tile.hflip:
+                        kwargs["image_xscale"] = -1
+                    if tile.vflip:
+                        kwargs["image_yscale"] = -1
+                    if tile.dflip:
+                        kwargs["image_yscale"] = kwargs.get("image_yscale", 1) * -1
+                        kwargs["image_rotation"] = 90
+
                     x = i % tilemap.width
                     if tilemap.renderorder.startswith("left"):
                         x = tilemap.width - x - 1
