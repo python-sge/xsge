@@ -260,10 +260,11 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         kwargs["image_yscale"] = kwargs.get("image_yscale", 1) * -1
                         kwargs["image_rotation"] = 90
 
+                    # i = y * tilemap.width + x
                     x = i % tilemap.width
+                    y = i // tilemap.width
                     if tilemap.renderorder.startswith("left"):
                         x = tilemap.width - x - 1
-                    y = i // tilemap.height
                     if tilemap.renderorder.endswith("up"):
                         y = tilemap.height - y - 1
 
