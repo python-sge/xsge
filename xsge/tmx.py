@@ -165,11 +165,6 @@ def load(fname, cls=sge.Room, types=None, z=0):
       - Polygon objects default to :class:`Polygon`.
       - Polyline objects default to :class:`xsge.path.Path`.
 
-      Polygon and polyline objects have lists of points passed to their
-      constructors, as is expected for :class:`xsge.path.Path`, instead
-      of the usual x and y coordinates.  Keep this in mind when defining
-      different classes for these types of objects.
-
     - Image layers are converted to the class connected to the image
       layer's name.  If the image layer's name is not a valid key in
       ``types``, :class:`Decoration` is used.
@@ -330,13 +325,19 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     elif obj.polygon:
                         if cls is None:
                             cls = Polygon
-                        pt = [(x + obj.x, y + obj.y) for x, y in obj.polygon]
-                        objects.append(cls(pt, **kwargs))
+                        xoff, yoff = obj.polygon[0]
+                        p = [(x - xoff, y - yoff) for x, y in obj.polygon[1:]]
+                        kwargs["points"] = p
+                        objects.append(cls(obj.x + xoff, obj.y + yoff,
+                                           **kwargs))
                     elif obj.polyline:
                         if cls is None:
                             cls = Polyline
-                        pt = [(x + obj.x, y + obj.y) for x, y in obj.polyline]
-                        objects.append(cls(pt, **kwargs))
+                        xoff, yoff = obj.polyline[0]
+                        p = [(x - xoff, y - yoff) for x, y in obj.polyline[1:]]
+                        kwargs["points"] = p
+                        objects.append(cls(obj.x + xoff, obj.y + yoff,
+                                           **kwargs))
                     else:
                         if cls is None:
                             cls = Rectangle
