@@ -204,10 +204,10 @@ def load(fname, cls=sge.Room, types=None, z=0):
         fwidth = fs.width - tileset.margin
         fheight = fs.height - tileset.margin
 
-        columns = int((fwidth - tileset.margin +
-                       tileset.spacing) / tileset.tilewidth)
-        rows = int((fheight - tileset.margin +
-                    tileset.spacing) / tileset.tileheight)
+        columns = int((fwidth - tileset.margin) /
+                      (tileset.tilewidth + tileset.spacing))
+        rows = int((fheight - tileset.margin) /
+                   (tileset.tileheight + tileset.spacing))
 
         ts_sprite = sge.Sprite.from_tileset(
             tileset.image.source, x=tileset.margin, y=tileset.margin,
