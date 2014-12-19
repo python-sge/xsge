@@ -19,6 +19,9 @@ This module provides support for loading the `Tiled
 <http://www.mapeditor.org/>`_ TMX format.  This allows you to use Tiled
 to edit your game's world (e.g. levels), rather than building a level
 editor yourself.
+
+To load a TMX map, simply use :func:`xsge.tmx.load`.  See the
+documentation for this function for more information.
 """
 
 from __future__ import division
@@ -143,31 +146,31 @@ def load(fname, cls=sge.Room, types=None, z=0):
     layer, and each subsequent layer's Z-axis position is the Z-axis
     position of the previous layer plus one.
 
-    Except for views, all objects can be defined to be converted into
-    any class derived from :class:`sge.Object` via the ``types``
-    argument, which should be a dictionary matching strings to
-    corresponding :class:`sge.Object` classes, or :const:`None`, which
-    is equivalent to ``{}``.  Classes are determined in the following
-    ways:
+    Except for views, all tiles, objects, and image layers can be
+    defined to be converted into any class derived from
+    :class:`sge.Object` via the ``types`` argument, which should be a
+    dictionary matching strings to corresponding :class:`sge.Object`
+    classes, or :const:`None`, which is equivalent to ``{}``.  Classes
+    are determined in the following ways:
 
     - Tiles are converted to the class connected to, in order of
       preference, the name of the tileset or the name of the tile layer.
       If neither of these strings are valid keys in ``types``,
-      :class:`Decoration` is used.
+      :class:`xsge.tmx.Decoration` is used.
 
     - Objects are converted to the class connected to, in order of
       preference, the name of the object, the type of the object, or the
       name of the object group.  If none of these strings are valid keys
       in ``types``, the class used depends on what kind of object it is:
 
-      - Rectangle objects default to :class:`Rectangle`.
-      - Ellipse objects default to :class:`Ellipse`.
-      - Polygon objects default to :class:`Polygon`.
-      - Polyline objects default to :class:`xsge.path.Path`.
+      - Rectangle objects default to :class:`xsge.tmx.Rectangle`.
+      - Ellipse objects default to :class:`xsge.tmx.Ellipse`.
+      - Polygon objects default to :class:`xsge.tmx.Polygon`.
+      - Polyline objects default to :class:`xsge.tmx.Polyline`.
 
     - Image layers are converted to the class connected to the image
       layer's name.  If the image layer's name is not a valid key in
-      ``types``, :class:`Decoration` is used.
+      ``types``, :class:`xsge.tmx.Decoration` is used.
 
     Property lists, converted to integers or floats if possible, are
     passed to objects as keyword arguments in the following ways:
@@ -190,11 +193,15 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
     tile_sprites = {}
     for tileset in tilemap.tilesets:
-        if tileset.image.source is None:
-            print("Found a tileset without a source, for some reason...")
-            continue
-        n, e = os.path.splitext(os.path.basename(tileset.image.source))
-        d = os.path.dirname(tileset.image.source)
+        if tileset.image.source is not None:
+            source = tileset.image.source
+        else:
+            _file = tempfile.NamedTemporaryFile()
+            _file.write(tileset.image.data)
+            source = _file.name
+
+        n, e = os.path.splitext(os.path.basename(source))
+        d = os.path.dirname(source)
         fs = sge.Sprite(n, d)
         fwidth = fs.width - tileset.margin
         fheight = fs.height - tileset.margin
@@ -205,10 +212,9 @@ def load(fname, cls=sge.Room, types=None, z=0):
                    (tileset.tileheight + tileset.spacing))
 
         ts_sprite = sge.Sprite.from_tileset(
-            tileset.image.source, x=tileset.margin, y=tileset.margin,
-            columns=columns, rows=rows, xsep=tileset.spacing,
-            ysep=tileset.spacing, width=tileset.tilewidth,
-            height=tileset.tileheight)
+            source, x=tileset.margin, y=tileset.margin, columns=columns,
+            rows=rows, xsep=tileset.spacing, ysep=tileset.spacing,
+            width=tileset.tilewidth, height=tileset.tileheight)
 
         for i in six.moves.range(ts_sprite.frames):
             t_sprite = sge.Sprite(width=tileset.tilewidth,

@@ -18,6 +18,7 @@ Contents:
 
    gui
    physics
+   tmx
    
 
 Indices and tables
