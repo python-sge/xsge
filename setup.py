@@ -29,7 +29,7 @@ General Public License.  They are designed to give additional features
 to libre software games without any extra work.
 
 xSGE extensions are not dependent on any particular SGE implementation.
-They should would with any implementation that follows the
+They should work with any implementation that follows the
 specification.
 """.strip()
 
