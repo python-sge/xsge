@@ -17,6 +17,7 @@ Contents:
    :maxdepth: 1
 
    gui
+   path
    physics
    tmx
    

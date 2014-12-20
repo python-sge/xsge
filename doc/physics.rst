@@ -4,6 +4,8 @@ xsge.physics
 
 .. automodule:: xsge.physics
 
+.. contents::
+
 xsge.physics Classes
 ====================
 

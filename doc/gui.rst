@@ -4,6 +4,8 @@ xsge.gui
 
 .. automodule:: xsge.gui
 
+.. contents::
+
 xsge.gui Classes
 ================
 

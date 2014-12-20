@@ -4,6 +4,8 @@ xsge.tmx
 
 .. automodule:: xsge.tmx
 
+.. contents::
+
 xsge.tmx Classes
 ================
 
