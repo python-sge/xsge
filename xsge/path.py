@@ -130,7 +130,7 @@ class Path(sge.Object):
                 if decel:
                     d = obj.speed
                     decel_dist = 0
-                    while d:
+                    while d > 0:
                         d -= decel
                         decel_dist += d
 

@@ -47,7 +47,7 @@ def main():
     points = [(-100, -100), (0, -150), (100, -100), (100, 100), (-100, 100),
               (0, 0)]
     pth = path.Path(200, 150, points)
-    pth.follow_start(obj, 1, loop=None)
+    pth.follow_start(obj, 5, 0.1, 0.1, loop=None)
     objects = [obj, pth]
 
     # Create room
