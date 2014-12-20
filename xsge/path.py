@@ -155,7 +155,7 @@ class Path(sge.Object):
             else:
                 self.follow_stop(obj)
 
-                if loop is None
+                if loop is None:
                     self.follow_start(obj, speed, accel, decel, None)
                 elif loop > 0:
                     self.follow_start(obj, speed, accel, decel, loop - 1)
