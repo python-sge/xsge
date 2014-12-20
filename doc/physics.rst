@@ -2,9 +2,9 @@
 xsge.physics
 ************
 
-.. automodule:: xsge.physics
-
 .. contents::
+
+.. automodule:: xsge.physics
 
 xsge.physics Classes
 ====================

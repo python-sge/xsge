@@ -2,9 +2,9 @@
 xsge.tmx
 ********
 
-.. automodule:: xsge.tmx
-
 .. contents::
+
+.. automodule:: xsge.tmx
 
 xsge.tmx Classes
 ================

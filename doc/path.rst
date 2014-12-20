@@ -2,9 +2,9 @@
 xsge.tmx
 ********
 
-.. automodule:: xsge.path
-
 .. contents::
+
+.. automodule:: xsge.path
 
 xsge.path Classes
 =================

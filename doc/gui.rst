@@ -2,9 +2,9 @@
 xsge.gui
 ********
 
-.. automodule:: xsge.gui
-
 .. contents::
+
+.. automodule:: xsge.gui
 
 xsge.gui Classes
 ================
