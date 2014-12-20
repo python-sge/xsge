@@ -55,7 +55,7 @@ class Path(sge.Object):
         self.__objects = {}
         self.__delta = 0
 
-    def follow_start(self, obj, speed, accel=None, decel=None):
+    def follow_start(self, obj, speed, accel=None, decel=None, loop=0):
         """
         Cause ``obj`` to start following this path at the speed
         indicated by ``speed``.
@@ -72,6 +72,11 @@ class Path(sge.Object):
         decelerate, respectively, by that amount each frame on each
         segment of the path.
 
+        ``loop`` indicates the number of times the object should follow
+        the path after it does so the first time.  For example, if set
+        to ``2``, the object will follow the path a total of 3 times.
+        Set to :const:`None` to loop indefinitely.
+
         .. note::
 
            Acceleration and deceleration does not work with delta
@@ -81,7 +86,8 @@ class Path(sge.Object):
            to predict this even decently requires control over the
            actual movement, which paths don't have.
         """
-        self.__objects[id(obj)] = [obj, speed, accel, decel, obj.x, obj.y, 0]
+        self.__objects[id(obj)] = [obj, speed, accel, decel, obj.x, obj.y,
+                                   loop, 0]
 
     def follow_stop(self, obj):
         """Cause ``obj`` to stop following this path."""
@@ -99,7 +105,8 @@ class Path(sge.Object):
     def event_step(self, time_passed, delta_mult):
         self.__delta = (self.__delta % 1) + delta_mult
         for i in self.__objects.keys():
-            obj, speed, accel, decel, start_x, start_y, dest = self.__objects[i]
+            (obj, speed, accel, decel, start_x, start_y, loop,
+             dest) = self.__objects[i]
 
             p1 = (0, 0) if dest == 0 else self.points[dest - 1]
             p2 = self.points[dest]
@@ -144,7 +151,13 @@ class Path(sge.Object):
                         obj.speed = speed
 
                 self.__objects[i] = [obj, speed, accel, decel, start_x,
-                                     start_y, dest]
+                                     start_y, loop, dest]
             else:
                 self.follow_stop(obj)
-                self.event_follow_end(obj)
+
+                if loop is None
+                    self.follow_start(obj, speed, accel, decel, None)
+                elif loop > 0:
+                    self.follow_start(obj, speed, accel, decel, loop - 1)
+                else:
+                    self.event_follow_end(obj)
