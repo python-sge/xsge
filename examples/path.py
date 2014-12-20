@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# TMX example
+# Physics example
 # Written in 2014 by Julian Marchant <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
@@ -17,36 +17,44 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
-
 import sge
-from xsge import tmx
-
-
-DATA = os.path.join(os.path.dirname(__file__), "data")
+from xsge import path
 
 
 class Game(sge.Game):
 
     def event_key_press(self, key, char):
-        if key == "up":
-            self.current_room.views[0].y -= 32
-        elif key == "down":
-            self.current_room.views[0].y += 32
-        elif key == "left":
-            self.current_room.views[0].x -= 32
-        elif key == "right":
-            self.current_room.views[0].x += 32
-        elif key == "escape":
+        if key == 'escape':
             self.end()
 
     def event_close(self):
         self.end()
 
 
-Game(800, 600)
-sge.game.start_room = tmx.load(os.path.join(DATA, "map.tmx"))
+def main():
+    # Create Game object
+    Game(800, 600)
+
+    # Load sprites
+    square_sprite = sge.Sprite(width=32, height=32)
+    square_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.Color("aqua"))
+
+    # Load backgrounds
+    background = sge.Background([], sge.Color("black"))
+
+    # Create objects
+    obj = sge.Object(400, 300, sprite=square_sprite)
+    points = [(-100, -100), (0, -150), (100, -100), (100, 100), (-100, 100),
+              (0, 0)]
+    pth = path.Path(200, 150, points)
+    pth.follow_start(obj, 1, loop=None)
+    objects = [obj, pth]
+
+    # Create room
+    sge.game.start_room = sge.Room(objects, background=background)
+
+    sge.game.start()
 
 
 if __name__ == "__main__":
-    sge.game.start()
+    main()
