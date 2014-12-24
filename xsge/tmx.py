@@ -240,12 +240,6 @@ def load(fname, cls=sge.Room, types=None, z=0):
             cls = types.get(layer.name, Decoration)
             kwargs = {}
 
-            if not layer.visible:
-                kwargs["visible"] = False
-
-            if layer.opacity != 1:
-                kwargs["image_alpha"] = layer.opacity * 255
-
             for prop in layer.properties:
                 kwargs[prop.name] = _nconvert(prop.value)
 
@@ -276,12 +270,6 @@ def load(fname, cls=sge.Room, types=None, z=0):
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {}
 
-            if not layer.visible:
-                default_kwargs["visible"] = False
-
-            if layer.opacity != 1:
-                default_kwargs["image_alpha"] = layer.opacity * 255
-
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
 
@@ -295,9 +283,12 @@ def load(fname, cls=sge.Room, types=None, z=0):
             else:
                 default_cls = types.get(layer.name)
 
-                if not layer.color.startswith("#"):
-                    layer.color = "#" + layer.color
-                color = sge.Color(layer.color)
+                if layer.color is not None:
+                    if not layer.color.startswith("#"):
+                        layer.color = "#" + layer.color
+                    color = sge.Color(layer.color)
+                else:
+                    color = None
 
                 for obj in layer.objects:
                     cls = types.get(obj.name, types.get(obj.type, default_cls))
@@ -305,9 +296,6 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
                     if obj.rotation % 360:
                         kwargs["image_rotation"] = -obj.rotation
-
-                    if obj.visible != layer.visible:
-                        kwargs["visible"] = obj.visible
 
                     for prop in obj.properties:
                         kwargs[prop.name] = _nconvert(prop.value)
@@ -355,16 +343,6 @@ def load(fname, cls=sge.Room, types=None, z=0):
         elif isinstance(layer, tmx.ImageLayer):
             cls = types.get(layer.name, Decoration)
             kwargs = {}
-
-            if cls is sge.Object:
-                kwargs["tangible"] = False
-                kwargs["checks_collisions"] = False
-
-            if not layer.visible:
-                kwargs["visible"] = False
-
-            if layer.opacity != 1:
-                kwargs["image_alpha"] = layer.opacity * 255
 
             for prop in layer.properties:
                 kwargs[prop.name] = _nconvert(prop.value)
