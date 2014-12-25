@@ -40,33 +40,6 @@ class Player(physics.Collider):
         self.yvelocity = (sge.keyboard.get_pressed("down") -
                           sge.keyboard.get_pressed("up")) * 4
 
-    def event_collision_left(self, other):
-        if isinstance(other, physics.SolidRight):
-            self.xvelocity = 0
-        elif isinstance(other, (physics.SlopeTopRight,
-                                physics.SlopeBottomRight)):
-            self.xvelocity = max(-2, self.xvelocity)
-
-    def event_collision_right(self, other):
-        if isinstance(other, physics.SolidLeft):
-            self.xvelocity = 0
-        elif isinstance(other, (physics.SlopeTopLeft,
-                                physics.SlopeBottomLeft)):
-            self.xvelocity = min(2, self.xvelocity)
-
-    def event_collision_top(self, other):
-        if isinstance(other, physics.SolidBottom):
-            self.yvelocity = 0
-        elif isinstance(other, (physics.SlopeBottomLeft,
-                                physics.SlopeBottomRight)):
-            self.yvelocity = max(-2, self.yvelocity)
-
-    def event_collision_bottom(self, other):
-        if isinstance(other, physics.SolidTop):
-            self.yvelocity = 0
-        elif isinstance(other, (physics.SlopeTopLeft, physics.SlopeTopRight)):
-            self.yvelocity = min(2, self.yvelocity)
-
 
 class Square(physics.Solid, physics.MobileWall):
 
