@@ -28,6 +28,14 @@ from xsge import physics, tmx
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
 
+WALK_ACCEL = 0.5
+WALK_SPEED = 5
+FRICTION = 0.25
+FALL_ACCEL = 0.35
+FALL_SPEED = 10
+WALL_DECEL = 0.4
+JUMP_SPEED = 8
+
 
 class Game(sge.Game):
 
@@ -45,46 +53,48 @@ class Player(physics.Collider):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity += (sge.keyboard.get_pressed("right") -
-                           sge.keyboard.get_pressed("left")) * 0.25
-        if abs(self.xvelocity) > 0.1:
-            self.xvelocity -= 0.1 * (self.xvelocity / abs(self.xvelocity))
+                           sge.keyboard.get_pressed("left")) * WALK_ACCEL
+
+        if self.xvelocity > FRICTION:
+            self.xvelocity -= FRICTION
+        elif self.xvelocity < -FRICTION:
+            self.xvelocity += FRICTION
         else:
             self.xvelocity = 0
-        self.yvelocity += 0.5
-        if self.xvelocity > 5:
-            self.xvelocity = 5
-        elif self.xvelocity < -5:
-            self.xvelocity = -5
-        if self.yvelocity > 10:
-            self.yvelocity = 10
+
+        self.yvelocity += FALL_ACCEL
+
+        if self.xvelocity > WALK_SPEED:
+            self.xvelocity = WALK_SPEED
+        elif self.xvelocity < -WALK_SPEED:
+            self.xvelocity = -WALK_SPEED
+
+        if self.yvelocity > FALL_SPEED:
+            self.yvelocity = FALL_SPEED
+
         self.on_floor = (self.get_bottom_touching_wall() or
                          self.get_bottom_touching_slope())
 
     def event_key_press(self, key, char):
         if key == "up":
             if self.on_floor:
-                self.yvelocity = -9
+                self.yvelocity = -JUMP_SPEED
 
-    def event_collision_left(self, other):
+    def event_physics_collision_left(self, other):
         if isinstance(other, physics.SolidRight):
             self.xvelocity = 0
 
-    def event_collision_right(self, other):
+    def event_physics_collision_right(self, other):
         if isinstance(other, physics.SolidLeft):
             self.xvelocity = 0
 
-    def event_collision_top(self, other):
+    def event_physics_collision_top(self, other):
         if isinstance(other, physics.SolidBottom):
             self.yvelocity = 0
-        elif isinstance(other, (physics.SlopeBottomLeft,
-                                physics.SlopeBottomRight)):
-            self.yvelocity += 0.25
 
-    def event_collision_bottom(self, other):
+    def event_physics_collision_bottom(self, other):
         if isinstance(other, physics.SolidTop):
             self.yvelocity = 0
-        elif isinstance(other, (physics.SlopeTopLeft, physics.SlopeTopRight)):
-            self.yvelocity -= 0.25
 
 
 class Solid(physics.Solid):

@@ -18,6 +18,8 @@ Additions:
 Misc changes:
 * "xsticky" and "ysticky" class attributes of slopes renamed to be more
   specific and prevent name conflicts.
+* xsge.physics collision events are now special "event_physics_collision"
+  events, rather than just being the regular SGE collision events.
 
 Bugfixes:
 - Incorrect behavior with slope stickiness (prevented it from doing its

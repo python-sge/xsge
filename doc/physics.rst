@@ -14,7 +14,7 @@ xsge.physics.Collider
 
 .. autoclass:: xsge.physics.Collider
 
-xsge.physics.Collider methods
+xsge.physics.Collider Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automethod:: xsge.physics.Collider.move_x
@@ -37,50 +37,120 @@ xsge.physics.Collider methods
 
 .. automethod:: xsge.physics.Collider.get_bottom_touching_slope
 
+xsge.physics.Collider Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.Collider.event_physics_collision_left
+
+.. automethod:: xsge.physics.Collider.event_physics_collision_right
+
+.. automethod:: xsge.physics.Collider.event_physics_collision_top
+
+.. automethod:: xsge.physics.Collider.event_physics_collision_bottom
+
 xsge.physics.SolidLeft
 ----------------------
 
 .. autoclass:: xsge.physics.SolidLeft
+
+xsge.physics.SolidLeft Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SolidLeft.event_physics_collision_left
 
 xsge.physics.SolidRight
 -----------------------
 
 .. autoclass:: xsge.physics.SolidRight
 
+xsge.physics.SolidRight Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SolidRight.event_physics_collision_right
+
 xsge.physics.SolidTop
 ---------------------
 
 .. autoclass:: xsge.physics.SolidTop
+
+xsge.physics.SolidTop Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SolidTop.event_physics_collision_top
 
 xsge.physics.SolidBottom
 ------------------------
 
 .. autoclass:: xsge.physics.SolidBottom
 
+xsge.physics.SolidBottom Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SolidBottom.event_physics_collision_bottom
+
 xsge.physics.Solid
 ------------------
 
 .. autoclass:: xsge.physics.Solid
+
+xsge.physics.Solid Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.Solid.event_physics_collision_left
+
+.. automethod:: xsge.physics.Solid.event_physics_collision_right
+
+.. automethod:: xsge.physics.Solid.event_physics_collision_top
+
+.. automethod:: xsge.physics.Solid.event_physics_collision_bottom
 
 xsge.physics.SlopeTopLeft
 -------------------------
 
 .. autoclass:: xsge.physics.SlopeTopLeft
 
+xsge.physics.SlopeTopLeft Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SlopeTopLeft.event_physics_collision_left
+
+.. automethod:: xsge.physics.SlopeTopLeft.event_physics_collision_top
+
 xsge.physics.SlopeTopRight
 --------------------------
 
 .. autoclass:: xsge.physics.SlopeTopRight
+
+xsge.physics.SlopeTopRight Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SlopeTopRight.event_physics_collision_right
+
+.. automethod:: xsge.physics.SlopeTopRight.event_physics_collision_top
 
 xsge.physics.SlopeBottomLeft
 ----------------------------
 
 .. autoclass:: xsge.physics.SlopeBottomLeft
 
+xsge.physics.SlopeBottomLeft Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SlopeBottomLeft.event_physics_collision_left
+
+.. automethod:: xsge.physics.SlopeBottomLeft.event_physics_collision_bottom
+
 xsge.physics.SlopeBottomRight
 -----------------------------
 
 .. autoclass:: xsge.physics.SlopeBottomRight
+
+xsge.physics.SlopeBottomRight Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge.physics.SlopeBottomRight.event_physics_collision_right
+
+.. automethod:: xsge.physics.SlopeBottomRight.event_physics_collision_bottom
 
 xsge.physics.MobileWall
 -----------------------
