@@ -20,6 +20,8 @@ Misc changes:
   specific and prevent name conflicts.
 * xsge.physics collision events are now special "event_physics_collision"
   events, rather than just being the regular SGE collision events.
+* Slope collisions now happen before wall collisions (preventing some
+  bad behavior).
 
 Bugfixes:
 - Incorrect behavior with slope stickiness (prevented it from doing its

@@ -97,11 +97,6 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SolidLeft):
-                if not self.collision(other, x=old_x):
-                    self.bbox_right = min(self.bbox_right, other.bbox_left)
-                    stopper = other
-
             for other in self.collision(SlopeTopLeft):
                 oy = other.get_slope_y(old_bbox_right)
                 y = other.get_slope_y(self.bbox_right)
@@ -128,6 +123,11 @@ class Collider(sge.Object):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
                         stopper = other
 
+            for other in self.collision(SolidLeft):
+                if not self.collision(other, x=old_x):
+                    self.bbox_right = min(self.bbox_right, other.bbox_left)
+                    stopper = other
+
             if stopper is not None:
                 self.event_physics_collision_right(stopper)
                 stopper.event_physics_collision_left(self)
@@ -151,11 +151,6 @@ class Collider(sge.Object):
                         break
 
             stopper = None
-
-            for other in self.collision(SolidRight):
-                if not self.collision(other, x=old_x):
-                    self.bbox_left = max(self.bbox_left, other.bbox_right)
-                    stopper = other
 
             for other in self.collision(SlopeTopRight):
                 oy = other.get_slope_y(old_bbox_left)
@@ -182,6 +177,11 @@ class Collider(sge.Object):
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
                         stopper = other
+
+            for other in self.collision(SolidRight):
+                if not self.collision(other, x=old_x):
+                    self.bbox_left = max(self.bbox_left, other.bbox_right)
+                    stopper = other
 
             if stopper is not None:
                 self.event_physics_collision_left(stopper)
@@ -278,11 +278,6 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SolidTop):
-                if not self.collision(other, y=old_y):
-                    self.bbox_bottom = min(self.bbox_bottom, other.bbox_top)
-                    stopper = other
-
             for other in self.collision(SlopeTopLeft):
                 ox = other.get_slope_x(old_bbox_bottom)
                 x = other.get_slope_x(self.bbox_bottom)
@@ -311,6 +306,11 @@ class Collider(sge.Object):
                                                other.bbox_top)
                         stopper = other
 
+            for other in self.collision(SolidTop):
+                if not self.collision(other, y=old_y):
+                    self.bbox_bottom = min(self.bbox_bottom, other.bbox_top)
+                    stopper = other
+
             if stopper is not None:
                 self.event_physics_collision_bottom(stopper)
                 stopper.event_physics_collision_top(self)
@@ -334,11 +334,6 @@ class Collider(sge.Object):
                         break
 
             stopper = None
-
-            for other in self.collision(SolidBottom):
-                if not self.collision(other, y=old_y):
-                    self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                    stopper = other
 
             for other in self.collision(SlopeBottomLeft):
                 ox = other.get_slope_x(old_bbox_top)
@@ -365,6 +360,11 @@ class Collider(sge.Object):
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
                         stopper = other
+
+            for other in self.collision(SolidBottom):
+                if not self.collision(other, y=old_y):
+                    self.bbox_top = max(self.bbox_top, other.bbox_bottom)
+                    stopper = other
 
             if stopper is not None:
                 self.event_physics_collision_top(stopper)
