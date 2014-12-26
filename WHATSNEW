@@ -22,6 +22,9 @@ Misc changes:
   events, rather than just being the regular SGE collision events.
 * Slope collisions now happen before wall collisions (preventing some
   bad behavior).
+* Objects now move along slopes at the speed that they should, rather
+  than maintaining the same x or y velocity (and therefore zipping at
+  high speed through slopes).
 
 Bugfixes:
 - Incorrect behavior with slope stickiness (prevented it from doing its

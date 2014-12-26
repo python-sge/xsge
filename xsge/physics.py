@@ -38,6 +38,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import math
+
 import sge
 
 
@@ -69,31 +71,40 @@ class Collider(sge.Object):
         - ``move`` -- The amount to add to :attr:`x`.
         """
         sticky = False
+        move_mult = 1
         old_x = self.x
         old_y = self.y
         old_bbox_left = self.bbox_left
         old_bbox_right = self.bbox_right
         old_bbox_top = self.bbox_top
         old_bbox_bottom = self.bbox_bottom
-        self.x += move
 
         if move > 0:
-            for slope in self.collision(SlopeTopRight, x=old_x, y=(old_y + 1)):
-                y = slope.get_slope_y(old_bbox_left)
-                if (slope.xsticky_top and
-                        (old_bbox_bottom == y or
-                         not self.collision(slope, x=old_x))):
-                    sticky = 1
-                    break
-            else:
-                for slope in self.collision(SlopeBottomRight, x=old_x,
-                                            y=(old_y - 1)):
-                    y = slope.get_slope_y(old_bbox_left)
-                    if (slope.xsticky_bottom and
-                            (old_bbox_top == y or
-                             not self.collision(slope, x=old_x))):
-                        sticky = 2
+            for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
+                if slope.xsticky_top:
+                    y = slope.get_slope_y(self.bbox_left)
+                    if self.bbox_bottom == y:
+                        sticky = 1
+                        h = math.hypot(slope.bbox_width, slope.bbox_height)
+                        move_mult = slope.bbox_width / h
                         break
+                    elif not self.collision(slope):
+                        sticky = 1
+                        break
+            else:
+                for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
+                    if slope.xsticky_bottom:
+                        y = slope.get_slope_y(self.bbox_left)
+                        if self.bbox_top == y:
+                            sticky = 2
+                            h = math.hypot(slope.bbox_width, slope.bbox_height)
+                            move_mult = slope.bbox_width / h
+                            break
+                        elif not self.collision(slope):
+                            sticky = 2
+                            break
+
+            self.x += move * move_mult
 
             stopper = None
 
@@ -102,6 +113,12 @@ class Collider(sge.Object):
                 y = other.get_slope_y(self.bbox_right)
                 if self.bbox_bottom > y:
                     if old_bbox_bottom <= oy:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_width / h
+                        if m < move_mult:
+                            self.x -= move * (move_mult - m)
+                            move_mult = m
+                            y = other.get_slope_y(self.bbox_right)
                         self.move_y(y - self.bbox_bottom)
                         x = other.get_slope_x(self.bbox_bottom)
                         self.bbox_right = min(self.bbox_right, x)
@@ -115,6 +132,12 @@ class Collider(sge.Object):
                 y = other.get_slope_y(self.bbox_right)
                 if self.bbox_top < y:
                     if old_bbox_top >= oy:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_width / h
+                        if m < move_mult:
+                            self.x -= move * (move_mult - m)
+                            move_mult = m
+                            y = other.get_slope_y(self.bbox_right)
                         self.move_y(y - self.bbox_top)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_right = min(self.bbox_right, x)
@@ -133,22 +156,31 @@ class Collider(sge.Object):
                 stopper.event_physics_collision_left(self)
                 
         elif move < 0:
-            for slope in self.collision(SlopeTopLeft, x=old_x, y=(old_y + 1)):
-                y = slope.get_slope_y(old_bbox_right)
-                if (slope.xsticky_top and
-                        (old_bbox_bottom == y or
-                         not self.collision(slope, x=old_x))):
-                    sticky = 1
-                    break
-            else:
-                for slope in self.collision(SlopeBottomLeft, x=old_x,
-                                            y=(old_y - 1)):
-                    y = slope.get_slope_y(old_bbox_right)
-                    if (slope.xsticky_bottom and
-                            (old_bbox_top == y or
-                             not self.collision(slope, x=old_x))):
-                        sticky = 2
+            for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
+                if slope.xsticky_top:
+                    y = slope.get_slope_y(self.bbox_right)
+                    if self.bbox_bottom == y:
+                        sticky = 1
+                        h = math.hypot(slope.bbox_width, slope.bbox_height)
+                        move_mult = slope.bbox_width / h
                         break
+                    elif not self.collision(slope):
+                        sticky = 1
+                        break
+            else:
+                for slope in self.collision(SlopeBottomLeft, y=(self.y - 1)):
+                    if slope.xsticky_bottom:
+                        y = slope.get_slope_y(self.bbox_right)
+                        if self.bbox_top == y:
+                            sticky = 2
+                            h = math.hypot(slope.bbox_width, slope.bbox_height)
+                            move_mult = slope.bbox_width / h
+                            break
+                        elif not self.collision(slope):
+                            sticky = 2
+                            break
+
+            self.x += move * move_mult
 
             stopper = None
 
@@ -157,9 +189,15 @@ class Collider(sge.Object):
                 y = other.get_slope_y(self.bbox_left)
                 if self.bbox_bottom > y:
                     if old_bbox_bottom <= oy:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_width / h
+                        if m < move_mult:
+                            self.x -= move * (move_mult - m)
+                            move_mult = m
+                            y = other.get_slope_y(self.bbox_left)
                         self.move_y(y - self.bbox_bottom)
                         x = other.get_slope_x(self.bbox_bottom)
-                        self.bbox_right = max(self.bbox_right, x)
+                        self.bbox_left = max(self.bbox_left, x)
                         stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
@@ -170,6 +208,12 @@ class Collider(sge.Object):
                 y = other.get_slope_y(self.bbox_left)
                 if self.bbox_top < y:
                     if old_bbox_top >= oy:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_width / h
+                        if m < move_mult:
+                            self.x -= move * (move_mult - m)
+                            move_mult = m
+                            y = other.get_slope_y(self.bbox_left)
                         self.move_y(y - self.bbox_top)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_left = max(self.bbox_left, x)
@@ -249,32 +293,40 @@ class Collider(sge.Object):
         - ``move`` -- The amount to add to :attr:`y`.
         """
         sticky = False
+        move_mult = 1
         old_x = self.x
         old_y = self.y
         old_bbox_left = self.bbox_left
         old_bbox_right = self.bbox_right
         old_bbox_top = self.bbox_top
         old_bbox_bottom = self.bbox_bottom
-        self.y += move
 
         if move > 0:
-            for slope in self.collision(SlopeBottomLeft, x=(old_x + 1),
-                                        y=old_y):
-                x = slope.get_slope_x(old_bbox_top)
-                if (slope.ysticky_left and
-                        (old_bbox_right == x or
-                         not self.collision(slope, y=old_y))):
-                    sticky = 1
-                    break
-            else:
-                for slope in self.collision(SlopeBottomRight, x=(old_x - 1),
-                                            y=old_y):
-                    x = slope.get_slope_x(old_bbox_top)
-                    if (slope.ysticky_right and
-                            (old_bbox_left == x or
-                             not self.collision(slope, y=old_y))):
-                        sticky = 2
+            for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
+                if slope.ysticky_left:
+                    x = slope.get_slope_x(self.bbox_top)
+                    if self.bbox_right == x:
+                        sticky = 1
+                        h = math.hypot(slope.bbox_width, slope.bbox_height)
+                        move_mult = slope.bbox_height / h
                         break
+                    elif not self.collision(slope):
+                        sticky = 1
+                        break
+            else:
+                for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
+                    if slope.ysticky_right:
+                        x = slope.get_slope_x(self.bbox_top)
+                        if self.bbox_left == x:
+                            sticky = 2
+                            h = math.hypot(slope.bbox_width, slope.bbox_height)
+                            move_mult = slope.bbox_height / h
+                            break
+                        elif not self.collision(slope):
+                            sticky = 2
+                            break
+
+            self.y += move * move_mult
 
             stopper = None
 
@@ -283,6 +335,12 @@ class Collider(sge.Object):
                 x = other.get_slope_x(self.bbox_bottom)
                 if self.bbox_right > x:
                     if old_bbox_right <= ox:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_height / h
+                        if m < move_mult:
+                            self.y -= move * (move_mult - m)
+                            move_mult = m
+                            x = other.get_slope_x(self.bbox_bottom)
                         self.move_x(x - self.bbox_right)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_bottom = min(self.bbox_bottom, y)
@@ -297,6 +355,12 @@ class Collider(sge.Object):
                 x = other.get_slope_x(self.bbox_bottom)
                 if self.bbox_left < x:
                     if old_bbox_left >= ox:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_height / h
+                        if m < move_mult:
+                            self.y -= move * (move_mult - m)
+                            move_mult = m
+                            x = other.get_slope_x(self.bbox_bottom)
                         self.move_x(x - self.bbox_left)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_bottom = min(self.bbox_bottom, y)
@@ -316,22 +380,31 @@ class Collider(sge.Object):
                 stopper.event_physics_collision_top(self)
                 
         elif move < 0:
-            for slope in self.collision(SlopeTopLeft, x=(old_x + 1), y=old_y):
-                x = slope.get_slope_x(old_bbox_bottom)
-                if (slope.ysticky_left and
-                        (old_bbox_right == x or
-                         not self.collision(slope, y=old_y))):
-                    sticky = 1
-                    break
-            else:
-                for slope in self.collision(SlopeTopRight, x=(old_x - 1),
-                                            y=old_y):
-                    x = slope.get_slope_x(old_bbox_bottom)
-                    if (slope.ysticky_right and
-                            (old_bbox_left == x or
-                             not self.collision(slope, y=old_y))):
-                        sticky = 2
+            for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
+                if slope.ysticky_left:
+                    x = slope.get_slope_x(self.bbox_bottom)
+                    if self.bbox_right == x:
+                        sticky = 1
+                        h = math.hypot(slope.bbox_width, slope.bbox_height)
+                        move_mult = slope.bbox_height / h
                         break
+                    elif not self.collision(slope):
+                        sticky = 1
+                        break
+            else:
+                for slope in self.collision(SlopeTopRight, x=(self.x - 1)):
+                    x = slope.get_slope_x(self.bbox_bottom)
+                    if slope.ysticky_right:
+                        if self.bbox_left == x:
+                            sticky = 2
+                            h = math.hypot(slope.bbox_width, slope.bbox_height)
+                            move_mult = slope.bbox_height / h
+                            break
+                        elif not self.collision(slope):
+                            sticky = 2
+                            break
+
+            self.y += move * move_mult
 
             stopper = None
 
@@ -340,6 +413,12 @@ class Collider(sge.Object):
                 x = other.get_slope_x(self.bbox_top)
                 if self.bbox_right > x:
                     if old_bbox_right <= ox:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_height / h
+                        if m < move_mult:
+                            self.y -= move * (move_mult - m)
+                            move_mult = m
+                            x = other.get_slope_x(self.bbox_top)
                         self.move_x(x - self.bbox_right)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_top = max(self.bbox_top, y)
@@ -353,6 +432,12 @@ class Collider(sge.Object):
                 x = other.get_slope_x(self.bbox_top)
                 if self.bbox_left < x:
                     if old_bbox_left >= ox:
+                        h = math.hypot(other.bbox_width, other.bbox_height)
+                        m = other.bbox_height / h
+                        if m < move_mult:
+                            self.y -= move * (move_mult - m)
+                            move_mult = m
+                            x = other.get_slope_x(self.bbox_top)
                         self.move_x(x - self.bbox_left)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_top = max(self.bbox_top, y)
