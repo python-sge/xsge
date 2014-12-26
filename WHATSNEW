@@ -31,6 +31,7 @@ Bugfixes:
   job and caused other side effects)
 - Collision events in xsge.physics occurring with walls that were *behind*
   the wall that was collided with
+- Getting stuck to slopes without actually touching them
 
 
 0.4
