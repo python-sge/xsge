@@ -45,6 +45,11 @@
   <object x="272" y="288" width="32" height="16"/>
  </objectgroup>
  <objectgroup name="player" width="40" height="30">
-  <object gid="2" x="128" y="400"/>
+  <object gid="2" x="128" y="464">
+   <properties>
+    <property name="bbox_width" value="8"/>
+    <property name="bbox_x" value="4"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

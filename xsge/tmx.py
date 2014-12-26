@@ -306,7 +306,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         kwargs["sprite"] = tile_sprites.get(obj.gid)
                         x = (obj.x if tilemap.orientation == "orthogonal" else
                              obj.x - (obj.width / 2))
-                        y = obj.y - obj.height
+                        y = obj.y - kwargs["sprite"].height
                         objects.append(cls(x, y, **kwargs))
                     elif obj.ellipse:
                         if cls is None:
