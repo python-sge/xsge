@@ -24,6 +24,8 @@ Misc changes:
 Bugfixes:
 - Incorrect behavior with slope stickiness (prevented it from doing its
   job and caused other side effects)
+- Collision events in xsge.physics occurring with walls that were *behind*
+  the wall that was collided with
 
 
 0.4

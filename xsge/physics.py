@@ -95,11 +95,12 @@ class Collider(sge.Object):
                         sticky = 2
                         break
 
+            stopper = None
+
             for other in self.collision(SolidLeft):
                 if not self.collision(other, x=old_x):
                     self.bbox_right = min(self.bbox_right, other.bbox_left)
-                    self.event_physics_collision_right(other)
-                    other.event_physics_collision_left(self)
+                    stopper = other
 
             for other in self.collision(SlopeTopLeft):
                 oy = other.get_slope_y(old_bbox_right)
@@ -109,12 +110,10 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom)
                         x = other.get_slope_x(self.bbox_bottom)
                         self.bbox_right = min(self.bbox_right, x)
-                        self.event_physics_collision_right(other)
-                        other.event_physics_collision_left(self)
+                        stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
-                        self.event_physics_collision_right(other)
-                        other.event_physics_collision_left(self)
+                        stopper = other
 
             for other in self.collision(SlopeBottomLeft):
                 oy = other.get_slope_y(old_bbox_right)
@@ -124,12 +123,14 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_right = min(self.bbox_right, x)
-                        self.event_physics_collision_right(other)
-                        other.event_physics_collision_left(self)
+                        stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
-                        self.event_physics_collision_right(other)
-                        other.event_physics_collision_left(self)
+                        stopper = other
+
+            if stopper is not None:
+                self.event_physics_collision_right(stopper)
+                stopper.event_physics_collision_left(self)
                 
         elif move < 0:
             for slope in self.collision(SlopeTopLeft, x=old_x, y=(old_y + 1)):
@@ -149,11 +150,12 @@ class Collider(sge.Object):
                         sticky = 2
                         break
 
+            stopper = None
+
             for other in self.collision(SolidRight):
                 if not self.collision(other, x=old_x):
                     self.bbox_left = max(self.bbox_left, other.bbox_right)
-                    self.event_physics_collision_left(other)
-                    other.event_physics_collision_right(self)
+                    stopper = other
 
             for other in self.collision(SlopeTopRight):
                 oy = other.get_slope_y(old_bbox_left)
@@ -163,12 +165,10 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom)
                         x = other.get_slope_x(self.bbox_bottom)
                         self.bbox_right = max(self.bbox_right, x)
-                        self.event_physics_collision_left(other)
-                        other.event_physics_collision_right(self)
+                        stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
-                        self.event_physics_collision_left(other)
-                        other.event_physics_collision_right(self)
+                        stopper = other
 
             for other in self.collision(SlopeBottomRight):
                 oy = other.get_slope_y(old_bbox_left)
@@ -178,12 +178,14 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_left = max(self.bbox_left, x)
-                        self.event_physics_collision_left(other)
-                        other.event_physics_collision_right(self)
+                        stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
-                        self.event_physics_collision_left(other)
-                        other.event_physics_collision_right(self)
+                        stopper = other
+
+            if stopper is not None:
+                self.event_physics_collision_left(stopper)
+                stopper.event_physics_collision_right(self)
 
         # Engage stickiness (same whether moving left or right)
         # 1 = sticking to the floor
@@ -274,11 +276,12 @@ class Collider(sge.Object):
                         sticky = 2
                         break
 
+            stopper = None
+
             for other in self.collision(SolidTop):
                 if not self.collision(other, y=old_y):
                     self.bbox_bottom = min(self.bbox_bottom, other.bbox_top)
-                    self.event_physics_collision_bottom(other)
-                    other.event_physics_collision_top(self)
+                    stopper = other
 
             for other in self.collision(SlopeTopLeft):
                 ox = other.get_slope_x(old_bbox_bottom)
@@ -288,13 +291,11 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_bottom = min(self.bbox_bottom, y)
-                        self.event_physics_collision_bottom(other)
-                        other.event_physics_collision_top(self)
+                        stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
                                                other.bbox_top)
-                        self.event_physics_collision_bottom(other)
-                        other.event_physics_collision_top(self)
+                        stopper = other
 
             for other in self.collision(SlopeTopRight):
                 ox = other.get_slope_x(old_bbox_bottom)
@@ -304,13 +305,15 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_bottom = min(self.bbox_bottom, y)
-                        self.event_physics_collision_bottom(other)
-                        other.event_physics_collision_top(self)
+                        stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
                                                other.bbox_top)
-                        self.event_physics_collision_bottom(other)
-                        other.event_physics_collision_top(self)
+                        stopper = other
+
+            if stopper is not None:
+                self.event_physics_collision_bottom(stopper)
+                stopper.event_physics_collision_top(self)
                 
         elif move < 0:
             for slope in self.collision(SlopeTopLeft, x=(old_x + 1), y=old_y):
@@ -330,11 +333,12 @@ class Collider(sge.Object):
                         sticky = 2
                         break
 
+            stopper = None
+
             for other in self.collision(SolidBottom):
                 if not self.collision(other, y=old_y):
                     self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                    self.event_physics_collision_top(other)
-                    other.event_physics_collision_bottom(self)
+                    stopper = other
 
             for other in self.collision(SlopeBottomLeft):
                 ox = other.get_slope_x(old_bbox_top)
@@ -344,12 +348,10 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_top = max(self.bbox_top, y)
-                        self.event_physics_collision_top(other)
-                        other.event_physics_collision_bottom(self)
+                        stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                        self.event_physics_collision_top(other)
-                        other.event_physics_collision_bottom(self)
+                        stopper = other
 
             for other in self.collision(SlopeBottomRight):
                 ox = other.get_slope_x(old_bbox_top)
@@ -359,12 +361,14 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_top = max(self.bbox_top, y)
-                        self.event_physics_collision_top(other)
-                        other.event_physics_collision_bottom(self)
+                        stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                        self.event_physics_collision_top(other)
-                        other.event_physics_collision_bottom(self)
+                        stopper = other
+
+            if stopper is not None:
+                self.event_physics_collision_top(stopper)
+                stopper.event_physics_collision_bottom(self)
 
         # Engage stickiness (same whether moving left or right)
         # 1 = sticking to a wall on the right
