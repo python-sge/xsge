@@ -567,14 +567,16 @@ class Collider(sge.Object):
         """
         for slope in self.collision(SlopeTopRight, x=(self.x - 1)):
             y = slope.get_slope_y(self.bbox_left)
-            if self.bbox_bottom >= y and (not self.collision(slope) or
-                                          self.bbox_bottom - 1 < y):
+            if (self.bbox_bottom == y or
+                    (self.bbox_bottom >= slope.bbox_bottom and
+                     not self.collision(slope))):
                 return True
         else:
             for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
                 y = slope.get_slope_y(self.bbox_left)
-                if self.bbox_top <= y and (not self.collision(slope) or
-                                           self.bbox_top + 1 > y):
+                if (self.bbox_top == y or
+                        (self.bbox_top <= slope.bbox_top and
+                         not self.collision(sope))):
                     return True
 
         return False
@@ -587,14 +589,16 @@ class Collider(sge.Object):
         """
         for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
             y = slope.get_slope_y(self.bbox_right)
-            if self.bbox_bottom >= y and (not self.collision(slope) or
-                                          self.bbox_bottom - 1 < y):
+            if (self.bbox_bottom == y or
+                    (self.bbox_bottom >= slope.bbox_bottom and
+                     not self.collision(slope))):
                 return True
         else:
             for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
                 y = slope.get_slope_y(self.bbox_right)
-                if self.bbox_top <= y and (not self.collision(slope) or
-                                           self.bbox_top + 1 > y):
+                if (self.bbox_top == y or
+                        (self.bbox_top <= slope.bbox_top and
+                         not self.collision(slope))):
                     return True
 
         return False
@@ -607,14 +611,16 @@ class Collider(sge.Object):
         """
         for slope in self.collision(SlopeBottomLeft, y=(self.y - 1)):
             x = slope.get_slope_x(self.bbox_top)
-            if self.bbox_right >= x and (not self.collision(slope) or
-                                         self.bbox_right - 1 < x):
+            if (self.bbox_right == x or
+                    (self.bbox_right >= slope.bbox_right and
+                     not self.collision(slope))):
                 return True
         else:
             for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
                 x = slope.get_slope_x(self.bbox_top)
-                if self.bbox_left <= x and (not self.collision(slope) or
-                                            self.bbox_left + 1 > x):
+                if (self.bbox_left == x or
+                        (self.bbox_left <= slope.bbox_left and
+                         not self.collision(slope))):
                     return True
 
         return False
@@ -627,14 +633,16 @@ class Collider(sge.Object):
         """
         for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
             x = slope.get_slope_x(self.bbox_bottom)
-            if self.bbox_right >= x and (not self.collision(slope) or
-                                         self.bbox_right - 1 < x):
+            if (self.bbox_right == x or
+                    (self.bbox_right >= slope.bbox_right and
+                     not self.collision(slope))):
                 return True
         else:
             for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
                 x = slope.get_slope_x(self.bbox_bottom)
-                if self.bbox_left <= x and (not self.collision(slope) or
-                                            self.bbox_left + 1 > x):
+                if (self.bbox_left == x or
+                        (self.bbox_left <= slope.bbox_left and
+                         not self.collision(slope))):
                     return True
 
         return False
