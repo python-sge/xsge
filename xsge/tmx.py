@@ -81,7 +81,7 @@ class Rectangle(sge.Object):
                  image_index=0, image_origin_x=None, image_origin_y=None,
                  image_fps=None, image_xscale=1, image_yscale=1,
                  image_rotation=0, image_alpha=255, image_blend=None):
-        super(Decoration, self).__init__(
+        super(Rectangle, self).__init__(
             x, y, z, sprite, visible, active, checks_collisions, tangible,
             bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
             collision_ellipse, collision_precise, xvelocity, yvelocity,
@@ -106,7 +106,7 @@ class Ellipse(sge.Object):
                  image_index=0, image_origin_x=None, image_origin_y=None,
                  image_fps=None, image_xscale=1, image_yscale=1,
                  image_rotation=0, image_alpha=255, image_blend=None):
-        super(Decoration, self).__init__(
+        super(Ellipse, self).__init__(
             x, y, z, sprite, visible, active, checks_collisions, tangible,
             bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
             collision_ellipse, collision_precise, xvelocity, yvelocity,
