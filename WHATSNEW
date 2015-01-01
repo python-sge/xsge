@@ -24,7 +24,7 @@ Misc changes:
   bad behavior).
 * Objects now move along slopes at the speed that they should, rather
   than maintaining the same x or y velocity (and therefore zipping at
-  high speed through slopes).
+  high speed through slopes), by default.
 
 Bugfixes:
 - Incorrect behavior with slope stickiness (prevented it from doing its
