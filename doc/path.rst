@@ -1,6 +1,6 @@
-********
-xsge.tmx
-********
+*********
+xsge.path
+*********
 
 .. This file has been dedicated to the public domain, to the extent
    possible under applicable law, via CC0. See
