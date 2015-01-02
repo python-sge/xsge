@@ -364,8 +364,14 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
         z += 1
 
-    return room_cls(objects=objects, width=room_width, height=room_height,
-                    views=(views if views else None), background=background)
+    room_kwargs = {"objects": objects, "width": room_width,
+                   "height": room_height, "views": views if views else None,
+                   "background": background}
+
+    for prop in tilemap.properties:
+        room_kwargs[prop.name] = _nconvert(prop.value)
+
+    return room_cls(**room_kwargs)
 
 
 def _nconvert(s):

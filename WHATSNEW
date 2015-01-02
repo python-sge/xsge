@@ -10,6 +10,10 @@ without any warranty.
 0.5.1
 ------------------------------------------------------------------------
 
+Misc changes:
+* Map properties are now passed as keyword arguments to the creation of
+  the room, rather than ignored.
+
 Bugfixes:
 - Fatal typo in class definitions for xsge.tmx
 
