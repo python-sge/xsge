@@ -16,6 +16,7 @@ Misc changes:
 
 Bugfixes:
 - Tileset name and properties being ignored
+- Z-axis value not being appropriately set for the layer
 
 
 0.5.1

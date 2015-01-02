@@ -269,7 +269,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
     for layer in tilemap.layers:
         if isinstance(layer, tmx.Layer):
             default_cls = types.get(layer.name, Decoration)
-            default_kwargs = {}
+            default_kwargs = {"z": z}
 
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
@@ -303,7 +303,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     objects.append(cls(x, y, **kwargs))
                     
         elif isinstance(layer, tmx.ObjectGroup):
-            default_kwargs = {}
+            default_kwargs = {"z": z}
 
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
@@ -383,7 +383,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         objects.append(cls(obj.x, obj.y, **kwargs))
         elif isinstance(layer, tmx.ImageLayer):
             cls = types.get(layer.name, Decoration)
-            kwargs = {}
+            kwargs = {"z": z}
 
             for prop in layer.properties:
                 kwargs[prop.name] = _nconvert(prop.value)
