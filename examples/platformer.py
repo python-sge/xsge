@@ -110,120 +110,54 @@ class Player(physics.Collider):
 
 class Solid(physics.Solid):
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(Solid, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(Solid, self).__init__(*args, **kwargs)
 
 
 class SolidTop(physics.SolidTop):
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(SolidTop, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(SolidTop, self).__init__(*args, **kwargs)
 
 
 class SlopeTopLeft(physics.SlopeTopLeft):
 
     xsticky_top = True
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(SlopeTopLeft, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(SlopeTopLeft, self).__init__(*args, **kwargs)
 
 
 class SlopeTopRight(physics.SlopeTopRight):
 
     xsticky_top = True
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(SlopeTopRight, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(SlopeTopRight, self).__init__(*args, **kwargs)
 
 
 class SlopeBottomLeft(physics.SlopeBottomLeft):
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(SlopeBottomLeft, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(SlopeBottomLeft, self).__init__(*args, **kwargs)
 
 
 class SlopeBottomRight(physics.SlopeBottomRight):
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
-        super(SlopeBottomRight, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("visible", False)
+        kwargs.setdefault("checks_collisions", False)
+        super(SlopeBottomRight, self).__init__(*args, **kwargs)
 
 
 Game(640, 480)
