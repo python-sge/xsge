@@ -167,6 +167,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
       - Ellipse objects default to :class:`xsge.tmx.Ellipse`.
       - Polygon objects default to :class:`xsge.tmx.Polygon`.
       - Polyline objects default to :class:`xsge.tmx.Polyline`.
+      - Tile objects default to the appropriate class for the given
+        tile (see above).
 
     - Image layers are converted to the class connected to the image
       layer's name.  If the image layer's name is not a valid key in
@@ -175,8 +177,9 @@ def load(fname, cls=sge.Room, types=None, z=0):
     Property lists, converted to integers or floats if possible, are
     passed to objects as keyword arguments in the following ways:
 
-    - Tiles have the properties of their tilesets and the properties of
-      their layers applied to them.  Tileset properties override layer
+    - Tiles have their properties, the properties of their tilesets, and
+      the properties of their layers applied to them.  Tileset properties
+      override layer properties, and tile properties override tileset
       properties.
 
     - Objects have their properties and the properties of their
@@ -191,12 +194,15 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
     tilemap = tmx.TileMap.load(fname)
 
+    tile_cls = {}
     tile_sprites = {}
+    tile_kwargs = {}
     for tileset in tilemap.tilesets:
         if tileset.image.source is not None:
             source = tileset.image.source
         else:
-            _file = tempfile.NamedTemporaryFile()
+            _file = tempfile.NamedTemporaryFile(
+                suffix=".{}".format(tileset.image.format))
             _file.write(tileset.image.data)
             source = _file.name
 
@@ -217,10 +223,35 @@ def load(fname, cls=sge.Room, types=None, z=0):
             width=tileset.tilewidth, height=tileset.tileheight)
 
         for i in six.moves.range(ts_sprite.frames):
+            if tileset.name in types:
+                tile_cls[tileset.firstgid + i] = types[tileset.name]
             t_sprite = sge.Sprite(width=tileset.tilewidth,
                                   height=tileset.tileheight)
             t_sprite.draw_sprite(ts_sprite, i, 0, 0)
             tile_sprites[tileset.firstgid + i] = t_sprite
+
+        tileset_kwargs = {}
+        for prop in tileset.properties:
+            tileset_kwargs[prop.name] = _nconvert[prop.value]
+
+        for tile in tileset.tiles:
+            i = tileset.firstgid + tile.id
+
+            if tile.image.source is not None:
+                source = tile.image.source
+            else:
+                _file = tempfile.NamedTemporaryFile(
+                    suffix=".{}".format(tile.image.format))
+                _file.write(tile.image.data)
+                source = _file.name
+
+            n, e = os.path.splitext(os.path.basename(source))
+            d = os.path.dirname(source)
+            tile_sprites[i] = sge.Sprite(n, d)
+
+            tile_kwargs[i] = tileset_kwargs.copy()
+            for prop in tile.properties:
+                tile_kwargs[i][prop.name] = _nconvert[prop.value]
 
     room_width = tilemap.width * tilemap.tilewidth
     room_height = tilemap.height * tilemap.tileheight
@@ -237,15 +268,17 @@ def load(fname, cls=sge.Room, types=None, z=0):
     views = []
     for layer in tilemap.layers:
         if isinstance(layer, tmx.Layer):
-            cls = types.get(layer.name, Decoration)
-            kwargs = {}
+            default_cls = types.get(layer.name, Decoration)
+            default_kwargs = {}
 
             for prop in layer.properties:
-                kwargs[prop.name] = _nconvert(prop.value)
+                default_kwargs[prop.name] = _nconvert(prop.value)
 
             for i in six.moves.range(len(layer.tiles)):
                 tile = layer.tiles[i]
                 if tile.gid:
+                    cls = tile_cls.get(tile.gid, default_cls)
+                    kwargs = default_kwargs.copy()
                     kwargs["sprite"] = tile_sprites.get(tile.gid)
                     if tile.hflip:
                         kwargs["image_xscale"] = -1
@@ -255,7 +288,9 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         kwargs["image_yscale"] = kwargs.get("image_yscale", 1) * -1
                         kwargs["image_rotation"] = 90
 
-                    # i = y * tilemap.width + x
+                    for j in tile_kwargs.get(tile.gid, {}):
+                        kwargs[j] = tile_kwargs[tile.gid][j]
+
                     x = i % tilemap.width
                     y = i // tilemap.width
                     if tilemap.renderorder.startswith("left"):
@@ -302,7 +337,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
                     if obj.gid is not None:
                         if cls is None:
-                            cls = Decoration
+                            cls = tile_cls.get(obj.gid, Decoration)
                         kwargs["sprite"] = tile_sprites.get(obj.gid)
                         if kwargs["sprite"] is not None:
                             w = kwargs["sprite"].width
