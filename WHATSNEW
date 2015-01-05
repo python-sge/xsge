@@ -7,6 +7,14 @@ without any warranty.
 
 ========================================================================
 
+0.5.3
+------------------------------------------------------------------------
+
+Bugfixes:
+- Assumption that all tilesets have an image (image sequences don't)
+- Use of square brackets where there should have been a function call
+
+
 0.5.2
 ------------------------------------------------------------------------
 

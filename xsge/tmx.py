@@ -198,60 +198,65 @@ def load(fname, cls=sge.Room, types=None, z=0):
     tile_sprites = {}
     tile_kwargs = {}
     for tileset in tilemap.tilesets:
-        if tileset.image.source is not None:
-            source = tileset.image.source
-        else:
-            _file = tempfile.NamedTemporaryFile(
-                suffix=".{}".format(tileset.image.format))
-            _file.write(tileset.image.data)
-            source = _file.name
-
-        n, e = os.path.splitext(os.path.basename(source))
-        d = os.path.dirname(source)
-        fs = sge.Sprite(n, d)
-        fwidth = fs.width - tileset.margin
-        fheight = fs.height - tileset.margin
-
-        columns = int((fwidth - tileset.margin + tileset.spacing) /
-                      (tileset.tilewidth + tileset.spacing))
-        rows = int((fheight - tileset.margin + tileset.spacing) /
-                   (tileset.tileheight + tileset.spacing))
-
-        ts_sprite = sge.Sprite.from_tileset(
-            source, x=tileset.margin, y=tileset.margin, columns=columns,
-            rows=rows, xsep=tileset.spacing, ysep=tileset.spacing,
-            width=tileset.tilewidth, height=tileset.tileheight)
-
-        for i in six.moves.range(ts_sprite.frames):
-            if tileset.name in types:
-                tile_cls[tileset.firstgid + i] = types[tileset.name]
-            t_sprite = sge.Sprite(width=tileset.tilewidth,
-                                  height=tileset.tileheight)
-            t_sprite.draw_sprite(ts_sprite, i, 0, 0)
-            tile_sprites[tileset.firstgid + i] = t_sprite
-
-        tileset_kwargs = {}
-        for prop in tileset.properties:
-            tileset_kwargs[prop.name] = _nconvert[prop.value]
-
-        for tile in tileset.tiles:
-            i = tileset.firstgid + tile.id
-
-            if tile.image.source is not None:
-                source = tile.image.source
+        if tileset.image is not None:
+            if tileset.image.source is not None:
+                source = tileset.image.source
             else:
                 _file = tempfile.NamedTemporaryFile(
-                    suffix=".{}".format(tile.image.format))
-                _file.write(tile.image.data)
+                    suffix=".{}".format(tileset.image.format))
+                _file.write(tileset.image.data)
                 source = _file.name
 
             n, e = os.path.splitext(os.path.basename(source))
             d = os.path.dirname(source)
-            tile_sprites[i] = sge.Sprite(n, d)
+            fs = sge.Sprite(n, d)
+            fwidth = fs.width - tileset.margin
+            fheight = fs.height - tileset.margin
+
+            columns = int((fwidth - tileset.margin + tileset.spacing) /
+                          (tileset.tilewidth + tileset.spacing))
+            rows = int((fheight - tileset.margin + tileset.spacing) /
+                       (tileset.tileheight + tileset.spacing))
+
+            ts_sprite = sge.Sprite.from_tileset(
+                source, x=tileset.margin, y=tileset.margin, columns=columns,
+                rows=rows, xsep=tileset.spacing, ysep=tileset.spacing,
+                width=tileset.tilewidth, height=tileset.tileheight)
+
+            for i in six.moves.range(ts_sprite.frames):
+                if tileset.name in types:
+                    tile_cls[tileset.firstgid + i] = types[tileset.name]
+                t_sprite = sge.Sprite(width=tileset.tilewidth,
+                                      height=tileset.tileheight)
+                t_sprite.draw_sprite(ts_sprite, i, 0, 0)
+                tile_sprites[tileset.firstgid + i] = t_sprite
+
+        tileset_kwargs = {}
+        for prop in tileset.properties:
+            tileset_kwargs[prop.name] = _nconvert(prop.value)
+
+        for tile in tileset.tiles:
+            i = tileset.firstgid + tile.id
+
+            if tile.image is not None:
+                if tile.image.source is not None:
+                    source = tile.image.source
+                else:
+                    _file = tempfile.NamedTemporaryFile(
+                        suffix=".{}".format(tile.image.format))
+                    _file.write(tile.image.data)
+                    source = _file.name
+
+                n, e = os.path.splitext(os.path.basename(source))
+                d = os.path.dirname(source)
+                tile_sprites[i] = sge.Sprite(n, d)
+
+            if tileset.name in types:
+                tile_cls[i] = types[tileset.name]
 
             tile_kwargs[i] = tileset_kwargs.copy()
             for prop in tile.properties:
-                tile_kwargs[i][prop.name] = _nconvert[prop.value]
+                tile_kwargs[i][prop.name] = _nconvert(prop.value)
 
     room_width = tilemap.width * tilemap.tilewidth
     room_height = tilemap.height * tilemap.tileheight
