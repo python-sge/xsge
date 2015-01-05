@@ -182,7 +182,13 @@ def load(fname, cls=sge.Room, types=None, z=0):
       override layer properties, and tile properties override tileset
       properties.
 
-    - Objects have their properties and the properties of their
+    - Tile objects have their properties, the properties of their tiles,
+      the properties of their tiles' tilesets, and the properties of
+      their object groups applied to them.  Object properties override
+      tile properties, tile properties override tileset properties, and
+      tileset properties override object group properties.
+
+    - Other objects have their properties and the properties of their
       object groups applied to them.  Object properties override object
       group properties.
 
@@ -293,7 +299,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         kwargs["image_yscale"] = kwargs.get("image_yscale", 1) * -1
                         kwargs["image_rotation"] = 90
 
-                    for j in tile_kwargs.get(tile.gid, {}):
+                    for j in tile_kwargs.setdefault(tile.gid, {}):
                         kwargs[j] = tile_kwargs[tile.gid][j]
 
                     x = i % tilemap.width
@@ -348,11 +354,20 @@ def load(fname, cls=sge.Room, types=None, z=0):
                             w = kwargs["sprite"].width
                             h = kwargs["sprite"].height
                         else:
-                            w = tilemap.tilewidth
-                            h = tilemap.tileheight
+                            w = 0
+                            h = 0
                         x = (obj.x if tilemap.orientation == "orthogonal" else
                              obj.x - (w / 2))
                         y = obj.y - h
+
+                        for i in tile_kwargs.setdefault(obj.gid, {}):
+                            kwargs[i] = tile_kwargs[obj.gid][i]
+
+                        # This is repetitive, but necessary to give
+                        # object properties priority, and harmless.
+                        for prop in obj.properties:
+                            kwargs[prop.name] = _nconvert(prop.value)
+
                         objects.append(cls(x, y, **kwargs))
                     elif obj.ellipse:
                         if cls is None:

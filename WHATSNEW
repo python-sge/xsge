@@ -10,6 +10,9 @@ without any warranty.
 0.5.3
 ------------------------------------------------------------------------
 
+Misc changes:
+* Tile objects now take properties from the appropriate tiles and tilesets.
+
 Bugfixes:
 - Assumption that all tilesets have an image (image sequences don't)
 - Use of square brackets where there should have been a function call
@@ -19,7 +22,6 @@ Bugfixes:
 ------------------------------------------------------------------------
 
 Misc changes:
-
 * Pay attention to tile properties
 
 Bugfixes:
