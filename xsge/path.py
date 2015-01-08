@@ -39,6 +39,14 @@ class Path(sge.Object):
     objects.  Paths are defined as a series of points for an object to
     follow.
 
+    This class is derived from :class:`sge.Object` and inherits all of
+    that class's attributes and methods.
+
+    .. note::
+
+       :meth:`event_step` is used to implement path-following behavior.
+       Keep this in mind if you derive a class from this one.
+
     .. attribute:: points
 
        A list of the points that make up the path relative to the
@@ -49,8 +57,26 @@ class Path(sge.Object):
        in this list.
     """
 
-    def __init__(self, x, y, points=()):
-        super(Path, self).__init__(x, y, tangible=False)
+    def __init__(self, x, y, points=(), z=0, sprite=None, visible=False,
+                 active=True, checks_collisions=False, tangible=False,
+                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
+                 regulate_origin=False, collision_ellipse=False,
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 image_index=0, image_origin_x=None, image_origin_y=None,
+                 image_fps=None, image_xscale=1, image_yscale=1,
+                 image_rotation=0, image_alpha=255, image_blend=None):
+        super(Path, self).__init__(
+            x, y, z=z, sprite=sprite, visible=visible, active=active,
+            checks_collisions=checks_collisions, tangible=tangible,
+            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+            bbox_height=bbox_height, regulate_origin=regulate_origin,
+            collision_ellipse=collision_ellipse,
+            collision_precise=collision_precise, xvelocity=xvelocity,
+            yvelocity=yvelocity, image_index=image_index,
+            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
+            image_fps=image_fps, image_xscale=image_xscale,
+            image_yscale=image_yscale, image_rotation=image_rotation,
+            image_alpha=image_alpha, image_blend=image_blend)
         self.points = list(points)
         self.__objects = {}
         self.__delta = 0

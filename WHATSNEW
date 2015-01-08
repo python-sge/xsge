@@ -12,6 +12,7 @@ without any warranty.
 
 Misc changes:
 * Tile objects now take properties from the appropriate tiles and tilesets.
+* Paths now support all sge.Object constructor arguments.
 
 Bugfixes:
 - Assumption that all tilesets have an image (image sequences don't)
