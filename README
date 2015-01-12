@@ -8,8 +8,8 @@ as-is, without any warranty.
 
 xSGE is a collection of extra modules for the SGE Game Engine.
 
-xSGE is under the GNU General Public License, so only software under a
-GPL-compatible license is permitted to use it.
+xSGE is under the GNU General Public License, so software using it can
+only be distributed under a GPL-compatible license.
 
 INSTALLATION
 
