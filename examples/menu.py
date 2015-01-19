@@ -40,8 +40,7 @@ mnu = menu.get_text_menu(320, 240, ["Item 1", "Item 2", "Item 3", "Exit"],
                          font=font, color=sge.Color("black"),
                          selected_color=sge.Color("red"),
                          background_color=sge.Color("aqua"), height=200,
-                         margin=16, halign=sge.ALIGN_CENTER,
-                         valign=sge.ALIGN_MIDDLE)
+                         margin=16, halign="center", valign="middle")
 
 for i in six.moves.range(3):
     mnu.items[i].action = print

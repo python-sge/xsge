@@ -240,7 +240,7 @@ class SimpleItem(Item):
 
 def get_text_menu(x, y, items, font=None, color=None, selected_font=None,
                   selected_color=None, background_color=None, height=None,
-                  margin=0, halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP):
+                  margin=0, halign="left", valign="top"):
     """
     Create a text-based menu.  The resulting menu will contain
     :class:`xsge.menu.SimpleItem` menu items.  You can then make the
@@ -294,10 +294,10 @@ def get_text_menu(x, y, items, font=None, color=None, selected_font=None,
     width += 2 * margin
     height += 2 * margin
 
-    origin_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: width / 2,
-                sge.ALIGN_RIGHT: width}.get(halign, 0)
-    origin_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: height / 2,
-                sge.ALIGN_BOTTOM: height}.get(valign, 0)
+    origin_x = {"left": 0, "right": width,
+                "center": width / 2}.get(halign.lower(), 0)
+    origin_y = {"top": 0, "bottom": height,
+                "middle": height / 2}.get(valign.lower(), 0)
 
     ih = height - 2 * margin
     ih += ((height - margin - item_h) - ih *

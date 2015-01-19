@@ -469,8 +469,7 @@ class Window(object):
                                   width=self.sprite.width,
                                   height=window_border_top_sprite.height,
                                   color=title_text_color,
-                                  halign=sge.ALIGN_CENTER,
-                                  valign=sge.ALIGN_MIDDLE)
+                                  halign="center", valign="middle")
 
             self.sprite.draw_unlock()
         else:
@@ -1039,8 +1038,7 @@ class Label(Widget):
         self._color = value if value is not None else text_color
 
     def __init__(self, parent, x, y, z, text, font=None, width=None,
-                 height=None, color=None, halign=sge.ALIGN_LEFT,
-                 valign=sge.ALIGN_TOP):
+                 height=None, color=None, halign="left", valign="top"):
         super(Label, self).__init__(parent, x, y, z)
         self.text = text
         self.font = font
@@ -1084,8 +1082,7 @@ class Button(Widget):
     information.
     """
 
-    def __init__(self, parent, x, y, z, text, width=None,
-                 halign=sge.ALIGN_CENTER):
+    def __init__(self, parent, x, y, z, text, width=None, halign="center"):
         super(Button, self).__init__(parent, x, y, z)
         self.text = text
         self.width = width
@@ -1116,8 +1113,7 @@ class Button(Widget):
         self.sprite_normal.draw_text(button_font, self.text, sprite_w / 2,
                                      h / 2, width=w, height=h,
                                      color=button_text_color,
-                                     halign=self.halign,
-                                     valign=sge.ALIGN_MIDDLE)
+                                     halign=self.halign, valign="middle")
         self.sprite_normal.draw_unlock()
 
         sprite_w = (w + button_selected_left_sprite.width +
@@ -1134,8 +1130,7 @@ class Button(Widget):
         self.sprite_selected.draw_text(button_font, self.text, sprite_w / 2,
                                        h / 2, width=w, height=h,
                                        color=button_text_color,
-                                       halign=self.halign,
-                                       valign=sge.ALIGN_MIDDLE)
+                                       halign=self.halign, valign="middle")
         self.sprite_selected.draw_unlock()
 
         sprite_w = (w + button_pressed_left_sprite.width +
@@ -1152,8 +1147,7 @@ class Button(Widget):
         self.sprite_pressed.draw_text(button_font, self.text, sprite_w / 2,
                                       h / 2, width=w, height=h,
                                       color=button_text_color,
-                                      halign=self.halign,
-                                      valign=sge.ALIGN_MIDDLE)
+                                      halign=self.halign, valign="middle")
         self.sprite_pressed.draw_unlock()
 
     def refresh(self):
@@ -1489,7 +1483,7 @@ class TextBox(Widget):
 
             text_sprite.draw_text(textbox_font, self.text[tl:tr], text_x,
                                   text_y, color=textbox_text_color,
-                                  valign=sge.ALIGN_MIDDLE)
+                                  valign="middle")
 
             if self._selected is None:
                 if (self._cursor_shown and
@@ -1511,7 +1505,7 @@ class TextBox(Widget):
                 text_sprite.draw_text(textbox_font, self.text[a:b],
                                       x + self._text_x, text_y,
                                       color=textbox_text_selected_color,
-                                      valign=sge.ALIGN_MIDDLE)
+                                      valign="middle")
 
             text_sprite.draw_unlock()
 
