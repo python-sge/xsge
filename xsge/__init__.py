@@ -1,5 +1,5 @@
-# xSGE - Extended Stellar Game Engine
-# Copyright (C) 2014 Julian Marchant <onpon4@riseup.net>
+# xSGE - Extensions for the SGE Game Engine
+# Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ from __future__ import unicode_literals
 
 __version__ = "0.6a0"
 
-from xsge import gui, path, physics, tmx
+from xsge import gui, menu, path, physics, tmx
 
 
-__all__ = ["gui", "path", "physics", "tmx"]
+__all__ = ["gui", "menu", "path", "physics", "tmx"]
