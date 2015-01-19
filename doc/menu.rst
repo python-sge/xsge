@@ -42,3 +42,8 @@ xsge.menu.SimpleItem
 --------------------
 
 .. autoclass:: xsge.menu.SimpleItem
+
+xsge.menu Functions
+===================
+
+.. autofunction:: xsge.menu.get_text_menu
