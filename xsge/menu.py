@@ -29,6 +29,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
 import sge
 
 
@@ -235,3 +236,82 @@ class SimpleItem(Item):
 
     def event_choose(self):
         self.action(*self.action_args, **self.action_kwargs)
+
+
+def get_text_menu(x, y, items, font=None, color=None, selected_font=None,
+                  selected_color=None, background_color=None, height=None,
+                  margin=0, halign=sge.ALIGN_LEFT, valign=sge.ALIGN_TOP):
+    """
+    Create a text-based menu.  The resulting menu will contain
+    :class:`xsge.menu.SimpleItem` menu items.  You can then make the
+    menu actually work by modifying the items' :attr:`action`,
+    :attr:`action_args`, and :attr:`action_kwargs` values.
+
+    Arguments:
+
+    - ``x`` -- The horizontal location of the menu within the room.
+    - ``y`` -- The vertical location of the menu within the room.
+    - ``items`` -- A list of strings to use as menu items.
+    - ``font`` -- The default font to use.
+    - ``color`` -- The default color to use.
+    - ``selected_font`` -- The font to use when an item is selected.  If
+      set to :const:`None`, the font will not change when the item is
+      selected.
+    - ``selected_color`` -- The color to use when an item is selected.
+      If set to :const:`None`, the color will not change when the item
+      is selected.
+    - ``background_color`` -- The color of the menu.  If set to
+      :const:`None`, only the menu items will be displayed.
+    - ``height`` -- The height of the menu.  If set to :const:`None`,
+      the height will be the sum of the items' height.
+    - ``margin`` -- The number of pixels that should surround the menu
+      items.
+    - ``halign`` -- The horizontal alignment of the menu.  See the
+      documentation for :meth:`sge.Sprite.draw_text` for more
+      information.
+    - ``valign`` -- The vertical alignment of the menu.  See the
+      documentation for :meth:`sge.Sprite.draw_text` for more
+      information.
+    """
+    if selected_font is None: selected_font = font
+    if selected_color is None: selected_color = color
+    width = 0
+    item_h = 0
+    item_objs = []
+    for item in items:
+        un_spr = sge.Sprite.from_text(font, item, color=color,
+                                      halign=halign, valign=valign)
+        s_spr = sge.Sprite.from_text(selected_font, item,
+                                     color=selected_color, halign=halign,
+                                     valign=valign)
+        width = max(width, un_spr.width, s_spr.width)
+        item_h = max(item_h, un_spr.height, s_spr.height)
+        item_objs.append(SimpleItem(x, y, s_spr, un_spr))
+
+    if height is None:
+        height = item_h * len(items)
+
+    width += 2 * margin
+    height += 2 * margin
+
+    origin_x = {sge.ALIGN_LEFT: 0, sge.ALIGN_CENTER: width / 2,
+                sge.ALIGN_RIGHT: width}.get(halign, 0)
+    origin_y = {sge.ALIGN_TOP: 0, sge.ALIGN_MIDDLE: height / 2,
+                sge.ALIGN_BOTTOM: height}.get(valign, 0)
+
+    ih = height - 2 * margin
+    ih += ((height - margin - item_h) - ih *
+           ((len(item_objs) - 1) / len(item_objs)))
+    for i in six.moves.range(len(item_objs)):
+        obj = item_objs[i]
+        obj.y = y - origin_y + obj.sprite.origin_y + margin
+        obj.y += ih * (i / len(item_objs))
+
+    if background_color is not None:
+        menu_sprite = sge.Sprite(width=width, height=height, origin_x=origin_x,
+                                 origin_y=origin_y)
+        menu_sprite.draw_rectangle(0, 0, width, height, fill=background_color)
+    else:
+        menu_sprite = None
+
+    return Menu(x, y, item_objs, sprite=menu_sprite)
