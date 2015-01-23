@@ -19,7 +19,7 @@ from __future__ import unicode_literals
 
 import six
 import sge
-from xsge import menu
+from xsge import gui
 
 
 class Game(sge.Game):
@@ -32,25 +32,31 @@ class Game(sge.Game):
         self.end()
 
 
+class Room(sge.Room):
+
+    def event_room_start(self):
+        c = True
+        while c:
+            i = gui.get_menu_selection(
+                320, 240, ["Item 1", "Item 2", "Item 3", "Exit"],
+                font_normal=font, color_normal=sge.Color("black"),
+                color_selected=sge.Color("red"),
+                background_color=sge.Color("aqua"), height=200, margin=16,
+                halign="center", valign="middle")
+            if 0 <= i <= 2:
+                print("Item {} chosen!".format(i + 1))
+            else:
+                c = False
+
+        sge.game.end()
+
+
 Game(640, 480)
+gui.init()
 
 font = sge.Font("Liberation Mono")
 
-mnu = menu.get_text_menu(320, 240, ["Item 1", "Item 2", "Item 3", "Exit"],
-                         font=font, color=sge.Color("black"),
-                         selected_color=sge.Color("red"),
-                         background_color=sge.Color("aqua"), height=200,
-                         margin=16, halign="center", valign="middle")
-
-for i in six.moves.range(3):
-    mnu.items[i].action = print
-    mnu.items[i].action_args = ["Item {} chosen!".format(i + 1)]
-
-mnu.items[3].action = sge.game.end
-
-objects = [mnu]
-
-sge.game.start_room = sge.Room(objects)
+sge.game.start_room = Room()
 
 
 if __name__ == "__main__":

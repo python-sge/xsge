@@ -15,7 +15,6 @@ Contents:
    :maxdepth: 1
 
    gui
-   menu
    path
    physics
    tmx

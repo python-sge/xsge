@@ -231,6 +231,46 @@ available:
 
 .. automethod:: xsge.gui.TextBox.event_change_text
 
+xsge.gui.MenuItem
+-----------------
+
+.. autoclass:: xsge.gui.MenuItem
+
+xsge.gui.MenuWindow
+-------------------
+
+.. autoclass:: xsge.gui.MenuWindow
+
+xsge.gui.MenuWindow Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the methods inherited from :class:`xsge.gui.Window`, the
+following methods are also available:
+
+.. automethod:: xsge.gui.MenuWindow.from_text
+
+xsge.gui.MenuWindow Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the event methods inherited from
+:class:`xsge.gui.Window`, the following event methods are also
+available:
+
+.. automethod:: xsge.gui.MenuWindow.event_choose
+
+xsge.gui.MenuDialog
+-------------------
+
+.. autoclass:: xsge.gui.MenuDialog
+
+xsge.gui.MenuDialog Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the methods inherited from :class:`xsge.gui.Dialog`, the
+following methods are also available:
+
+.. automethod:: xsge.gui.MenuDialog.from_text
+
 xsge.gui.MessageDialog
 ----------------------
 

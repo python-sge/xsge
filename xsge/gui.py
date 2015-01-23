@@ -573,8 +573,12 @@ class Window(object):
                 self.sprite.height != target_height):
             self.redraw()
 
-        x = self.x - window_border_left_sprite.width
-        y = self.y - window_border_top_sprite.height
+        if self.border:
+            x = self.x - window_border_left_sprite.width
+            y = self.y - window_border_top_sprite.height
+        else:
+            x = self.x
+            y = self.y
 
         if x < 0:
             x = 0
@@ -585,8 +589,12 @@ class Window(object):
         elif y + self.sprite.height >= sge.game.height:
             y = sge.game.height - self.sprite.height
 
-        self.x = x + window_border_left_sprite.width
-        self.y = y + window_border_top_sprite.height
+        if self.border:
+            self.x = x + window_border_left_sprite.width
+            self.y = y + window_border_top_sprite.height
+        else:
+            self.x = x
+            self.y = y
 
         sge.game.project_sprite(self.sprite, 0, x, y)
 
@@ -2006,29 +2014,46 @@ class MenuItem(Widget):
             self.sprite_selected = sprite_selected
         else:
             self.sprite_selected = self.sprite
+        self.__frame = 0
 
-    def event_step(self, time_passed, delta_mult):
+    def refresh(self):
         parent = self.parent()
         if parent is not None:
-            handler = parent.parent()
-            if (handler is not None and
-                ((handler.keyboard_focused_window is parent and
-                  parent.keyboard_focused_widget is self) or
-                 (handler.get_mouse_focused_window() is parent and
-                  parent.get_mouse_focused_widget() is self))):
-                self.sprite = self.sprite_selected
+            if parent.keyboard_focused_widget is self:
+                spr = self.sprite_selected
             else:
-                self.sprite = self.sprite_normal
+                spr = self.sprite_normal
+
+            sge.game.project_sprite(spr, int(round(self.__frame)),
+                                    parent.x + self.x, parent.y + self.y)
+        else:
+            self.destroy()
+
+    def event_step(self, time_passed, delta_mult):
+        self.__frame += delta_mult
 
 
 class MenuWindow(Window):
 
     """
     This window allows the user to cycle through its tab-focusable
-    widgets with the arrow keys, and select one with either the Enter
-    key or a joystick button, at which point the window is closed and
-    :meth:`event_choose` is called.  Meant to be used with
-    :class:`xsge.gui.MenuItem` widgets.
+    widgets with the arrow keys.  If the Enter key or a joystick button
+    is pressed, :attr:`choice` is set to the index of the currently
+    selected widget, the window is closed, and :meth:`event_choose` is
+    called.  If the Escape key is pressed, the window is closed and
+    :meth:`event_choose` is called.
+
+    Has no border by default.  Meant to  be used with
+    :class:`xsge.gui.MenuItem` widgets to create keyboard-navigated
+    menus.
+
+    .. attribute:: choice
+
+       The menu item chosen.  If no menu item has been chosen, it is set
+       to :const:`None`.
+
+    See the documentation for :class:`xsge.gui.Window` for more
+    information.
     """
 
     def __init__(self, parent, x, y, width, height, title="",
@@ -2036,6 +2061,10 @@ class MenuWindow(Window):
         super(MenuWindow, self).__init__(parent, x, y, width, height, title,
                                          background_color, border)
         self.__axes = {}
+
+    def event_step(self, time_passed, delta_mult):
+        if self.keyboard_focused_widget is None and self.widgets:
+            self.keyboard_focused_widget = self.widgets[0]
 
     def event_key_press(self, key, char):
         if key in ("up", "down"):
@@ -2052,9 +2081,17 @@ class MenuWindow(Window):
                     if self.widgets[i].tab_focus:
                         self.keyboard_focused_widget = self.widgets[i]
                         break
-        elif key == in ("enter", "kp_enter"):
-            # TODO: Close window, indicate selection
-            pass
+        elif key in ("enter", "kp_enter"):
+            try:
+                self.choice = self.widgets.index(self.keyboard_focused_widget)
+            except ValueError:
+                self.choice = None
+
+            self.event_choose()
+            self.destroy()
+        elif key == "escape":
+            self.event_choose()
+            self.destroy()
 
     def event_joystick_axis_move(self, js_name, js_id, axis, value):
         if axis == 1:
@@ -2075,6 +2112,111 @@ class MenuWindow(Window):
 
     def event_joystick_button_press(self, js_name, js_id, button):
         self.event_key_press("enter", "\n")
+
+    def event_choose(self):
+        """Called when a menu item is chosen."""
+        pass
+
+    @classmethod
+    def from_text(cls, parent, x, y, items, font_normal=None,
+                  color_normal=None, font_selected=None, color_selected=None,
+                  background_color=sge.Color("#0000"), height=None, margin=0,
+                  halign="left", valign="top"):
+        """
+        Return a menu created automatically from a list of strings.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location of the window within the
+          room.  Affected by ``halign``.
+        - ``y`` -- The vertical location of the window within the room.
+          Affected by ``valign``.
+        - ``font_normal`` -- The default font to use.
+        - ``color_normal`` -- The default color to use.
+        - ``font_selected`` -- The font to use for the currently
+          selected item.  If set to :const:`None`, the default font will
+          be used.
+        - ``color_selected`` -- The color to use for the currently
+          selected item.  If set to :const:`None`, the default color
+          will be used.
+        - ``height`` -- The height of the menu.  If set to
+          :const:`None`, it will be the sum of the items' height.
+        - ``margin`` -- The size of the margin around the menu.
+        - ``halign`` -- The horizontal alignment of the menu.  See the
+          documentation for :meth:`sge.Sprite.draw_text` for more
+          information.
+        - ``valign`` -- The vertical alignment of the menu.  See the
+          documentation for :meth:`sge.Sprite.draw_text` for more
+          information.
+        """
+        if font_selected is None: font_selected = font_normal
+        if color_selected is None: color_selected = color_normal
+        width = 0
+        item_h = 0
+        item_sprites = []
+        for item in items:
+            n_spr = sge.Sprite.from_text(font_normal, item, color=color_normal,
+                                         halign=halign, valign=valign)
+            s_spr = sge.Sprite.from_text(font_selected, item,
+                                         color=color_selected, halign=halign,
+                                         valign=valign)
+            width = max(width, n_spr.width, s_spr.width)
+            item_h = max(item_h, n_spr.height, s_spr.height)
+            item_sprites.append((n_spr, s_spr))
+
+        if height is None:
+            height = item_h * len(items)
+
+        width += 2 * margin
+        height += 2 * margin
+
+        origin_x = {"left": 0, "right": width,
+                    "center": width / 2}.get(halign.lower(), 0)
+        origin_y = {"top": 0, "bottom": height,
+                    "middle": height / 2}.get(valign.lower(), 0)
+
+        x -= origin_x
+        y -= origin_y
+
+        self = cls(parent, x, y, width, height,
+                   background_color=background_color)
+
+        ih = height - 2 * margin
+        ih += ((height - margin - item_h) - ih *
+               ((len(item_sprites) - 1) / len(item_sprites)))
+        for i in six.moves.range(len(item_sprites)):
+            n_spr, s_spr = item_sprites[i]
+            iy = n_spr.origin_y + margin + ih * i / len(item_sprites)
+            MenuItem(self, origin_x, iy, i, sprite_normal=n_spr,
+                     sprite_selected=s_spr)
+
+        return self
+
+
+class MenuDialog(MenuWindow, Dialog):
+
+    """
+    This dialog allows the user to cycle through its tab-focusable
+    widgets with the arrow keys.  If the Enter key or a joystick button
+    is pressed, :attr:`choice` is set to the index of the currently
+    selected widget, the window is closed, and :meth:`event_choose` is
+    called.  If the Escape key is pressed, the window is closed and
+    :meth:`event_choose` is called.
+
+    Has no border by default.  Meant to  be used with
+    :class:`xsge.gui.MenuItem` widgets to create keyboard-navigated
+    menus.
+
+    .. attribute:: choice
+
+       The menu item chosen.  If no menu item has been chosen, it is set
+       to :const:`None`.
+
+    See the documentation for :class:`xsge.gui.Dialog` for more
+    information.
+    """
+
+    pass
 
 
 class MessageDialog(Dialog):
@@ -2473,3 +2615,47 @@ def get_text_entry(parent=None, message="", title="Text Entry", text="",
         parent.destroy()
 
     return w.text
+
+
+def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
+                       color_normal=None, font_selected=None,
+                       color_selected=None, background_color=sge.Color("#0000"),
+                       height=None, margin=0, halign="left", valign="top"):
+    """
+    Show a menu and return the index of the menu item selected.
+
+    Arguments:
+
+    - ``parent`` -- The parent handler of the
+      :class:`xsge.gui.TextMenuDialog` object created.  Set to
+      :const:`None` to create a new handler and then destroy it after
+      the dialog is shown.
+    - ``default`` -- The index of the item to select by default.
+
+    See the documentation for :class:`xsge.gui.MenuDialog.from_text` for
+    more information.
+    """
+    if items:
+        if parent is None:
+            parent = Handler.create()
+            destroy_parent = True
+        else:
+            destroy_parent = False
+
+        w = MenuDialog.from_text(parent, x, y, items, font_normal=font_normal,
+                                 color_normal=color_normal,
+                                 font_selected=font_selected,
+                                 color_selected=color_selected,
+                                 background_color=background_color,
+                                 height=height, margin=margin, halign=halign,
+                                 valign=valign)
+        w.keyboard_selected_widget = w.widgets[0]
+        w.show()
+        w.destroy()
+
+        if destroy_parent:
+            parent.destroy()
+
+        return w.choice
+    else:
+        return None
