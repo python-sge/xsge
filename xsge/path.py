@@ -130,7 +130,7 @@ class Path(sge.Object):
 
     def event_step(self, time_passed, delta_mult):
         self.__delta = (self.__delta % 1) + delta_mult
-        for i in self.__objects.keys():
+        for i in list(self.__objects.keys()):
             (obj, speed, accel, decel, start_x, start_y, loop,
              dest) = self.__objects[i]
 

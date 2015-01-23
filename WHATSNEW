@@ -39,6 +39,7 @@ Additions:
 Bugfixes:
 - Tab key deselecting everything when reaching the end in xsge.gui
 - Borderless windows being offset by the border size
+- Crash when following a path
 
 
 0.5.3
