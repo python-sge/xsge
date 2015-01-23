@@ -267,6 +267,76 @@ class Handler(sge.Object):
             for widget in window.widgets:
                 widget.event_global_mouse_button_release(button)
 
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick_axis_move(js_name, js_id, axis, value)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_axis_move(js_name, js_id, axis, value)
+
+        for window in self.windows[:]:
+            window.event_global_joystick_axis_move(js_name, js_id, axis, value)
+            for widget in window.widgets:
+                widget.event_global_joystick_axis_move(js_name, js_id, axis,
+                                                       value)
+
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick_hat_move(js_name, js_id, hat, x, y)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_hat_move(js_name, js_id, hat, x, y)
+
+        for window in self.windows[:]:
+            window.event_global_joystick_hat_move(js_name, js_id, hat, x, y)
+            for widget in window.widgets:
+                widget.event_global_joystick_hat_move(js_name, js_id, hat, x, y)
+
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick_trackball_move(js_name, js_id, ball, x, y)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_trackball_move(js_name, js_id, ball, x, y)
+
+        for window in self.windows[:]:
+            window.event_global_joystick_trackball_move(js_name, js_id, ball,
+                                                        x, y)
+            for widget in window.widgets:
+                widget.event_global_joystick_trackball_move(js_name, js_id,
+                                                            ball, x, y)
+
+    def event_joystick_button_press(self, js_name, js_id, button):
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick_button_press(js_name, js_id, button)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_button_press(js_name, js_id, button)
+
+        for window in self.windows[:]:
+            window.event_global_joystick_button_press(js_name, js_id, button)
+            for widget in window.widgets:
+                widget.event_global_joystick_button_press(js_name, js_id,
+                                                          button)
+
+    def event_joystick_button_release(self, js_name, js_id, button):
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick_button_release(js_name, js_id, button)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_button_release(js_name, js_id, button)
+
+        for window in self.windows[:]:
+            window.event_global_joystick_button_release(js_name, js_id, button)
+            for widget in window.widgets:
+                widget.event_global_joystick_button_release(js_name, js_id,
+                                                            button)
+
 
 class Window(object):
 
@@ -575,13 +645,10 @@ class Window(object):
                 except ValueError:
                     i = -1
 
-                while True:
+                for _ in six.moves.range(len(self.widgets)):
                     i += 1
-
-                    if i >= len(self.widgets):
-                        self.keyboard_focused_widget = None
-                        break
-                    elif self.widgets[i].tab_focus:
+                    i %= len(self.widgets)
+                    if self.widgets[i].tab_focus:
                         self.keyboard_focused_widget = self.widgets[i]
                         break
 
@@ -606,6 +673,46 @@ class Window(object):
         Called when a mouse button is released while this window has
         mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
+        """
+        pass
+
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
+        """
+        Called when a joystick axis is moved while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickAxisMove` for more information.
+        """
+        pass
+
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        """
+        Called when a joystick hat is moved while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickHatMove` for more information.
+        """
+        pass
+
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        """
+        Called when a joystick trackball is moved while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
+        """
+        pass
+
+    def event_joystick_button_press(self, js_name, js_id, button):
+        """
+        Called when a joystick button is pressed while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonPress` for more information.
+        """
+        pass
+
+    def event_joystick_button_release(self, js_name, js_id, button):
+        """
+        Called when a joystick button is released while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
         """
         pass
 
@@ -685,6 +792,46 @@ class Window(object):
         if button == "left":
             self._close_button_pressed = False
             self._border_grab = None
+
+    def event_global_joystick_axis_move(self, js_name, js_id, axis, value):
+        """
+        Called when a joystick axis is moved, regardless of which window
+        has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickAxisMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        """
+        Called when a joystick hat is moved, regardless of which window
+        has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickHatMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        """
+        Called when a joystick trackball is moved, regardless of which
+        window has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_button_press(self, js_name, js_id, button):
+        """
+        Called when a joystick button is pressed, regardless of which
+        window has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonPress` for more information.
+        """
+        pass
+
+    def event_global_joystick_button_release(self, js_name, js_id, button):
+        """
+        Called when a joystick button is released, regardless of which
+        window has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
 
     def event_close(self):
         """
@@ -839,6 +986,11 @@ class Widget(object):
     .. attribute:: sprite
 
        The sprite this widget displays as itself.
+
+    .. attribute:: tab_focus
+
+       Class attribute indicating whether or not the widget should be
+       considered for focusing when the Tab key is pressed.
     """
 
     tab_focus = True
@@ -945,6 +1097,46 @@ class Widget(object):
         """
         pass
 
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
+        """
+        Called when a joystick axis is moved while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickAxisMove` for more information.
+        """
+        pass
+
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        """
+        Called when a joystick hat is moved while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickHatMove` for more information.
+        """
+        pass
+
+    def event_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        """
+        Called when a joystick trackball is moved while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
+        """
+        pass
+
+    def event_joystick_button_press(self, js_name, js_id, button):
+        """
+        Called when a joystick button is pressed while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonPress` for more information.
+        """
+        pass
+
+    def event_joystick_button_release(self, js_name, js_id, button):
+        """
+        Called when a joystick button is released while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
     def event_global_key_press(self, key, char):
         """
         Called when a key is pressed, regardless of which widget has
@@ -974,6 +1166,46 @@ class Widget(object):
         Called when a mouse button is released, regardless of which
         widget has mouse focus.  See the documentation for
         :class:`sge.input.MouseButtonRelease` for more information.
+        """
+        pass
+
+    def event_global_joystick_axis_move(self, js_name, js_id, axis, value):
+        """
+        Called when a joystick axis is moved, regardless of which widget
+        has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickAxisMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        """
+        Called when a joystick hat is moved, regardless of which widget
+        has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickHatMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_trackball_move(self, js_name, js_id, ball, x, y):
+        """
+        Called when a joystick trackball is moved, regardless of which
+        widget has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickTrackballMove` for more information.
+        """
+        pass
+
+    def event_global_joystick_button_press(self, js_name, js_id, button):
+        """
+        Called when a joystick button is pressed, regardless of which
+        widget has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonPress` for more information.
+        """
+        pass
+
+    def event_global_joystick_button_release(self, js_name, js_id, button):
+        """
+        Called when a joystick button is released, regardless of which
+        widget has keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickButtonRelease` for more information.
         """
         pass
 
@@ -1744,6 +1976,105 @@ class TextBox(Widget):
 
         """
         pass
+
+
+class MenuItem(Widget):
+
+    """
+    This widget has two sprites: one for when it is selected, and one
+    for when it is unselected.  Meant to be used with
+    :class:`xsge.gui.MenuWindow` or :class:`xsge.gui.MenuDialog`.
+
+    .. attribute:: sprite_normal
+
+       The sprite to use as :attr:`sprite` when this widget is
+       unselected.
+
+    .. attribute:: sprite_selected
+
+       The sprite to use as :attr:`sprite` when this widget is selected.
+
+    See the documentation for :class:`xsge.gui.Widget` for more
+    information.
+    """
+
+    def __init__(self, parent, x, y, z, sprite_normal=None,
+                 sprite_selected=None):
+        super(MenuItem, self).__init__(parent, x, y, z, sprite=sprite_normal)
+        self.sprite_normal = self.sprite
+        if sprite_selected is not None:
+            self.sprite_selected = sprite_selected
+        else:
+            self.sprite_selected = self.sprite
+
+    def event_step(self, time_passed, delta_mult):
+        parent = self.parent()
+        if parent is not None:
+            handler = parent.parent()
+            if (handler is not None and
+                ((handler.keyboard_focused_window is parent and
+                  parent.keyboard_focused_widget is self) or
+                 (handler.get_mouse_focused_window() is parent and
+                  parent.get_mouse_focused_widget() is self))):
+                self.sprite = self.sprite_selected
+            else:
+                self.sprite = self.sprite_normal
+
+
+class MenuWindow(Window):
+
+    """
+    This window allows the user to cycle through its tab-focusable
+    widgets with the arrow keys, and select one with either the Enter
+    key or a joystick button, at which point the window is closed and
+    :meth:`event_choose` is called.  Meant to be used with
+    :class:`xsge.gui.MenuItem` widgets.
+    """
+
+    def __init__(self, parent, x, y, width, height, title="",
+                 background_color=sge.Color("#0000"), border=False):
+        super(MenuWindow, self).__init__(parent, x, y, width, height, title,
+                                         background_color, border)
+        self.__axes = {}
+
+    def event_key_press(self, key, char):
+        if key in ("up", "down"):
+            if self.widgets:
+                try:
+                    i = self.widgets.index(self.keyboard_focused_widget)
+                except ValueError:
+                    i = -1
+
+                d = -1 if key == "up" else 1
+                for _ in six.moves.range(len(self.widgets)):
+                    i += d
+                    i %= len(self.widgets)
+                    if self.widgets[i].tab_focus:
+                        self.keyboard_focused_widget = self.widgets[i]
+                        break
+        elif key == in ("enter", "kp_enter"):
+            # TODO: Close window, indicate selection
+            pass
+
+    def event_joystick_axis_move(self, js_name, js_id, axis, value):
+        if axis == 1:
+            prev = self.__axes.get((js_id, axis), 0)
+            self.__axes[(js_id, axis)] = value
+
+            if prev > -joystick_threshold and value <= -joystick_threshold:
+                self.event_key_press("up", "")
+            elif prev < joystick_threshold and value >= joystick_threshold:
+                self.event_key_press("down", "")
+
+    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
+        if not x:
+            if y < 0:
+                self.event_key_press("up", "")
+            else:
+                self.event_key_press("down", "")
+
+    def event_joystick_button_press(self, js_name, js_id, button):
+        self.event_key_press("enter", "\n")
 
 
 class MessageDialog(Dialog):

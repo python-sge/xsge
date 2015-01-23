@@ -63,6 +63,16 @@ xsge.gui.Window Event Methods
 
 .. automethod:: xsge.gui.Window.event_mouse_button_release
 
+.. automethod:: xsge.gui.Window.event_joystick_axis_move
+
+.. automethod:: xsge.gui.Window.event_joystick_hat_move
+
+.. automethod:: xsge.gui.Window.event_joystick_trackball_move
+
+.. automethod:: xsge.gui.Window.event_joystick_button_press
+
+.. automethod:: xsge.gui.Window.event_joystick_button_release
+
 .. automethod:: xsge.gui.Window.event_titlebar_mouse_button_press
 
 .. automethod:: xsge.gui.Window.event_titlebar_mouse_button_release
@@ -74,6 +84,16 @@ xsge.gui.Window Event Methods
 .. automethod:: xsge.gui.Window.event_global_mouse_button_press
 
 .. automethod:: xsge.gui.Window.event_global_mouse_button_release
+
+.. automethod:: xsge.gui.Window.event_global_joystick_axis_move
+
+.. automethod:: xsge.gui.Window.event_global_joystick_hat_move
+
+.. automethod:: xsge.gui.Window.event_global_joystick_trackball_move
+
+.. automethod:: xsge.gui.Window.event_global_joystick_button_press
+
+.. automethod:: xsge.gui.Window.event_global_joystick_button_release
 
 .. automethod:: xsge.gui.Window.event_close
 
@@ -117,6 +137,16 @@ xsge.gui.Widget Event Methods
 
 .. automethod:: xsge.gui.Widget.event_mouse_button_release
 
+.. automethod:: xsge.gui.Widget.event_joystick_axis_move
+
+.. automethod:: xsge.gui.Widget.event_joystick_hat_move
+
+.. automethod:: xsge.gui.Widget.event_joystick_trackball_move
+
+.. automethod:: xsge.gui.Widget.event_joystick_button_press
+
+.. automethod:: xsge.gui.Widget.event_joystick_button_release
+
 .. automethod:: xsge.gui.Widget.event_global_key_press
 
 .. automethod:: xsge.gui.Widget.event_global_key_release
@@ -124,6 +154,16 @@ xsge.gui.Widget Event Methods
 .. automethod:: xsge.gui.Widget.event_global_mouse_button_press
 
 .. automethod:: xsge.gui.Widget.event_global_mouse_button_release
+
+.. automethod:: xsge.gui.Widget.event_global_joystick_axis_move
+
+.. automethod:: xsge.gui.Widget.event_global_joystick_hat_move
+
+.. automethod:: xsge.gui.Widget.event_global_joystick_trackball_move
+
+.. automethod:: xsge.gui.Widget.event_global_joystick_button_press
+
+.. automethod:: xsge.gui.Widget.event_global_joystick_button_release
 
 xsge.gui.Label
 --------------

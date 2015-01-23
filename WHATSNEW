@@ -12,6 +12,29 @@ without any warranty.
 
 Additions:
 + xsge.menu
++ xsge.gui.Window.event_joystick_axis_move
++ xsge.gui.Window.event_joystick_hat_move
++ xsge.gui.Window.event_joystick_trackball_move
++ xsge.gui.Window.event_joystick_button_press
++ xsge.gui.Window.event_joystick_button_release
++ xsge.gui.Window.event_global_joystick_axis_move
++ xsge.gui.Window.event_global_joystick_hat_move
++ xsge.gui.Window.event_global_joystick_trackball_move
++ xsge.gui.Window.event_global_joystick_button_press
++ xsge.gui.Window.event_global_joystick_button_release
++ xsge.gui.Widget.event_joystick_axis_move
++ xsge.gui.Widget.event_joystick_hat_move
++ xsge.gui.Widget.event_joystick_trackball_move
++ xsge.gui.Widget.event_joystick_button_press
++ xsge.gui.Widget.event_joystick_button_release
++ xsge.gui.Widget.event_global_joystick_axis_move
++ xsge.gui.Widget.event_global_joystick_hat_move
++ xsge.gui.Widget.event_global_joystick_trackball_move
++ xsge.gui.Widget.event_global_joystick_button_press
++ xsge.gui.Widget.event_global_joystick_button_release
+
+Bugfixes:
+- Tab key deselecting everything when reaching the end in xsge.gui.
 
 
 0.5.3

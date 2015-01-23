@@ -39,6 +39,31 @@ __all__ = []
 joystick_threshold = 0.7
 
 
+class Handler(sge.Object):
+
+    """
+    An object of this class needs to exist in any room where menus are
+    to be used.  It feeds SGE events to the menus so they can react to
+    user input.  It also refreshes all menus every frame.
+
+    .. attribute:: menus
+
+       A list of all menus that are currently handled by this handler.
+
+       You don't need to modify this list manually. Instead, use
+       :meth:`xsge.menu.Menu.show` and :meth:`xsge.menu.Menu.hide` to
+       add and remove menus from this list, respectively.
+    """
+
+    def __init__(self):
+        super(Handler, self).__init__(0, 0, visible=False, tangible=False)
+        self.menus = []
+
+    def event_step(self, time_passed, delta_mult):
+        for menu in self.menus[:]:
+            menu.refresh()
+
+
 class Menu(sge.Object):
 
     """
