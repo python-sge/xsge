@@ -36,6 +36,11 @@ Additions:
 + xsge.gui.MenuDialog
 + xsge.gui.get_menu_selection
 
+Misc changes:
+* Methods checking whether a collider is touching walls now return a
+  list of such walls, rather than just returning True or False.  Less
+  efficient, but more useful.
+
 Bugfixes:
 - Tab key deselecting everything when reaching the end in xsge.gui
 - Borderless windows being offset by the border size

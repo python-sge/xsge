@@ -562,135 +562,143 @@ class Collider(sge.Object):
 
     def get_left_touching_wall(self):
         """
-        Return whether the left side of this object is touching the
-        right side of a :class:`SolidRight` object.
+        Return a list of :class:`SolidRight` objects whose right sides
+        are touching the left side of this object.
         """
+        r = []
         for tile in self.collision(SolidRight, x=(self.x - 1)):
             if not self.collision(tile):
-                return True
-
-        return False
+                r.append(tile)
+        return r
 
     def get_right_touching_wall(self):
         """
-        Return whether the right side of this object is touching the
-        right side of a :class:`SolidLeft` object.
+        Return a list of :class:`SolidLeft` objects whose left sides are
+        touching the right side of this object.
         """
+        r = []
         for tile in self.collision(SolidLeft, x=(self.x + 1)):
             if not self.collision(tile):
-                return True
-
-        return False
+                r.append(tile)
+        return r
 
     def get_top_touching_wall(self):
         """
-        Return whether the top side of this object is touching the
-        bottom side of a :class:`SolidBottom` object.
+        Return a list of :class:`SolidTop` objects whose top sides are
+        touching the bottom side of this object.
         """
+        r = []
         for tile in self.collision(SolidBottom, y=(self.y - 1)):
             if not self.collision(tile):
-                return True
-
-        return False
+                r.append(tile)
+        return r
 
     def get_bottom_touching_wall(self):
         """
-        Return whether the bottom side of this object is touching the
-        top side of a :class:`SolidTop` object.
+        Return a list of :class:`SolidBottom` objects whose bottom sides
+        are touching the top side of this object.
         """
+        r = []
         for tile in self.collision(SolidTop, y=(self.y + 1)):
             if not self.collision(tile):
-                return True
-
-        return False
+                r.append(tile)
+        return r
 
     def get_left_touching_slope(self):
         """
-        Return whether the left side of this object is touching the
-        right side of a :class:`SlopeTopRight` or
-        :class:`SlopeBottomRight` object.
+        Return a list of :class:`SlopeTopRight` and
+        :class:`SlopeBottomRight` objects whose right sides are touching
+        the left side of this object.
         """
+        r = []
+
         bbb = round(self.bbox_bottom, NDIG)
         for slope in self.collision(SlopeTopRight, x=(self.x - 1)):
             y = round(slope.get_slope_y(self.bbox_left), NDIG)
             if bbb == y or (self.bbox_bottom >= slope.bbox_bottom and
                             not self.collision(slope)):
-                return True
-        else:
-            bbt = round(self.bbox_top, NDIG)
-            for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
-                y = round(slope.get_slope_y(self.bbox_left), NDIG)
-                if bbt == y or (self.bbox_top <= slope.bbox_top and
-                                not self.collision(sope)):
-                    return True
+                r.append(slope)
 
-        return False
+        bbt = round(self.bbox_top, NDIG)
+        for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
+            y = round(slope.get_slope_y(self.bbox_left), NDIG)
+            if bbt == y or (self.bbox_top <= slope.bbox_top and
+                            not self.collision(sope)):
+                r.append(slope)
+
+        return r
 
     def get_right_touching_slope(self):
         """
-        Return whether the right side of this object is touching the
-        left side of a :class:`SlopeTopLeft` or :class:`SlopeBottomLeft`
-        object.
+        Return a list of :class:`SlopeTopLeft` and
+        :class:`SlopeBottomLeft` objects whose left sides are touching
+        the right side of this object.
         """
+        r = []
+
         bbb = round(self.bbox_bottom, NDIG)
         for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
             y = round(slope.get_slope_y(self.bbox_right), NDIG)
             if bbb == y or (self.bbox_bottom >= slope.bbox_bottom and
                             not self.collision(slope)):
-                return True
-        else:
-            bbt = round(self.bbox_top, NDIG)
-            for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
-                y = round(slope.get_slope_y(self.bbox_right), NDIG)
-                if bbt == y or (self.bbox_top <= slope.bbox_top and
-                                not self.collision(slope)):
-                    return True
+                r.append(slope)
 
-        return False
+        bbt = round(self.bbox_top, NDIG)
+        for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
+            y = round(slope.get_slope_y(self.bbox_right), NDIG)
+            if bbt == y or (self.bbox_top <= slope.bbox_top and
+                            not self.collision(slope)):
+                r.append(slope)
+
+        return r
 
     def get_top_touching_slope(self):
         """
-        Return whether the top side of this object is touching the
-        bottom side of a :class:`SlopeBottomLeft` or
-        :class:`SlopeBottomRight` object.
+        Return a list of :class:`SlopeBottomLeft` and
+        :class:`SlopeBottomRight` objects whose bottom sides are
+        touching the top side of this object.
         """
+        r = []
+
         bbr = round(self.bbox_right, NDIG)
         for slope in self.collision(SlopeBottomLeft, y=(self.y - 1)):
             x = round(slope.get_slope_x(self.bbox_top), NDIG)
             if bbr == x or (self.bbox_right >= slope.bbox_right and
                             not self.collision(slope)):
-                return True
-        else:
-            bbl = round(self.bbox_left, NDIG)
-            for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
-                x = round(slope.get_slope_x(self.bbox_top), NDIG)
-                if bbl == x or (self.bbox_left <= slope.bbox_left and
-                                not self.collision(slope)):
-                    return True
+                r.append(slope)
 
-        return False
+        bbl = round(self.bbox_left, NDIG)
+        for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
+            x = round(slope.get_slope_x(self.bbox_top), NDIG)
+            if bbl == x or (self.bbox_left <= slope.bbox_left and
+                            not self.collision(slope)):
+                r.append(slope)
+
+        return r
 
     def get_bottom_touching_slope(self):
         """
-        Return whether the bottom side of this object is touching the
-        top side of a :class:`SlopeTopLeft` or :class:`SlopeTopRight`
-        object.
+        Return a list of :class:`SlopeTopLeft` and
+        :class:`SlopeTopRight` objects whose top sides are touching the
+        bottom side of this object.
         """
+        r = []
+
         bbr = round(self.bbox_right, NDIG)
         for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
             x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
             if bbr == x or (self.bbox_right >= slope.bbox_right and
                             not self.collision(slope)):
-                return True
-        else:
-            bbl = round(self.bbox_left, NDIG)
-            for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
-                x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
-                if bbl == x or (self.bbox_left <= slope.bbox_left and
-                                not self.collision(slope)):
-                    return True
+                r.append(slope)
 
-        return False
+        bbl = round(self.bbox_left, NDIG)
+        for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
+            x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
+            if bbl == x or (self.bbox_left <= slope.bbox_left and
+                            not self.collision(slope)):
+                r.append(slope)
+
+        return r
 
     def event_physics_collision_left(self, other):
         """
