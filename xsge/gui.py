@@ -874,6 +874,7 @@ class Dialog(Window):
         """
         parent = self.parent()
         if parent is not None:
+            screenshot = sge.Sprite.from_screenshot()
             super(Dialog, self).show()
             parent.keyboard_focused_window = self
             while self in parent.windows:
@@ -946,6 +947,9 @@ class Dialog(Window):
                     delta_mult = t / (1000 / sge.game.fps)
                 else:
                     delta_mult = 1
+
+                # Project screenshot
+                sge.game.project_sprite(screenshot, 0, 0, 0)
 
                 # Project windows
                 self.event_step(time_passed, delta_mult)

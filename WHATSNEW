@@ -40,6 +40,8 @@ Misc changes:
 * Methods checking whether a collider is touching walls now return a
   list of such walls, rather than just returning True or False.  Less
   efficient, but more useful.
+* Modal dialogs now project screenshots of what came before them, to
+  preserve projections that were there at the time.
 
 Bugfixes:
 - Tab key deselecting everything when reaching the end in xsge.gui
