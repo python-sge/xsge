@@ -15,6 +15,7 @@ Contents:
    :maxdepth: 1
 
    gui
+   lighting
    path
    physics
    tmx
