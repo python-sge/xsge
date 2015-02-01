@@ -59,8 +59,8 @@ class Game(sge.Game):
 
 class Circle(sge.Object):
     def __init__(self, x, y, player=0):
-        super(Circle, self).__init__(x, y, tangible=False,
-                                     bbox_width=64, bbox_height=64)
+        super(Circle, self).__init__(x, y, tangible=False, bbox_x=-32,
+                                     bbox_y=-32, bbox_width=64, bbox_height=64)
         self.player = player
 
     def event_begin_step(self, time_passed, delta_mult):
@@ -107,10 +107,12 @@ def main():
     Game(width=640, height=480, collision_events_enabled=False)
 
     # Load sprites
-    light_sprite = sge.Sprite("light", DATA)
-    light_red_sprite = sge.Sprite("light_red", DATA)
-    light_green_sprite = sge.Sprite("light_green", DATA)
-    light_blue_sprite = sge.Sprite("light_blue", DATA)
+    light_sprite = sge.Sprite("light", DATA, origin_x=32, origin_y=32)
+    light_red_sprite = sge.Sprite("light_red", DATA, origin_x=32, origin_y=32)
+    light_green_sprite = sge.Sprite("light_green", DATA, origin_x=32,
+                                    origin_y=32)
+    light_blue_sprite = sge.Sprite("light_blue", DATA, origin_x=32,
+                                   origin_y=32)
     fence = sge.Sprite('fence', DATA)
 
     # Load backgrounds
