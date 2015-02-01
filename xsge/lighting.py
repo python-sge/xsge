@@ -23,6 +23,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
 import sge
 
 
@@ -60,27 +61,52 @@ def project_darkness(z=100000):
     - ``z`` -- The Z-axis position of the darkness in the room.
       Anything with a higher Z-axis value will not be affected.
     """
-    dx = sge.game.current_room.width
-    dy = sge.game.current_room.height
-    dx2 = 0
-    dy2 = 0
+    global _lights
+
+    groups = []
     for view in sge.game.current_room.views:
-        dx = min(dx, view.x)
-        dy = min(dx, view.y)
-        dx2 = max(dx2, view.x + view.width)
-        dy2 = max(dy2, view.y + view.height)
-    width = dx2 - dx
-    height = dy2 - dy
+        my_groups = []
+        for i in six.moves.range(len(groups)):
+            for member in groups[i]:
+                if (view.x + view.width > member.x and
+                        view.x < member.x + member.width and
+                        view.y + view.height > member.y and
+                        view.y < member.y + member.height):
+                    my_groups.append(i)
+                    break
 
-    darkness = sge.Sprite(width=width, height=height)
+        if my_groups:
+            g = my_groups[0]
+            groups[g].append(view)
+            for i in my_groups[1:]:
+                groups[g].extend(groups[i])
+                del groups[i]
+        else:
+            groups.append([view])
 
-    darkness.draw_lock()
-    darkness.draw_rectangle(0, 0, width, height, fill=sge.Color("black"))
-    while _lights:
-        x, y, sprite, image = _lights.pop(0)
-        darkness.draw_sprite(sprite, image, x - dx, y - dy,
-                             blend_mode=sge.BLEND_RGB_MAXIMUM)
-    darkness.draw_unlock()
+    for group in groups:
+        dx = sge.game.current_room.width
+        dy = sge.game.current_room.height
+        dx2 = 0
+        dy2 = 0
+        for view in group:
+            dx = min(dx, view.x)
+            dy = min(dy, view.y)
+            dx2 = max(dx2, view.x + view.width)
+            dy2 = max(dy2, view.y + view.height)
+        width = dx2 - dx
+        height = dy2 - dy
 
-    sge.game.current_room.project_sprite(darkness, 0, dx, dy, z,
-                                         blend_mode=sge.BLEND_RGB_MULTIPLY)
+        darkness = sge.Sprite(width=width, height=height)
+
+        darkness.draw_lock()
+        darkness.draw_rectangle(0, 0, width, height, fill=sge.Color("black"))
+        for x, y, sprite, image in _lights:
+            darkness.draw_sprite(sprite, image, x - dx, y - dy,
+                                 blend_mode=sge.BLEND_RGB_MAXIMUM)
+        darkness.draw_unlock()
+
+        sge.game.current_room.project_sprite(darkness, 0, dx, dy, z,
+                                             blend_mode=sge.BLEND_RGB_MULTIPLY)
+
+    _lights = []

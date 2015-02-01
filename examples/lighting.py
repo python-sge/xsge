@@ -63,15 +63,12 @@ class Circle(sge.Object):
                                      bbox_y=-32, bbox_width=64, bbox_height=64)
         self.player = player
 
-    def event_begin_step(self, time_passed, delta_mult):
+    def light_up(self):
         s = [light_sprite, light_red_sprite, light_green_sprite,
              light_blue_sprite][self.player]
         lighting.project_light(self.x, self.y, s)
 
-    def event_paused_step(self, time_passed, delta_mult):
-        self.event_begin_step(time_passed, delta_mult)
-
-    def event_step(self, time_passed, delta_mult):
+    def event_begin_step(self, time_passed, delta_mult):
         left_key = ['left', 'a', 'j', 'kp_4'][self.player]
         right_key = ['right', 'd', 'l', 'kp_6'][self.player]
         up_key = ['up', 'w', 'i', 'kp_8'][self.player]
@@ -95,6 +92,11 @@ class Circle(sge.Object):
         my_view = sge.game.current_room.views[self.player]
         my_view.x = self.x - (my_view.width // 2)
         my_view.y = self.y - (my_view.height // 2)
+
+        self.light_up()
+
+    def event_paused_step(self, time_passed, delta_mult):
+        self.light_up()
 
 
 def main():
