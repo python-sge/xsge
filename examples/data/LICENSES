@@ -3,7 +3,12 @@ non-functional data files found in this directory.
 
 ========================================================================
 
+fence.png
 level.tmx
+light.png
+light_blue.png
+light_green.png
+light_red.png
 map.tmx
 tiles.png
 tiles.tsx
