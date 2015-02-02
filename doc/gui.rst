@@ -289,3 +289,5 @@ xsge.gui Functions
 .. autofunction:: xsge.gui.show_message
 
 .. autofunction:: xsge.gui.get_text_entry
+
+.. autofunction:: xsge.gui.get_menu_selection
