@@ -201,6 +201,9 @@ class Handler(sge.Object):
         return None
 
     def event_step(self, time_passed, delta_mult):
+        if self.windows and self.keyboard_focused_window not in self.windows:
+            self.keyboard_focused_window = self.windows[-1]
+
         for window in self.windows[:]:
             window.event_step(time_passed, delta_mult)
             for widget in window.widgets:

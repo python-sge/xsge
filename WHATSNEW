@@ -43,6 +43,8 @@ Misc changes:
   efficient, but more useful.
 * Modal dialogs now project screenshots of what came before them, to
   preserve projections that were there at the time.
+* When no xsge.gui window has keyboard focus, the topmost window
+  automatically gains keyboard focus.
 
 Bugfixes:
 - Tab key deselecting everything when reaching the end in xsge.gui
