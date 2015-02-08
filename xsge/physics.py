@@ -705,7 +705,7 @@ class Collider(sge.Object):
         Called when the left side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_left` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -714,7 +714,7 @@ class Collider(sge.Object):
         Called when the right side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_right` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -723,7 +723,7 @@ class Collider(sge.Object):
         Called when the top side of the collider collides with a wall or
         slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_top` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -732,7 +732,7 @@ class Collider(sge.Object):
         Called when the bottom side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_bottom` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -755,7 +755,7 @@ class SolidLeft(sge.Object):
         Called when the left side of the wall collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_left` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -772,7 +772,7 @@ class SolidRight(sge.Object):
         Called when the right side of the wall collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_right` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -789,7 +789,7 @@ class SolidTop(sge.Object):
         Called when the top side of the wall collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_top` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -806,7 +806,7 @@ class SolidBottom(sge.Object):
         Called when the bottom side of the wall collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_bottom` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -870,7 +870,7 @@ class SlopeTopLeft(sge.Object):
         Called when the left side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_left` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -879,7 +879,7 @@ class SlopeTopLeft(sge.Object):
         Called when the top side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_top` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -934,7 +934,7 @@ class SlopeTopRight(sge.Object):
         Called when the right side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_right` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -943,7 +943,7 @@ class SlopeTopRight(sge.Object):
         Called when the top side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_top` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -998,7 +998,7 @@ class SlopeBottomLeft(sge.Object):
         Called when the left side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_left` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -1007,7 +1007,7 @@ class SlopeBottomLeft(sge.Object):
         Called when the bottom side of the slope collides with a
         collider in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_left` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -1062,7 +1062,7 @@ class SlopeBottomRight(sge.Object):
         Called when the right side of the slope collides with a collider
         in the sense of the physics system, rather than in the sense of
         SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_right` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
@@ -1071,7 +1071,7 @@ class SlopeBottomRight(sge.Object):
         Called when the bottom side of the slope collides with a
         collider in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision_bottom` for more information.
+        :meth:`sge.Object.event_collision` for more information.
         """
         pass
 
