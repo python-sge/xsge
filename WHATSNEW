@@ -13,6 +13,9 @@ without any warranty.
 Misc changes:
 * Updated docstrings to stop referencing old directional collision events.
 
+Bugfixes:
+- Positioning of tiles that were a different size than the tileset being wrong
+
 
 0.6
 ------------------------------------------------------------------------

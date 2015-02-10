@@ -296,7 +296,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     if tile.vflip:
                         kwargs["image_yscale"] = -1
                     if tile.dflip:
-                        kwargs["image_yscale"] = kwargs.get("image_yscale", 1) * -1
+                        kwargs["image_yscale"] = -kwargs.get("image_yscale", 1)
                         kwargs["image_rotation"] = 90
 
                     for j in tile_kwargs.setdefault(tile.gid, {}):
@@ -311,6 +311,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
                     x *= tilemap.tilewidth
                     y *= tilemap.tileheight
+                    y += tilemap.tileheight - kwargs["sprite"].height
                     objects.append(cls(x, y, **kwargs))
                     
         elif isinstance(layer, tmx.ObjectGroup):
