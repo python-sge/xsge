@@ -1,5 +1,5 @@
 # xSGE Path
-# Copyright (c) 2014 Julian Marchant <onpon4@riseup.net>
+# Copyright (c) 2014, 2015 Julian Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,9 +62,11 @@ class Path(sge.Object):
                  bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
         super(Path, self).__init__(
             x, y, z=z, sprite=sprite, visible=visible, active=active,
             checks_collisions=checks_collisions, tangible=tangible,
@@ -72,14 +74,15 @@ class Path(sge.Object):
             bbox_height=bbox_height, regulate_origin=regulate_origin,
             collision_ellipse=collision_ellipse,
             collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, image_index=image_index,
+            yvelocity=yvelocity, xacceleration=xacceleration,
+            yacceleration=yacceleration, xdeceleration=xdeceleration,
+            ydeceleration=ydeceleration, image_index=image_index,
             image_origin_x=image_origin_x, image_origin_y=image_origin_y,
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
             image_alpha=image_alpha, image_blend=image_blend)
         self.points = list(points)
         self.__objects = {}
-        self.__delta = 0
 
     def follow_start(self, obj, speed, accel=None, decel=None, loop=0):
         """
@@ -102,15 +105,6 @@ class Path(sge.Object):
         the path after it does so the first time.  For example, if set
         to ``2``, the object will follow the path a total of 3 times.
         Set to :const:`None` to loop indefinitely.
-
-        .. note::
-
-           Acceleration and deceleration does not work with delta
-           timing.  This is a simple consequence of the way delta timing
-           works; it is not possible to perfectly predict how much to
-           accelerate or decelerate to achieve the desired effect, and
-           to predict this even decently requires control over the
-           actual movement, which paths don't have.
         """
         self.__objects[id(obj)] = [obj, speed, accel, decel, obj.x, obj.y,
                                    loop, 0]
@@ -129,7 +123,6 @@ class Path(sge.Object):
         pass
 
     def event_step(self, time_passed, delta_mult):
-        self.__delta = (self.__delta % 1) + delta_mult
         for i in list(self.__objects.keys()):
             (obj, speed, accel, decel, start_x, start_y, loop,
              dest) = self.__objects[i]
@@ -149,26 +142,41 @@ class Path(sge.Object):
                 xdist = dx - obj.x
                 ydist = dy - obj.y
                 dist = math.hypot(xdist, ydist)
-
-                obj.move_direction = math.degrees(math.atan2(-ydist, xdist))
+                md = math.atan2(-ydist, xdist)
                 deceling = False
 
                 if decel:
-                    d = obj.speed
-                    decel_dist = 0
-                    while d > 0:
-                        d -= decel
-                        decel_dist += d
-
+                    decel_dist = (obj.speed ** 2) / (2 * decel)
                     if dist <= decel_dist:
-                        obj.speed = max(0, obj.speed - decel)
+                        obj.xdeceleration = -(decel * math.cos(md))
+                        obj.ydeceleration = -(decel * math.sin(md))
+                        d = dist - decel_dist
+                        xs = speed * math.cos(md)
+                        ys = speed * math.sin(md)
+                        obj.xvelocity = math.sqrt(xs ** 2 +
+                                                  2 * obj.xdeceleration * d)
+                        obj.yvelocity = math.sqrt(ys ** 2 +
+                                                  2 * obj.ydeceleration * d)
                         deceling = True
+                    else:
+                        obj.xdeceleration = 0
+                        obj.ydeceleration = 0
+                else:
+                    obj.xdeceleration = 0
+                    obj.ydeceleration = 0
 
                 if not deceling:
                     if accel and obj.speed < speed:
-                        obj.speed = min(speed, obj.speed + accel)
+                        obj.xacceleration = accel * math.cos(md)
+                        obj.yacceleration = accel * math.sin(md)
                     else:
                         obj.speed = speed
+                        obj.move_direction = math.degrees(md)
+                        obj.xacceleration = 0
+                        obj.yacceleration = 0
+                else:
+                    obj.xacceleration = 0
+                    obj.yacceleration = 0
 
                 self.__objects[i] = [obj, speed, accel, decel, start_x,
                                      start_y, loop, dest]

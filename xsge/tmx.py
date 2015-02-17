@@ -54,16 +54,25 @@ class Decoration(sge.Object):
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
         super(Decoration, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+            x, y, z=z, sprite=sprite, visible=visible, active=active,
+            checks_collisions=checks_collisions, tangible=tangible,
+            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+            bbox_height=bbox_height, regulate_origin=regulate_origin,
+            collision_ellipse=collision_ellipse,
+            collision_precise=collision_precise, xvelocity=xvelocity,
+            yvelocity=yvelocity, xacceleration=xacceleration,
+            yacceleration=yacceleration, xdeceleration=xdeceleration,
+            ydeceleration=ydeceleration, image_index=image_index,
+            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
+            image_fps=image_fps, image_xscale=image_xscale,
+            image_yscale=image_yscale, image_rotation=image_rotation,
+            image_alpha=image_alpha, image_blend=image_blend)
 
 
 class Rectangle(sge.Object):
@@ -78,16 +87,25 @@ class Rectangle(sge.Object):
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=False,
                  collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
         super(Rectangle, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+            x, y, z=z, sprite=sprite, visible=visible, active=active,
+            checks_collisions=checks_collisions, tangible=tangible,
+            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+            bbox_height=bbox_height, regulate_origin=regulate_origin,
+            collision_ellipse=collision_ellipse,
+            collision_precise=collision_precise, xvelocity=xvelocity,
+            yvelocity=yvelocity, xacceleration=xacceleration,
+            yacceleration=yacceleration, xdeceleration=xdeceleration,
+            ydeceleration=ydeceleration, image_index=image_index,
+            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
+            image_fps=image_fps, image_xscale=image_xscale,
+            image_yscale=image_yscale, image_rotation=image_rotation,
+            image_alpha=image_alpha, image_blend=image_blend)
 
 
 class Ellipse(sge.Object):
@@ -103,16 +121,25 @@ class Ellipse(sge.Object):
                  bbox_y=None, bbox_width=None, bbox_height=None,
                  regulate_origin=False, collision_ellipse=True,
                  collision_precise=False, xvelocity=0, yvelocity=0,
-                 image_index=0, image_origin_x=None, image_origin_y=None,
-                 image_fps=None, image_xscale=1, image_yscale=1,
-                 image_rotation=0, image_alpha=255, image_blend=None):
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
         super(Ellipse, self).__init__(
-            x, y, z, sprite, visible, active, checks_collisions, tangible,
-            bbox_x, bbox_y, bbox_width, bbox_height, regulate_origin,
-            collision_ellipse, collision_precise, xvelocity, yvelocity,
-            image_index, image_origin_x, image_origin_y, image_fps,
-            image_xscale, image_yscale, image_rotation, image_alpha,
-            image_blend)
+            x, y, z=z, sprite=sprite, visible=visible, active=active,
+            checks_collisions=checks_collisions, tangible=tangible,
+            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
+            bbox_height=bbox_height, regulate_origin=regulate_origin,
+            collision_ellipse=collision_ellipse,
+            collision_precise=collision_precise, xvelocity=xvelocity,
+            yvelocity=yvelocity, xacceleration=xacceleration,
+            yacceleration=yacceleration, xdeceleration=xdeceleration,
+            ydeceleration=ydeceleration, image_index=image_index,
+            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
+            image_fps=image_fps, image_xscale=image_xscale,
+            image_yscale=image_yscale, image_rotation=image_rotation,
+            image_alpha=image_alpha, image_blend=image_blend)
 
 
 class Polygon(path.Path):
