@@ -1429,45 +1429,9 @@ class MobileWall(sge.Object):
                             other.event_physics_collision_bottom(self)
 
     def event_update_position(self, delta_mult):
-        xdecel = (self.xdeceleration and self.xvelocity and
-                  (self.xdeceleration < 0) != (self.xvelocity < 0))
-        ydecel = (self.ydeceleration and self.yvelocity and
-                  (self.ydeceleration < 0) != (self.yvelocity < 0))
-
-        if (self.xacceleration + self.xdeceleration and
-                (self.xacceleration or xdecel)):
-            vi = self.xvelocity
-            a = self.xacceleration * delta_mult
-            self.xvelocity += a
-
-            if xdecel:
-                if abs(self.xvelocity) > abs(self.xdeceleration):
-                    a += self.xdeceleration * delta_mult
-                    self.xvelocity += self.xdeceleration * delta_mult
-                else:
-                    a -= self.xvelocity
-                    self.xvelocity = 0
-
-            d = ((self.xvelocity ** 2) - (vi ** 2)) / (2 * a)
-            self.move_x(math.copysign(d, self.xvelocity))
-        else:
-            self.move_x(self.xvelocity * delta_mult)
-
-        if (self.yacceleration + self.ydeceleration and
-                (self.yacceleration or ydecel)):
-            vi = self.yvelocity
-            a = self.yacceleration * delta_mult
-            self.yvelocity += a
-
-            if ydecel:
-                if abs(self.yvelocity) > abs(self.ydeceleration):
-                    a += self.ydeceleration * delta_mult
-                    self.yvelocity += self.ydeceleration * delta_mult
-                else:
-                    a -= self.yvelocity
-                    self.yvelocity = 0
-
-            d = ((self.yvelocity ** 2) - (vi ** 2)) / (2 * a)
-            self.move_y(math.copysign(d, self.yvelocity))
-        else:
-            self.move_y(self.yvelocity * delta_mult)
+        self.move_x(self.xvelocity * delta_mult +
+                    0.5 * self.xacceleration * (delta_mult ** 2))
+        self.move_y(self.yvelocity * delta_mult +
+                    0.5 * self.yacceleration * (delta_mult ** 2))
+        self.xvelocity += self.xacceleration * delta_mult
+        self.yvelocity += self.yacceleration * delta_mult
