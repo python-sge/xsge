@@ -736,36 +736,6 @@ class Collider(sge.Object):
         """
         pass
 
-    def event_update_position(self, delta_mult):
-        if delta_mult:
-            vi = self.xvelocity
-            a = self.xacceleration
-            self.xvelocity += a * delta_mult
-            if (self.xdeceleration and
-                    (self.xvelocity < 0) != (self.xdeceleration < 0)):
-                dc = self.xdeceleration * delta_mult
-                if abs(self.xvelocity) > abs(dc):
-                    a += self.xdeceleration
-                    self.xvelocity += dc
-                else:
-                    a -= self.xvelocity / delta_mult
-                    self.xvelocity = 0
-            self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
-
-            vi = self.yvelocity
-            a = self.yacceleration
-            self.yvelocity += a * delta_mult
-            if (self.ydeceleration and
-                    (self.yvelocity < 0) != (self.ydeceleration < 0)):
-                dc = self.ydeceleration * delta_mult
-                if abs(self.yvelocity) > abs(dc):
-                    a += self.ydeceleration
-                    self.yvelocity += dc
-                else:
-                    a -= self.yvelocity / delta_mult
-                    self.yvelocity = 0
-            self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
-
 
 class SolidLeft(sge.Object):
 
@@ -1413,33 +1383,3 @@ class MobileWall(sge.Object):
                                          True)
                             self.event_physics_collision_top(other)
                             other.event_physics_collision_bottom(self)
-
-    def event_update_position(self, delta_mult):
-        if delta_mult:
-            vi = self.xvelocity
-            a = self.xacceleration
-            self.xvelocity += a * delta_mult
-            if (self.xdeceleration and
-                    (self.xvelocity < 0) != (self.xdeceleration < 0)):
-                dc = self.xdeceleration * delta_mult
-                if abs(self.xvelocity) > abs(dc):
-                    a += self.xdeceleration
-                    self.xvelocity += dc
-                else:
-                    a -= self.xvelocity / delta_mult
-                    self.xvelocity = 0
-            self.move_x(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
-
-            vi = self.yvelocity
-            a = self.yacceleration
-            self.yvelocity += a * delta_mult
-            if (self.ydeceleration and
-                    (self.yvelocity < 0) != (self.ydeceleration < 0)):
-                dc = self.ydeceleration * delta_mult
-                if abs(self.yvelocity) > abs(dc):
-                    a += self.ydeceleration
-                    self.yvelocity += dc
-                else:
-                    a -= self.yvelocity / delta_mult
-                    self.yvelocity = 0
-            self.move_y(vi * delta_mult + 0.5 * a * (delta_mult ** 2))
