@@ -7,13 +7,17 @@ without any warranty.
 
 ========================================================================
 
-0.6.1
+0.7
 ------------------------------------------------------------------------
 
 Misc changes:
 * Updated docstrings to stop referencing old directional collision events.
 * xsge.path.Path's acceleration and deceleration can now work with delta
   timing properly.
+* xsge.physics collision methods now have a "move_loss" attribute,
+  indicating how much movement was lost as a result of the collision.
+  (Only applies to Collider objects; MobileWall objects don't lose
+  movement as a result of collision, so they don't have the new attribute.)
 
 Bugfixes:
 - Positioning of tiles that were a different size than the tileset being wrong

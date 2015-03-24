@@ -171,7 +171,9 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                self.event_physics_collision_right(stopper)
+                move_loss = max(0, self.x - old_x)
+                print(self.x - old_x)
+                self.event_physics_collision_right(stopper, move_loss)
                 stopper.event_physics_collision_left(self)
                 
         elif move < 0:
@@ -256,7 +258,9 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                self.event_physics_collision_left(stopper)
+                move_loss = max(0, old_x - self.x)
+                print(old_x - self.x)
+                self.event_physics_collision_left(stopper, move_loss)
                 stopper.event_physics_collision_right(self)
 
         # Engage stickiness (same whether moving left or right)
@@ -420,7 +424,9 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                self.event_physics_collision_bottom(stopper)
+                move_loss = max(0, self.y - old_y)
+                print(self.y - old_y)
+                self.event_physics_collision_bottom(stopper, move_loss)
                 stopper.event_physics_collision_top(self)
                 
         elif move < 0:
@@ -505,7 +511,8 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                self.event_physics_collision_top(stopper)
+                move_loss = max(0, old_y - self.y)
+                self.event_physics_collision_top(stopper, move_loss)
                 stopper.event_physics_collision_bottom(self)
 
         # Engage stickiness (same whether moving left or right)
@@ -700,39 +707,52 @@ class Collider(sge.Object):
 
         return r
 
-    def event_physics_collision_left(self, other):
+    def event_physics_collision_left(self, other, move_loss):
         """
         Called when the left side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
-        sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision` for more information.
+        sense of SGE collision detection.
+
+        Arguments:
+
+        - ``move_loss`` -- The amount of movement that was prevented by
+          the collision in pixels.  For example, if the object would
+          have moved 6 pixels, but only moved 2 pixels as a result of
+          this collision, this value will be ``4``.  This can be used to
+          undo such a reduction in movement.
+
+        See the documentation for :meth:`sge.Object.event_collision` for
+        more information.
         """
         pass
 
-    def event_physics_collision_right(self, other):
+    def event_physics_collision_right(self, other, move_loss):
         """
         Called when the right side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision` for more information.
+        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        more information.
         """
         pass
 
-    def event_physics_collision_top(self, other):
+    def event_physics_collision_top(self, other, move_loss):
         """
         Called when the top side of the collider collides with a wall or
         slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision` for more information.
+        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        more information.
         """
         pass
 
-    def event_physics_collision_bottom(self, other):
+    def event_physics_collision_bottom(self, other, move_loss):
         """
         Called when the bottom side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`sge.Object.event_collision` for more information.
+        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        more information.
         """
         pass
 
