@@ -171,8 +171,7 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                move_loss = max(0, self.x - old_x)
-                print(self.x - old_x)
+                move_loss = max(0, abs(move) - abs(self.x - old_x))
                 self.event_physics_collision_right(stopper, move_loss)
                 stopper.event_physics_collision_left(self)
                 
@@ -258,8 +257,7 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                move_loss = max(0, old_x - self.x)
-                print(old_x - self.x)
+                move_loss = max(0, abs(move) - abs(self.x - old_x))
                 self.event_physics_collision_left(stopper, move_loss)
                 stopper.event_physics_collision_right(self)
 
@@ -424,8 +422,7 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                move_loss = max(0, self.y - old_y)
-                print(self.y - old_y)
+                move_loss = max(0, abs(move) - abs(self.y - old_y))
                 self.event_physics_collision_bottom(stopper, move_loss)
                 stopper.event_physics_collision_top(self)
                 
@@ -511,7 +508,7 @@ class Collider(sge.Object):
                     stopper = other
 
             if stopper is not None:
-                move_loss = max(0, old_y - self.y)
+                move_loss = max(0, abs(move) - abs(self.y - old_y))
                 self.event_physics_collision_top(stopper, move_loss)
                 stopper.event_physics_collision_bottom(self)
 
