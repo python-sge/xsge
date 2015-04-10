@@ -34,7 +34,7 @@ specification.
 """.strip()
 
 setup(name="xsge",
-      version="0.7",
+      version="0.7.1a0",
       description="Extensions for the SGE",
       long_description=long_description,
       author="Julian Marchant",

@@ -131,7 +131,7 @@ class Path(sge.Object):
             dx = dp[0] + start_x
             dy = dp[1] + start_y
 
-            if math.hypot(dx - obj.x, dy - obj.y) < obj.speed:
+            if math.hypot(dx - obj.x, dy - obj.y) / delta_mult < obj.speed:
                 dest += 1
                 obj.speed = 0
 
