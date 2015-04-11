@@ -1,0 +1,36 @@
+Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+xSGE is a collection of extensions for the SGE licensed under the GNU
+General Public License.  They are designed to give additional features
+to free/libre software games which aren't necessary, but are nice to
+have.
+
+xSGE extensions are not dependent on any particular SGE implementation.
+They should work with any implementation that follows the specification.
+
+This extension provides an easy-to-use framework for collision physics.
+This is especially useful for platformers, though it can also be useful
+for other types of games.
+
+INSTALLATION
+
+First, install the dependencies:
+
+- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
+- SGE Game Engine 0.18 <http://stellarengine.nongnu.org>
+
+Once you have all the dependencies, install this package with the
+included setup.py script, e.g.:
+
+    python setup.py install
+
+USAGE
+
+The documentation for this package can be found in the "doc" folder.

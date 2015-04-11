@@ -20,7 +20,8 @@ from __future__ import unicode_literals
 import os
 
 import sge
-from xsge import physics, tmx
+import xsge_physics
+import xsge_tmx
 
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
@@ -45,7 +46,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Player(physics.Collider):
+class Player(xsge_physics.Collider):
 
     on_floor = False
     on_slope = False
@@ -87,25 +88,26 @@ class Player(physics.Collider):
             if self.on_floor or self.on_slope:
                 self.yvelocity = -JUMP_SPEED
 
-    def event_physics_collision_left(self, other, move_loss):
-        if isinstance(other, physics.SolidRight):
+    def event_xsge_physics_collision_left(self, other, move_loss):
+        if isinstance(other, xsge_physics.SolidRight):
             self.xvelocity = 0
 
-    def event_physics_collision_right(self, other, move_loss):
-        if isinstance(other, physics.SolidLeft):
+    def event_xsge_physics_collision_right(self, other, move_loss):
+        if isinstance(other, xsge_physics.SolidLeft):
             self.xvelocity = 0
 
-    def event_physics_collision_top(self, other, move_loss):
-        if isinstance(other, (physics.SolidBottom, physics.SlopeBottomLeft,
-                              physics.SlopeBottomRight)):
+    def event_xsge_physics_collision_top(self, other, move_loss):
+        if isinstance(other, (xsge_physics.SolidBottom,
+                              xsge_physics.SlopeBottomLeft,
+                              xsge_physics.SlopeBottomRight)):
             self.yvelocity = 0
 
-    def event_physics_collision_bottom(self, other, move_loss):
-        if isinstance(other, physics.SolidTop):
+    def event_xsge_physics_collision_bottom(self, other, move_loss):
+        if isinstance(other, xsge_physics.SolidTop):
             self.yvelocity = 0
 
 
-class Solid(physics.Solid):
+class Solid(xsge_physics.Solid):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("visible", False)
@@ -113,7 +115,7 @@ class Solid(physics.Solid):
         super(Solid, self).__init__(*args, **kwargs)
 
 
-class SolidTop(physics.SolidTop):
+class SolidTop(xsge_physics.SolidTop):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("visible", False)
@@ -121,7 +123,7 @@ class SolidTop(physics.SolidTop):
         super(SolidTop, self).__init__(*args, **kwargs)
 
 
-class SlopeTopLeft(physics.SlopeTopLeft):
+class SlopeTopLeft(xsge_physics.SlopeTopLeft):
 
     xsticky_top = True
 
@@ -131,7 +133,7 @@ class SlopeTopLeft(physics.SlopeTopLeft):
         super(SlopeTopLeft, self).__init__(*args, **kwargs)
 
 
-class SlopeTopRight(physics.SlopeTopRight):
+class SlopeTopRight(xsge_physics.SlopeTopRight):
 
     xsticky_top = True
 
@@ -141,7 +143,7 @@ class SlopeTopRight(physics.SlopeTopRight):
         super(SlopeTopRight, self).__init__(*args, **kwargs)
 
 
-class SlopeBottomLeft(physics.SlopeBottomLeft):
+class SlopeBottomLeft(xsge_physics.SlopeBottomLeft):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("visible", False)
@@ -149,7 +151,7 @@ class SlopeBottomLeft(physics.SlopeBottomLeft):
         super(SlopeBottomLeft, self).__init__(*args, **kwargs)
 
 
-class SlopeBottomRight(physics.SlopeBottomRight):
+class SlopeBottomRight(xsge_physics.SlopeBottomRight):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("visible", False)
@@ -163,7 +165,8 @@ types = {"player": Player, "solid": Solid, "unisolid": SolidTop,
          "slope_topleft": SlopeTopLeft, "slope_topright": SlopeTopRight,
          "slope_bottomleft": SlopeBottomLeft,
          "slope_bottomright": SlopeBottomRight}
-sge.game.start_room = tmx.load(os.path.join(DATA, "level.tmx"), types=types)
+sge.game.start_room = xsge_tmx.load(os.path.join(DATA, "level.tmx"),
+                                    types=types)
 
 
 if __name__ == "__main__":

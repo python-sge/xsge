@@ -19,7 +19,7 @@ from __future__ import unicode_literals
 
 import six
 import sge
-from xsge import gui
+import xsge_gui
 
 
 class Game(sge.Game):
@@ -37,7 +37,7 @@ class Room(sge.Room):
     def event_room_start(self):
         c = True
         while c:
-            i = gui.get_menu_selection(
+            i = xsge_gui.get_menu_selection(
                 320, 240, ["Item 1", "Item 2", "Item 3", "Exit"],
                 font_normal=font, color_normal=sge.Color("black"),
                 color_selected=sge.Color("red"),
@@ -52,7 +52,7 @@ class Room(sge.Room):
 
 
 Game(640, 480)
-gui.init()
+xsge_gui.init()
 
 font = sge.Font("Liberation Mono")
 

@@ -1,5 +1,5 @@
-# setup.py
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# setup.py alias
+# Copyright (C) 2015 Julian Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -20,39 +20,22 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 import sys
-from distutils.core import setup
+import subprocess
 
-long_description = """
-xSGE is a collection of extensions for the SGE licensed under the GNU
-General Public License.  They are designed to give additional features
-to libre software games without any extra work.
+EXECUTABLE = sys.executable
+DIR = os.path.abspath(os.path.dirname(__file__))
 
-xSGE extensions are not dependent on any particular SGE implementation.
-They should work with any implementation that follows the
-specification.
-""".strip()
 
-setup(name="xsge",
-      version="0.7.1a0",
-      description="Extensions for the SGE",
-      long_description=long_description,
-      author="Julian Marchant",
-      author_email="onpon4@riseup.net",
-      url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
-                   "Intended Audience :: Developers",
-                   "License :: DFSG approved",
-                   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-                   "Operating System :: OS Independent",
-                   "Programming Language :: Python :: 2",
-                   "Programming Language :: Python :: 3",
-                   "Topic :: Games/Entertainment",
-                   "Topic :: Software Development"],
-      license="GNU General Public License",
-      packages=["xsge"],
-      package_dir={"xsge": "xsge"},
-      package_data={"xsge": ["COPYING", "gui_data/*"]},
-      requires=["sge (>=0.17, <0.18)", "six (>=1.4.0)", "tmx (>=1.2.2)"],
-      provides=["xsge"],
-     )
+if EXECUTABLE:
+    for d in os.listdir(DIR):
+        dirname = os.path.join(DIR, d)
+        if os.path.isdir(dirname):
+            os.chdir(dirname)
+            if os.path.isfile("setup.py"):
+                subprocess.call([EXECUTABLE, "setup.py"] + sys.argv[1:])
+else:
+    print("Failed to determine the Python executable to use. Please edit")
+    print("this script to define the Python binary explicitly, or otherwise")
+    print("install each package individually.")

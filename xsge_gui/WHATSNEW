@@ -1,0 +1,92 @@
+Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+========================================================================
+
+0.8
+------------------------------------------------------------------------
+
+Misc changes:
+* Renamed from xsge.gui to xsge_gui.
+
+
+0.6
+------------------------------------------------------------------------
+
+Additions:
++ xsge.gui.Window.event_joystick_axis_move
++ xsge.gui.Window.event_joystick_hat_move
++ xsge.gui.Window.event_joystick_trackball_move
++ xsge.gui.Window.event_joystick_button_press
++ xsge.gui.Window.event_joystick_button_release
++ xsge.gui.Window.event_global_joystick_axis_move
++ xsge.gui.Window.event_global_joystick_hat_move
++ xsge.gui.Window.event_global_joystick_trackball_move
++ xsge.gui.Window.event_global_joystick_button_press
++ xsge.gui.Window.event_global_joystick_button_release
++ xsge.gui.Widget.event_joystick_axis_move
++ xsge.gui.Widget.event_joystick_hat_move
++ xsge.gui.Widget.event_joystick_trackball_move
++ xsge.gui.Widget.event_joystick_button_press
++ xsge.gui.Widget.event_joystick_button_release
++ xsge.gui.Widget.event_global_joystick_axis_move
++ xsge.gui.Widget.event_global_joystick_hat_move
++ xsge.gui.Widget.event_global_joystick_trackball_move
++ xsge.gui.Widget.event_global_joystick_button_press
++ xsge.gui.Widget.event_global_joystick_button_release
++ xsge.gui.MenuItem
++ xsge.gui.MenuWindow
++ xsge.gui.MenuDialog
++ xsge.gui.get_menu_selection
+
+Misc changes:
+* Modal dialogs now project screenshots of what came before them, to
+  preserve projections that were there at the time.
+* When no xsge.gui window has keyboard focus, the topmost window
+  automatically gains keyboard focus.
+
+Bugfixes:
+- Tab key deselecting everything when reaching the end in xsge.gui
+- Borderless windows being offset by the border size
+
+
+0.4
+------------------------------------------------------------------------
+
+Misc changes:
+* Made Six an external dependency.
+
+
+0.3.0
+------------------------------------------------------------------------
+
+Additions:
++ "default" argument for xsge.gui message boxes
+
+Misc changes:
+* Arguments for xsge.gui message boxes and text entry dialogs reordered.
+* Height for dialog boxes can be set to None to size automatically.
+* Python 2 compatibility is now better and more explicit.
+
+Bugfixes:
+- Incomplete __all__ specification in xsge.gui
+
+
+0.2.0
+------------------------------------------------------------------------
+
+Misc changes:
+* Arguments for xsge.gui.show_message and xsge.gui.get_text_entry reordered.
+* Setting ``parent`` in xsge.gui.show_message and
+  xsge.gui.get_text_entry to None now creates a handler automatically.
+  This is now the default value of ``parent``.
+
+
+0.1.0
+------------------------------------------------------------------------
+
+First release.

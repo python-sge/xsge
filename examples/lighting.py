@@ -21,7 +21,7 @@ import os
 import random
 
 import sge
-from xsge import lighting
+import xsge_lighting
 
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
@@ -32,7 +32,7 @@ circles = []
 class Game(sge.Game):
 
     def event_step(self, time_passed, delta_mult):
-        lighting.project_darkness()
+        xsge_lighting.project_darkness()
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
                           sge.Color("#808080"), thickness=3)
         self.project_line(0, self.height / 2, self.width, self.height / 2,
@@ -66,7 +66,7 @@ class Circle(sge.Object):
     def light_up(self):
         s = [light_sprite, light_red_sprite, light_green_sprite,
              light_blue_sprite][self.player]
-        lighting.project_light(self.x, self.y, s)
+        xsge_lighting.project_light(self.x, self.y, s)
 
     def event_begin_step(self, time_passed, delta_mult):
         left_key = ['left', 'a', 'j', 'kp_4'][self.player]

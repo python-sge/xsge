@@ -20,7 +20,7 @@ from __future__ import unicode_literals
 import os
 
 import sge
-from xsge import tmx
+import xsge_tmx
 
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
@@ -45,7 +45,7 @@ class Game(sge.Game):
 
 
 Game(800, 600)
-sge.game.start_room = tmx.load(os.path.join(DATA, "map.tmx"))
+sge.game.start_room = xsge_tmx.load(os.path.join(DATA, "map.tmx"))
 
 
 if __name__ == "__main__":

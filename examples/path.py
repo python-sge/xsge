@@ -18,7 +18,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sge
-from xsge import path
+import xsge_path
 
 
 class Game(sge.Game):
@@ -46,7 +46,7 @@ def main():
     obj = sge.Object(400, 300, sprite=square_sprite)
     points = [(-100, -100), (0, -150), (100, -100), (100, 100), (-100, 100),
               (0, 0)]
-    pth = path.Path(200, 150, points)
+    pth = xsge_path.Path(200, 150, points)
     pth.follow_start(obj, 5, 0.1, 0.1, loop=None)
     objects = [obj, pth]
 

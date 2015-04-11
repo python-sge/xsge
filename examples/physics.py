@@ -18,7 +18,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sge
-from xsge import physics
+import xsge_physics
 
 
 class Game(sge.Game):
@@ -31,7 +31,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Player(physics.Collider):
+class Player(xsge_physics.Collider):
 
     def event_step(self, time_passed, delta_mult):
         sge.game.window_text = "({}, {})".format(self.x, self.y)
@@ -41,7 +41,7 @@ class Player(physics.Collider):
                           sge.keyboard.get_pressed("up")) * 4
 
 
-class Square(physics.Solid, physics.MobileWall):
+class Square(xsge_physics.Solid, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity = (sge.keyboard.get_pressed("d") -
@@ -50,7 +50,7 @@ class Square(physics.Solid, physics.MobileWall):
                           sge.keyboard.get_pressed("w")) * 4
 
 
-class DiamondTopLeft(physics.SlopeTopLeft, physics.MobileWall):
+class DiamondTopLeft(xsge_physics.SlopeTopLeft, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity = (sge.keyboard.get_pressed("l") -
@@ -59,7 +59,7 @@ class DiamondTopLeft(physics.SlopeTopLeft, physics.MobileWall):
                           sge.keyboard.get_pressed("i")) * 4
 
 
-class DiamondTopRight(physics.SlopeTopRight, physics.MobileWall):
+class DiamondTopRight(xsge_physics.SlopeTopRight, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity = (sge.keyboard.get_pressed("l") -
@@ -68,7 +68,7 @@ class DiamondTopRight(physics.SlopeTopRight, physics.MobileWall):
                           sge.keyboard.get_pressed("i")) * 4
 
 
-class DiamondBottomLeft(physics.SlopeBottomLeft, physics.MobileWall):
+class DiamondBottomLeft(xsge_physics.SlopeBottomLeft, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity = (sge.keyboard.get_pressed("l") -
@@ -77,7 +77,8 @@ class DiamondBottomLeft(physics.SlopeBottomLeft, physics.MobileWall):
                           sge.keyboard.get_pressed("i")) * 4
 
 
-class DiamondBottomRight(physics.SlopeBottomRight, physics.MobileWall):
+class DiamondBottomRight(xsge_physics.SlopeBottomRight,
+                         xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
         self.xvelocity = (sge.keyboard.get_pressed("l") -
@@ -127,30 +128,30 @@ def main():
 
     # Create objects
     player = Player(400, 300, 5, sprite=square_sprite)
-    bottom_1 = physics.SolidTop(400, 500, 0, sprite=solid_sprite)
-    bottom_2 = physics.SolidTop(416, 500, 0, sprite=solid_sprite)
-    bottom_3 = physics.SolidTop(384, 500, 0, sprite=solid_sprite)
-    top_1 = physics.SolidBottom(400, 100, 0, sprite=solid_sprite)
-    top_2 = physics.SolidBottom(416, 100, 0, sprite=solid_sprite)
-    top_3 = physics.SolidBottom(384, 100, 0, sprite=solid_sprite)
-    left_1 = physics.SolidRight(100, 300, 0, sprite=solid_sprite)
-    left_2 = physics.SolidRight(100, 316, 0, sprite=solid_sprite)
-    left_3 = physics.SolidRight(100, 284, 0, sprite=solid_sprite)
-    right_1 = physics.SolidLeft(700, 300, 0, sprite=solid_sprite)
-    right_2 = physics.SolidLeft(700, 316, 0, sprite=solid_sprite)
-    right_3 = physics.SolidLeft(700, 284, 0, sprite=solid_sprite)
-    slope1_1 = physics.SlopeTopLeft(700, 500, 0, sprite=slope1_sprite)
-    slope1_2 = physics.SlopeTopLeft(732, 484, 0, sprite=slope1_sprite)
-    slope1_3 = physics.SlopeTopLeft(668, 516, 0, sprite=slope1_sprite)
-    slope2_1 = physics.SlopeTopRight(100, 500, 0, sprite=slope2_sprite)
-    slope2_2 = physics.SlopeTopRight(116, 532, 0, sprite=slope2_sprite)
-    slope2_3 = physics.SlopeTopRight(84, 468, 0, sprite=slope2_sprite)
-    slope3_1 = physics.SlopeBottomRight(100, 100, 0, sprite=slope3_sprite)
-    slope3_2 = physics.SlopeBottomRight(116, 84, 0, sprite=slope3_sprite)
-    slope3_3 = physics.SlopeBottomRight(84, 116, 0, sprite=slope3_sprite)
-    slope4_1 = physics.SlopeBottomLeft(700, 100, 0, sprite=slope4_sprite)
-    slope4_2 = physics.SlopeBottomLeft(716, 116, 0, sprite=slope4_sprite)
-    slope4_3 = physics.SlopeBottomLeft(684, 84, 0, sprite=slope4_sprite)
+    bottom_1 = xsge_physics.SolidTop(400, 500, 0, sprite=solid_sprite)
+    bottom_2 = xsge_physics.SolidTop(416, 500, 0, sprite=solid_sprite)
+    bottom_3 = xsge_physics.SolidTop(384, 500, 0, sprite=solid_sprite)
+    top_1 = xsge_physics.SolidBottom(400, 100, 0, sprite=solid_sprite)
+    top_2 = xsge_physics.SolidBottom(416, 100, 0, sprite=solid_sprite)
+    top_3 = xsge_physics.SolidBottom(384, 100, 0, sprite=solid_sprite)
+    left_1 = xsge_physics.SolidRight(100, 300, 0, sprite=solid_sprite)
+    left_2 = xsge_physics.SolidRight(100, 316, 0, sprite=solid_sprite)
+    left_3 = xsge_physics.SolidRight(100, 284, 0, sprite=solid_sprite)
+    right_1 = xsge_physics.SolidLeft(700, 300, 0, sprite=solid_sprite)
+    right_2 = xsge_physics.SolidLeft(700, 316, 0, sprite=solid_sprite)
+    right_3 = xsge_physics.SolidLeft(700, 284, 0, sprite=solid_sprite)
+    slope1_1 = xsge_physics.SlopeTopLeft(700, 500, 0, sprite=slope1_sprite)
+    slope1_2 = xsge_physics.SlopeTopLeft(732, 484, 0, sprite=slope1_sprite)
+    slope1_3 = xsge_physics.SlopeTopLeft(668, 516, 0, sprite=slope1_sprite)
+    slope2_1 = xsge_physics.SlopeTopRight(100, 500, 0, sprite=slope2_sprite)
+    slope2_2 = xsge_physics.SlopeTopRight(116, 532, 0, sprite=slope2_sprite)
+    slope2_3 = xsge_physics.SlopeTopRight(84, 468, 0, sprite=slope2_sprite)
+    slope3_1 = xsge_physics.SlopeBottomRight(100, 100, 0, sprite=slope3_sprite)
+    slope3_2 = xsge_physics.SlopeBottomRight(116, 84, 0, sprite=slope3_sprite)
+    slope3_3 = xsge_physics.SlopeBottomRight(84, 116, 0, sprite=slope3_sprite)
+    slope4_1 = xsge_physics.SlopeBottomLeft(700, 100, 0, sprite=slope4_sprite)
+    slope4_2 = xsge_physics.SlopeBottomLeft(716, 116, 0, sprite=slope4_sprite)
+    slope4_3 = xsge_physics.SlopeBottomLeft(684, 84, 0, sprite=slope4_sprite)
     square = Square(10, 300, 0, sprite=sqwall_sprite)
     diamond_tl = DiamondTopLeft(700, 240, 0, sprite=diamond_tl_sprite)
     diamond_tr = DiamondTopRight(716, 240, 0, sprite=diamond_tr_sprite)
