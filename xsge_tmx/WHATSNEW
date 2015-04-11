@@ -11,71 +11,14 @@ without any warranty.
 ------------------------------------------------------------------------
 
 Misc changes:
-* Split up xSGE into several distinct packages.
-
-Bugfixes:
-- Delta timing causing objects to get stuck at intersections of paths.
+* Renamed from xsge.tmx to xsge_tmx.
 
 
 0.7
 ------------------------------------------------------------------------
 
-Misc changes:
-* Updated docstrings to stop referencing old directional collision events.
-* xsge.path.Path's acceleration and deceleration can now work with delta
-  timing properly.
-* xsge.physics collision methods now have a "move_loss" attribute,
-  indicating how much movement was lost as a result of the collision.
-  (Only applies to Collider objects; MobileWall objects don't lose
-  movement as a result of collision, so they don't have the new attribute.)
-
 Bugfixes:
 - Positioning of tiles that were a different size than the tileset being wrong
-
-
-0.6
-------------------------------------------------------------------------
-
-Additions:
-+ xsge.gui.Window.event_joystick_axis_move
-+ xsge.gui.Window.event_joystick_hat_move
-+ xsge.gui.Window.event_joystick_trackball_move
-+ xsge.gui.Window.event_joystick_button_press
-+ xsge.gui.Window.event_joystick_button_release
-+ xsge.gui.Window.event_global_joystick_axis_move
-+ xsge.gui.Window.event_global_joystick_hat_move
-+ xsge.gui.Window.event_global_joystick_trackball_move
-+ xsge.gui.Window.event_global_joystick_button_press
-+ xsge.gui.Window.event_global_joystick_button_release
-+ xsge.gui.Widget.event_joystick_axis_move
-+ xsge.gui.Widget.event_joystick_hat_move
-+ xsge.gui.Widget.event_joystick_trackball_move
-+ xsge.gui.Widget.event_joystick_button_press
-+ xsge.gui.Widget.event_joystick_button_release
-+ xsge.gui.Widget.event_global_joystick_axis_move
-+ xsge.gui.Widget.event_global_joystick_hat_move
-+ xsge.gui.Widget.event_global_joystick_trackball_move
-+ xsge.gui.Widget.event_global_joystick_button_press
-+ xsge.gui.Widget.event_global_joystick_button_release
-+ xsge.gui.MenuItem
-+ xsge.gui.MenuWindow
-+ xsge.gui.MenuDialog
-+ xsge.gui.get_menu_selection
-+ xsge.lighting
-
-Misc changes:
-* Methods checking whether a collider is touching walls now return a
-  list of such walls, rather than just returning True or False.  Less
-  efficient, but more useful.
-* Modal dialogs now project screenshots of what came before them, to
-  preserve projections that were there at the time.
-* When no xsge.gui window has keyboard focus, the topmost window
-  automatically gains keyboard focus.
-
-Bugfixes:
-- Tab key deselecting everything when reaching the end in xsge.gui
-- Borderless windows being offset by the border size
-- Crash when following a path
 
 
 0.5.3
@@ -83,7 +26,6 @@ Bugfixes:
 
 Misc changes:
 * Tile objects now take properties from the appropriate tiles and tilesets.
-* Paths now support all sge.Object constructor arguments.
 
 Bugfixes:
 - Assumption that all tilesets have an image (image sequences don't)
@@ -115,69 +57,4 @@ Bugfixes:
 0.5
 ------------------------------------------------------------------------
 
-Additions:
-+ xsge.physics.MobileWall
-+ xsge.tmx
-+ xsge.path
-
-Misc changes:
-* "xsticky" and "ysticky" class attributes of slopes renamed to be more
-  specific and prevent name conflicts.
-* xsge.physics collision events are now special "event_physics_collision"
-  events, rather than just being the regular SGE collision events.
-* Slope collisions now happen before wall collisions (preventing some
-  bad behavior).
-* Objects now move along slopes at the speed that they should, rather
-  than maintaining the same x or y velocity (and therefore zipping at
-  high speed through slopes), by default.
-
-Bugfixes:
-- Incorrect behavior with slope stickiness (prevented it from doing its
-  job and caused other side effects)
-- Collision events in xsge.physics occurring with walls that were *behind*
-  the wall that was collided with
-- Getting stuck to slopes without actually touching them
-
-
-0.4
-------------------------------------------------------------------------
-
-Additions:
-+ xsge.physics
-
-Removals:
-- xsge.transition
-
-Misc changes:
-* Made Six an external dependency.
-
-
-0.3.0
-------------------------------------------------------------------------
-
-Additions:
-+ "default" argument for xsge.gui message boxes
-
-Misc changes:
-* Arguments for xsge.gui message boxes and text entry dialogs reordered.
-* Height for dialog boxes can be set to None to size automatically.
-* Python 2 compatibility is now better and more explicit.
-
-Bugfixes:
-- Incomplete __all__ specification in xsge.gui
-
-
-0.2.0
-------------------------------------------------------------------------
-
-Misc changes:
-* Arguments for xsge.gui.show_message and xsge.gui.get_text_entry reordered.
-* Setting ``parent`` in xsge.gui.show_message and
-  xsge.gui.get_text_entry to None now creates a handler automatically.
-  This is now the default value of ``parent``.
-
-
-0.1.0
-------------------------------------------------------------------------
-
-First release, containing xsge.gui and xsge.transition.
+First release.

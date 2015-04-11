@@ -42,8 +42,7 @@ import os
 import sge
 import six
 import tmx
-
-from xsge import path
+import xsge_path
 
 
 __all__ = ["load"]
@@ -150,19 +149,19 @@ class Ellipse(sge.Object):
             image_alpha=image_alpha, image_blend=image_blend)
 
 
-class Polygon(path.Path):
+class Polygon(xsge_path.Path):
 
     """
     Default class for polygon objects.  Identical to
-    :class:`xsge.path.Path`.
+    :class:`xsge_path.Path`.
     """
 
 
-class Polyline(path.Path):
+class Polyline(xsge_path.Path):
 
     """
     Default class for polyline objects.  Identical to
-    :class:`xsge.path.Path`.
+    :class:`xsge_path.Path`.
     """
 
 
