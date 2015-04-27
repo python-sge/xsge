@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="30" tilewidth="16" tileheight="16" backgroundcolor="#55ffff">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <layer name="Tile Layer 1" width="40" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1tsKgzAMBuDKVti8EMbe/123XRRCSNqcOoP6Q0BsrR8eSpZSypK8cKrwHDdWmfPaXD5fLp8vR/Kt39qYeifwceOVmH8E363E7s+RPo2N88Hx+8BHfZOcT2uT+LAR+6jrqTGLTeqDRovPaqN862A+3E8kvuj+Bd+X+/6lPs21LWfx9d5JBt8DrPPszJOsu4HjKF8vM56f5F/a02e9r3ReZp9mf/P4Rvt3q5dh7QhfL/B/9mSW75dm9GSmT5tR74D7u39G2tfsYfT0XFnqA76VBJY=
+  </data>
+ </layer>
+ <objectgroup color="#0000ff" name="slope_bottomright" width="40" height="30">
+  <object x="304" y="288" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup color="#0000ff" name="slope_bottomleft" width="40" height="30">
+  <object x="320" y="384" width="32" height="32"/>
+  <object x="256" y="288" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup color="#0000ff" name="slope_topright" width="40" height="30">
+  <object x="144" y="176" width="48" height="48"/>
+  <object x="16" y="432" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup color="#0000ff" name="slope_topleft" width="40" height="30">
+  <object x="416" y="144" width="80" height="80"/>
+  <object x="496" y="416" width="48" height="48"/>
+ </objectgroup>
+ <objectgroup color="#ffff00" name="unisolid" width="40" height="30">
+  <object x="176" y="112" width="96" height="16"/>
+  <object x="272" y="176" width="80" height="16"/>
+  <object x="560" y="288" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup color="#ffffff" name="solid" width="40" height="30">
+  <object x="496" y="144" width="128" height="96"/>
+  <object x="400" y="224" width="96" height="16"/>
+  <object x="624" y="0" width="16" height="480"/>
+  <object x="0" y="464" width="624" height="16"/>
+  <object x="0" y="0" width="16" height="464"/>
+  <object x="16" y="0" width="608" height="16"/>
+  <object x="96" y="176" width="48" height="64"/>
+  <object x="144" y="224" width="64" height="16"/>
+  <object x="64" y="320" width="128" height="16"/>
+  <object x="224" y="368" width="144" height="16"/>
+  <object x="352" y="384" width="16" height="32"/>
+  <object x="544" y="416" width="80" height="48"/>
+  <object x="608" y="240" width="16" height="176"/>
+  <object x="256" y="272" width="96" height="16"/>
+  <object x="432" y="352" width="96" height="16"/>
+  <object x="272" y="288" width="32" height="16"/>
+ </objectgroup>
+ <objectgroup name="player" width="40" height="30">
+  <object gid="2" x="128" y="464">
+   <properties>
+    <property name="bbox_width" value="8"/>
+    <property name="bbox_x" value="4"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

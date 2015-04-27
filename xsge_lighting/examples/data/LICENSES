@@ -4,14 +4,10 @@ non-functional data files found in this directory.
 ========================================================================
 
 fence.png
-level.tmx
 light.png
 light_blue.png
 light_green.png
 light_red.png
-map.tmx
-tiles.png
-tiles.tsx
 
 Author: onpon4 <https://onpon4.github.io>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
