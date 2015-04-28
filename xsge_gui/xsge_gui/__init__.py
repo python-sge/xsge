@@ -118,7 +118,7 @@ __all__ = ["Handler", "Window", "Dialog", "Widget", "Label", "Button",
            "MessageDialog", "TextEntryDialog", "init", "show_message",
            "get_text_entry"]
 
-DATA = os.path.join(os.path.dirname(__file__), "gui_data")
+DATA = os.path.join(os.path.dirname(__file__), "data")
 TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
