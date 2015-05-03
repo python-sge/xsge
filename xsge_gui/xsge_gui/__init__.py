@@ -93,7 +93,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8"
+__version__ = "0.8.1a0"
 
 import os
 import weakref
@@ -2079,6 +2079,7 @@ class MenuWindow(Window):
         super(MenuWindow, self).__init__(parent, x, y, width, height, title,
                                          background_color, border)
         self.__axes = {}
+        self.choice = None
 
     def event_step(self, time_passed, delta_mult):
         if self.keyboard_focused_widget is None and self.widgets:
@@ -2103,7 +2104,7 @@ class MenuWindow(Window):
             try:
                 self.choice = self.widgets.index(self.keyboard_focused_widget)
             except ValueError:
-                self.choice = None
+                pass
 
             self.event_choose()
             self.destroy()
