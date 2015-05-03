@@ -43,7 +43,7 @@ class Room(sge.Room):
                 color_selected=sge.Color("red"),
                 background_color=sge.Color("aqua"), height=200, margin=16,
                 halign="center", valign="middle")
-            if 0 <= i <= 2:
+            if i is not None and 0 <= i <= 2:
                 print("Item {} chosen!".format(i + 1))
             else:
                 c = False
