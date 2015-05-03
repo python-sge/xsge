@@ -46,7 +46,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8"
+__version__ = "0.8.1a0"
 
 import math
 
@@ -738,7 +738,7 @@ class Collider(sge.Object):
         Called when the right side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        :meth:`xsge_physics.Collider.event_physics_collision_left` for
         more information.
         """
         pass
@@ -748,7 +748,7 @@ class Collider(sge.Object):
         Called when the top side of the collider collides with a wall or
         slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        :meth:`xsge_physics.Collider.event_physics_collision_left` for
         more information.
         """
         pass
@@ -758,7 +758,7 @@ class Collider(sge.Object):
         Called when the bottom side of the collider collides with a wall
         or slope in the sense of the physics system, rather than in the
         sense of SGE collision detection.  See the documentation for
-        :meth:`xsge.physics.Collider.event_physics_collision_left` for
+        :meth:`xsge_physics.Collider.event_physics_collision_left` for
         more information.
         """
         pass

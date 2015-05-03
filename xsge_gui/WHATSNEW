@@ -12,6 +12,7 @@ without any warranty.
 
 Bugfixes:
 - Pressing escape in a menu causing an error
+- References to "xsge.gui" remaining in the documentation
 
 
 0.8

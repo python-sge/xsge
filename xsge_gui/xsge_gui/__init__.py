@@ -26,7 +26,7 @@ They should work with any implementation that follows the specification.
 This extension provides a simple toolkit for adding GUIs to a SGE game
 as well as support for modal dialog boxes.
 
-To use this extension, you must call :func:`xsge.gui.init` sometime
+To use this extension, you must call :func:`xsge_gui.init` sometime
 between the creation of the :class:`sge.Game` object and the start of
 the game.
 
@@ -179,7 +179,7 @@ class Handler(sge.Object):
        A list of all windows that are currently handled by this handler.
 
        You don't need to modify this list manually. Instead, use
-       :meth:`xsge.gui.Window.show` and :meth:`xsge.gui.Window.hide` to
+       :meth:`xsge_gui.Window.show` and :meth:`xsge_gui.Window.hide` to
        add and remove windows from this list, respectively.
     """
 
@@ -391,7 +391,7 @@ class Window(object):
 
        The color of this window's background.  If set to :const:`None`,
        it becomes the same value as
-       :data:`xsge.gui.window_background_color`.
+       :data:`xsge_gui.window_background_color`.
 
     .. attribute:: border
 
@@ -487,7 +487,7 @@ class Window(object):
                 parent.windows.insert(0, parent.windows.pop(i))
 
     def destroy(self):
-        """An alias for :meth:`xsge.gui.Window.hide`."""
+        """An alias for :meth:`xsge_gui.Window.hide`."""
         self.hide()
 
     def redraw(self):
@@ -860,7 +860,7 @@ class Window(object):
         Called when the "X" button in the top-right corner of the window
         is pressed.
 
-        By default, this calls :meth:`xsge.gui.Window.destroy`.
+        By default, this calls :meth:`xsge_gui.Window.destroy`.
         """
         self.destroy()
 
@@ -873,7 +873,7 @@ class Dialog(Window):
     They are used for tasks that must be completed before the main
     program continues, such as pop-up messages.
 
-    See the documentation for :class:`xsge.gui.Window` for more
+    See the documentation for :class:`xsge_gui.Window` for more
     information.
 
     """
@@ -881,9 +881,9 @@ class Dialog(Window):
     def show(self):
         """Show this dialog and start its loop.
 
-        Like :meth:`xsge.gui.Window.show`, this method adds the dialog
+        Like :meth:`xsge_gui.Window.show`, this method adds the dialog
         to its parent.  It then starts this dialog's loop.  Call
-        :meth:`xsge.gui.Dialog.hide` on this dialog to end the loop.
+        :meth:`xsge_gui.Dialog.hide` on this dialog to end the loop.
 
         """
         parent = self.parent()
@@ -1248,7 +1248,7 @@ class Label(Widget):
     .. attribute:: font
 
        The font this label's text should be rendered with.  If set to
-       :const:`None`, the value of :data:`xsge.gui.default_font` is
+       :const:`None`, the value of :data:`xsge_gui.default_font` is
        used.
 
     .. attribute:: width
@@ -1273,7 +1273,7 @@ class Label(Widget):
        The vertical alignment of the text.  See the documentation for
        :meth:`sge.Sprite.draw_text` for more information.
 
-    See the documentation for :class:`xsge.gui.Widget` for more
+    See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
 
@@ -1336,7 +1336,7 @@ class Button(Widget):
        The horizontal alignment of the text.  See the documentation for
        :meth:`sge.Sprite.draw_text` for more information.
 
-    See the documentation for :class:`xsge.gui.Widget` for more
+    See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
 
@@ -1475,7 +1475,7 @@ class CheckBox(Widget):
 
        Whether or not the checkbox is on.
 
-    See the documentation for :class:`xsge.gui.Widget` for more
+    See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
 
@@ -1528,12 +1528,12 @@ class CheckBox(Widget):
 class RadioButton(CheckBox):
 
     """
-    This widget is mostly like :class:`xsge.gui.CheckBox`, but clicking
+    This widget is mostly like :class:`xsge_gui.CheckBox`, but clicking
     on it while it is on will not turn it off, and only one radio button
     can be on at any given time (i.e. enabling one radio button on a
     window will disable all others on the same window).
 
-    See the documentation for :class:`xsge.gui.CheckBox` for more
+    See the documentation for :class:`xsge_gui.CheckBox` for more
     information.
     """
 
@@ -1652,7 +1652,7 @@ class TextBox(Widget):
 
        The maximum number of characters allowed in the text box.
 
-    See the documentation for :class:`xsge.gui.Widget` for more
+    See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
 
@@ -2009,7 +2009,7 @@ class MenuItem(Widget):
     """
     This widget has two sprites: one for when it is selected, and one
     for when it is unselected.  Meant to be used with
-    :class:`xsge.gui.MenuWindow` or :class:`xsge.gui.MenuDialog`.
+    :class:`xsge_gui.MenuWindow` or :class:`xsge_gui.MenuDialog`.
 
     .. attribute:: sprite_normal
 
@@ -2020,7 +2020,7 @@ class MenuItem(Widget):
 
        The sprite to use as :attr:`sprite` when this widget is selected.
 
-    See the documentation for :class:`xsge.gui.Widget` for more
+    See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
 
@@ -2062,7 +2062,7 @@ class MenuWindow(Window):
     :meth:`event_choose` is called.
 
     Has no border by default.  Meant to  be used with
-    :class:`xsge.gui.MenuItem` widgets to create keyboard-navigated
+    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
     menus.
 
     .. attribute:: choice
@@ -2070,7 +2070,7 @@ class MenuWindow(Window):
        The menu item chosen.  If no menu item has been chosen, it is set
        to :const:`None`.
 
-    See the documentation for :class:`xsge.gui.Window` for more
+    See the documentation for :class:`xsge_gui.Window` for more
     information.
     """
 
@@ -2223,7 +2223,7 @@ class MenuDialog(MenuWindow, Dialog):
     :meth:`event_choose` is called.
 
     Has no border by default.  Meant to  be used with
-    :class:`xsge.gui.MenuItem` widgets to create keyboard-navigated
+    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
     menus.
 
     .. attribute:: choice
@@ -2231,7 +2231,7 @@ class MenuDialog(MenuWindow, Dialog):
        The menu item chosen.  If no menu item has been chosen, it is set
        to :const:`None`.
 
-    See the documentation for :class:`xsge.gui.Dialog` for more
+    See the documentation for :class:`xsge_gui.Dialog` for more
     information.
     """
 
@@ -2251,13 +2251,13 @@ class MessageDialog(Dialog):
        dialog hasn't yet been closed or was closed by clicking on the
        close button), it is set to :const:`None`.
 
-    See the documentation for :class:`xsge.gui.Dialog` for more
+    See the documentation for :class:`xsge_gui.Dialog` for more
     information.
     """
 
     def __init__(self, parent, message="", title="Message", buttons=("Ok",),
                  default=-1, width=320, height=None):
-        """See :func:`xsge.gui.show_message`."""
+        """See :func:`xsge_gui.show_message`."""
         button_w = max(1, int(round((width - DIALOG_PADDING *
                                      (len(buttons) + 1)) / len(buttons))))
         button_h = button_sprite.height
@@ -2317,13 +2317,13 @@ class TextEntryDialog(Dialog):
        The text entered after the "Ok" button is clicked.  If the "Ok"
        button hasn't been clicked, this is :const:`None`.
 
-    See the documentation for :class:`xsge.gui.Dialog` for more
+    See the documentation for :class:`xsge_gui.Dialog` for more
     information.
     """
 
     def __init__(self, parent, message="", title="Text Entry", text="",
                  width=320, height=None):
-        """See :func:`xsge.gui.get_text_entry`."""
+        """See :func:`xsge_gui.get_text_entry`."""
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = button_sprite.height
         textbox_w = max(1, width - DIALOG_PADDING * 2)
@@ -2552,19 +2552,19 @@ def show_message(parent=None, message="", title="Message", buttons=("Ok",),
     Arguments:
 
     - ``parent`` -- The parent handler of the
-      :class:`xsge.gui.MessageDialog` object created.  Set to
+      :class:`xsge_gui.MessageDialog` object created.  Set to
       :const:`None` to create a new handler and then destroy it after
       the dialog is shown.
     - ``message`` -- The message shown to the user.
     - ``title`` -- The window title of the
-      :class:`xsge.gui.MessageDialog` object created.
+      :class:`xsge_gui.MessageDialog` object created.
     - ``buttons`` -- A list of strings to put inside the buttons, from
       left to right.
     - ``default`` -- The index of the default button selected by the
       keyboard (i.e. the default choice).
-    - ``width`` -- The width of the :class:`xsge.gui.MessageDialog`
+    - ``width`` -- The width of the :class:`xsge_gui.MessageDialog`
       object created.
-    - ``height`` -- The height of the :class:`xsge.gui.MessageDialog`
+    - ``height`` -- The height of the :class:`xsge_gui.MessageDialog`
       object created.  If set to :const:`None`, set the height
       automatically based on the space needed for the text.
 
@@ -2572,7 +2572,7 @@ def show_message(parent=None, message="", title="Message", buttons=("Ok",),
     the leftmost button, or :const:`None` if no button was pressed (i.e.
     the close button on the window frame was pressed instead).
 
-    See the documentation for :class:`xsge.gui.MessageDialog` for more
+    See the documentation for :class:`xsge_gui.MessageDialog` for more
     information.
     """
     if parent is None:
@@ -2600,23 +2600,23 @@ def get_text_entry(parent=None, message="", title="Text Entry", text="",
     Arguments:
 
     - ``parent`` -- The parent handler of the
-      :class:`xsge.gui.MessageDialog` object created.  Set to
+      :class:`xsge_gui.MessageDialog` object created.  Set to
       :const:`None` to create a new handler and then destroy it after
       the dialog is shown.
     - ``message`` -- The message shown to the user.
     - ``title`` -- The window title of the
-      :class:`xsge.gui.TextEntryDialog` object created.
+      :class:`xsge_gui.TextEntryDialog` object created.
     - ``text`` -- The text in the text box by default.
-    - ``width`` -- The width of the :class:`xsge.gui.TextEntryDialog`
+    - ``width`` -- The width of the :class:`xsge_gui.TextEntryDialog`
       object created.
-    - ``height`` -- The height of the :class:`xsge.gui.TextEntryDialog`
+    - ``height`` -- The height of the :class:`xsge_gui.TextEntryDialog`
       object created.  If set to :const:`None`, set the height
       automatically based on the space needed for the text.
 
     Value returned is the text entered if the "Ok" button is pressed, or
     :const:`None` otherwise.
 
-    See the documentation for :class:`xsge.gui.TextEntryDialog` for more
+    See the documentation for :class:`xsge_gui.TextEntryDialog` for more
     information.
     """
     if parent is None:
@@ -2646,12 +2646,12 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
     Arguments:
 
     - ``parent`` -- The parent handler of the
-      :class:`xsge.gui.TextMenuDialog` object created.  Set to
+      :class:`xsge_gui.TextMenuDialog` object created.  Set to
       :const:`None` to create a new handler and then destroy it after
       the dialog is shown.
     - ``default`` -- The index of the item to select by default.
 
-    See the documentation for :class:`xsge.gui.MenuDialog.from_text` for
+    See the documentation for :class:`xsge_gui.MenuDialog.from_text` for
     more information.
     """
     if items:

@@ -31,7 +31,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8"
+__version__ = "0.8.1a0"
 
 import six
 import sge
@@ -45,9 +45,9 @@ _lights = []
 def project_light(x, y, sprite, image=0):
     """
     Add a light to the current frame.  This must be called every frame
-    :func:`xsge.lighting.project_darkness` is called to maintain the
+    :func:`xsge_lighting.project_darkness` is called to maintain the
     respective light.  This function should be called *before*
-    :func:`xsge.lighting.project_darkness`.
+    :func:`xsge_lighting.project_darkness`.
 
     Arguments:
 

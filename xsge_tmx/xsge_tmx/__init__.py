@@ -28,7 +28,7 @@ This extension provides support for loading the `Tiled
 to edit your game's world (e.g. levels), rather than building a level
 editor yourself.
 
-To load a TMX map, simply use :func:`xsge.tmx.load`.  See the
+To load a TMX map, simply use :func:`xsge_tmx.load`.  See the
 documentation for this function for more information.
 """
 
@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8"
+__version__ = "0.8.1a0"
 
 import os
 
@@ -192,23 +192,23 @@ def load(fname, cls=sge.Room, types=None, z=0):
     - Tiles are converted to the class connected to, in order of
       preference, the name of the tileset or the name of the tile layer.
       If neither of these strings are valid keys in ``types``,
-      :class:`xsge.tmx.Decoration` is used.
+      :class:`xsge_tmx.Decoration` is used.
 
     - Objects are converted to the class connected to, in order of
       preference, the name of the object, the type of the object, or the
       name of the object group.  If none of these strings are valid keys
       in ``types``, the class used depends on what kind of object it is:
 
-      - Rectangle objects default to :class:`xsge.tmx.Rectangle`.
-      - Ellipse objects default to :class:`xsge.tmx.Ellipse`.
-      - Polygon objects default to :class:`xsge.tmx.Polygon`.
-      - Polyline objects default to :class:`xsge.tmx.Polyline`.
+      - Rectangle objects default to :class:`xsge_tmx.Rectangle`.
+      - Ellipse objects default to :class:`xsge_tmx.Ellipse`.
+      - Polygon objects default to :class:`xsge_tmx.Polygon`.
+      - Polyline objects default to :class:`xsge_tmx.Polyline`.
       - Tile objects default to the appropriate class for the given
         tile (see above).
 
     - Image layers are converted to the class connected to the image
       layer's name.  If the image layer's name is not a valid key in
-      ``types``, :class:`xsge.tmx.Decoration` is used.
+      ``types``, :class:`xsge_tmx.Decoration` is used.
 
     Property lists, converted to integers or floats if possible, are
     passed to objects as keyword arguments in the following ways:
