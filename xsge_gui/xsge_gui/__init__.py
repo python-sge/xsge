@@ -2669,7 +2669,8 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
                                  background_color=background_color,
                                  height=height, margin=margin, halign=halign,
                                  valign=valign)
-        w.keyboard_selected_widget = w.widgets[0]
+        default %= len(w.widgets)
+        w.keyboard_selected_widget = w.widgets[default]
         w.show()
         w.destroy()
 
