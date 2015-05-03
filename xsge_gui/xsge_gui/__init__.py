@@ -2150,6 +2150,7 @@ class MenuWindow(Window):
           room.  Affected by ``halign``.
         - ``y`` -- The vertical location of the window within the room.
           Affected by ``valign``.
+        - ``items`` -- A list of strings to use as the menu's items.
         - ``font_normal`` -- The default font to use.
         - ``color_normal`` -- The default color to use.
         - ``font_selected`` -- The font to use for the currently

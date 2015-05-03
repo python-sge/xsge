@@ -13,6 +13,7 @@ without any warranty.
 Bugfixes:
 - Pressing escape in a menu causing an error
 - References to "xsge.gui" remaining in the documentation
+- "items" argument of MenuWindow.from_text not being documented
 
 
 0.8
