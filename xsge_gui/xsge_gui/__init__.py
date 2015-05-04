@@ -178,9 +178,14 @@ class Handler(sge.Object):
 
        A list of all windows that are currently handled by this handler.
 
-       You don't need to modify this list manually. Instead, use
+       You don't need to modify this list manually.  Instead, use
        :meth:`xsge_gui.Window.show` and :meth:`xsge_gui.Window.hide` to
        add and remove windows from this list, respectively.
+
+    .. attribute:: keyboard_focused_window
+
+       The window that currently has keyboard focus, or :const:`None` if
+       no window has focus.
     """
 
     def __init__(self):
@@ -467,8 +472,10 @@ class Window(object):
         """Remove this window from its parent handler."""
         parent = self.parent()
         if parent is not None:
-            if self in parent.windows:
+            while self in parent.windows:
                 parent.windows.remove(self)
+            if self is parent.keyboard_focused_window:
+                parent.keyboard_focused_window = None
 
     def move_to_front(self):
         """Move this window in front of all other windows."""
