@@ -30,3 +30,8 @@ xsge_path.Path Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automethod:: xsge_path.Path.event_follow_end
+
+xsge_path.PathLink
+------------------
+
+.. autoclass:: xsge_path.PathLink

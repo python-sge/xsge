@@ -7,6 +7,17 @@ without any warranty.
 
 ========================================================================
 
+0.9
+------------------------------------------------------------------------
+
+Additions:
++ xsge_path.PathLink
+
+Bugfixes:
+- Imprecise movement which could cause following several paths in a row
+  to build up a difference in position.
+
+
 0.8
 ------------------------------------------------------------------------
 

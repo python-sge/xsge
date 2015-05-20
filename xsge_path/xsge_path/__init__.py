@@ -32,7 +32,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8.1a0"
+__version__ = "0.9a0"
 
 import math
 
@@ -194,3 +194,86 @@ class Path(sge.Object):
                     self.follow_start(obj, speed, accel, decel, loop - 1)
                 else:
                     self.event_follow_end(obj)
+
+
+class PathLink(Path):
+
+    """
+    Class for path links.  Path links are just like normal paths, but
+    can be linked to other path links or paths to form chains.
+
+    By using a chain of path links, you can cause an object to move in
+    different ways at different points of the path.  For example, you
+    can cause the object to change its speed, or you can cause it to
+    accelerate and decelerate only at particular points.
+
+    .. note::
+
+       :meth:`event_follow_end` is used to implement path linking.  Keep
+       this in mind if you derive a class from this one.
+
+    .. attribute:: next_path
+
+       The next :class:`xsge_path.Path` object to be followed after this
+       one.  If set to :const:`None`, no additional paths will be
+       followed.
+
+    .. attribute:: next_speed
+
+       The value to pass on to the ``speed`` argument of the next path's
+       :meth:`xsge_path.Path.follow_start` call.  If set to
+       :const:`None`, the next path will not be followed.
+
+    .. attribute:: next_accel
+
+       The value to pass on to the ``accel`` argument of the next path's
+       :meth:`xsge_path.Path.follow_start` call.
+
+    .. attribute:: next_decel
+
+       The value to pass on to the ``decel`` argument of the next path's
+       :meth:`xsge_path.Path.follow_start` call.
+
+    .. attribute:: next_loop
+
+       The value to pass on to the ``loop`` argument of the next path's
+       :meth:`xsge_path.Path.follow_start` call.
+    """
+
+    def __init__(self, x, y, points=(), next_path=None, next_speed=None,
+                 next_accel=None, next_decel=None, next_loop=0, z=0,
+                 sprite=None, visible=False, active=True,
+                 checks_collisions=False, tangible=False, bbox_x=None,
+                 bbox_y=None, bbox_width=None, bbox_height=None,
+                 regulate_origin=False, collision_ellipse=False,
+                 collision_precise=False, xvelocity=0, yvelocity=0,
+                 xacceleration=0, yacceleration=0, xdeceleration=0,
+                 ydeceleration=0, image_index=0, image_origin_x=None,
+                 image_origin_y=None, image_fps=None, image_xscale=1,
+                 image_yscale=1, image_rotation=0, image_alpha=255,
+                 image_blend=None):
+        super(PathLink, self).__init__(
+            x, y, points=points, z=z, sprite=sprite, visible=visible,
+            active=active, checks_collisions=checks_collisions,
+            tangible=tangible, bbox_x=bbox_x, bbox_y=bbox_y,
+            bbox_width=bbox_width, bbox_height=bbox_height,
+            regulate_origin=regulate_origin,
+            collision_ellipse=collision_ellipse,
+            collision_precise=collision_precise, xvelocity=xvelocity,
+            yvelocity=yvelocity, xacceleration=xacceleration,
+            yacceleration=yacceleration, xdeceleration=xdeceleration,
+            ydeceleration=ydeceleration, image_index=image_index,
+            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
+            image_fps=image_fps, image_xscale=image_xscale,
+            image_yscale=image_yscale, image_rotation=image_rotation,
+            image_alpha=image_alpha, image_blend=image_blend)
+        self.next_path = next_path
+        self.next_speed = next_speed
+        self.next_accel = next_accel
+        self.next_decel = next_decel
+        self.next_loop = next_loop
+
+    def event_follow_end(self, obj):
+        if self.next_path is not None and self.next_speed is not None:
+            self.next_path.follow_start(obj, self.next_speed, self.next_accel,
+                                        self.next_decel, self.next_loop)
