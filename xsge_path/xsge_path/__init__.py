@@ -144,8 +144,8 @@ class Path(sge.Object):
             if math.hypot(dx - obj.x, dy - obj.y) / delta_mult < obj.speed:
                 dest += 1
                 obj.speed = 0
-                obj.x = dx
-                obj.y = dy
+                obj.move_x(dx - obj.x)
+                obj.move_y(dy - obj.y)
 
             if dest < len(self.points):
                 dp = self.points[dest]
