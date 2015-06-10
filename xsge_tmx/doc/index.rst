@@ -16,6 +16,8 @@ xsge_tmx Classes
 
 .. autoclass:: xsge_tmx.Decoration
 
+.. autoclass:: xsge_tmx.RenderedTiles
+
 .. autoclass:: xsge_tmx.Rectangle
 
 .. autoclass:: xsge_tmx.Ellipse

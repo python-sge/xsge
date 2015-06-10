@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8.1a0"
+__version__ = "0.9a0"
 
 import os
 
@@ -82,6 +82,121 @@ class Decoration(sge.Object):
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
             image_alpha=image_alpha, image_blend=image_blend)
+
+
+class RenderedTiles(sge.Object):
+
+    """
+    An object of this class takes all :class:`xsge_tmx.Decoration`
+    objects which:
+
+    * Have the same Z-axis value as this object;
+    * Have a sprite with only one frame;
+    * Are inactive;
+    * Are not tangible;
+    * Have no speed;
+    * Have no acceleration;
+    * Do not in any way reside outside of the room.
+
+    It then draws all such objects' sprites onto a single room-sized
+    sprite, which becomes this object's sprite, and destroys the
+    objects.
+
+    If such objects do not exist, this object is destroyed.
+
+    Effectively, this eliminates slowdown caused by looping through
+    hundreds or thousands of objects representing tiles.
+    """
+
+    def event_create(self):
+        rw = sge.game.current_room.width
+        rh = sge.game.current_room.height
+        my_tiles = []
+        for obj in sge.game.current_room.objects:
+            if (isinstance(obj, Decoration) and
+                    obj.z == self.z and obj.sprite is not None and
+                    obj.sprite.frames == 1 and not obj.active and
+                    not obj.tangible and not obj.speed and
+                    not obj.xacceleration and not obj.yacceleration and
+                    obj.x - obj.image_origin_x >= 0 and
+                    obj.x - obj.image_origin_x + obj.sprite.width < rw and
+                    obj.y - obj.image_origin_y >= 0 and
+                    obj.y - obj.image_origin_y + obj.sprite.height < rh):
+                my_tiles.append(obj)
+
+        if len(my_tiles) > 1:
+            self.active = False
+            self.tangible = False
+            self.sprite = sge.Sprite(width=rw, height=rh)
+            self.sprite.draw_lock()
+            for obj in my_tiles:
+                if obj.visible and obj.image_alpha:
+                    spr = obj.sprite.copy()
+
+                    if obj.image_blend is not None:
+                        bspr = sge.Sprite(width=spr.width, height=spr.height)
+                        bspr.draw_rectangle(0, 0, bspr.width, bspr.height,
+                                            fill=obj.image_blend)
+                        spr.draw_sprite(bspr, 0, 0, 0,
+                                        blend_mode=sge.BLEND_RGB_MULTIPLY)
+
+                    if obj.image_alpha < 255:
+                        bspr = sge.Sprite(width=spr.width, height=spr.height)
+                        bspr.draw_rectangle(0, 0, bspr.width, bspr.height,
+                                            fill=sge.Color((255, 255, 255,
+                                                            obj.image_alpha)))
+                        spr.draw_sprite(bspr, 0, 0, 0,
+                                        blend_mode=sge.BLEND_RGB_MULTIPLY)
+
+                    if obj.image_xscale < 0:
+                        spr.mirror()
+
+                    if obj.image_yscale < 0:
+                        spr.flip()
+
+                    spr.width *= abs(obj.image_xscale)
+                    spr.height *= abs(obj.image_yscale)
+
+                    origin_x = spr.origin_x
+                    origin_y = spr.origin_y
+
+                    if obj.image_rotation % 360:
+                        spr.rotate(obj.image_rotation)
+
+                    if obj.image_origin_x is not None:
+                        spr.origin_x = obj.image_origin_x
+                    else:
+                        spr.origin_x = origin_x
+
+                    if obj.image_origin_y is not None:
+                        spr.origin_y = obj.image_origin_y
+                    else:
+                        spr.origin_y = origin_y
+
+                    self.sprite.draw_sprite(spr, 0, obj.x, obj.y)
+
+                #obj.destroy()
+
+            self.sprite.draw_unlock()
+        else:
+            #self.destroy()
+            my_tiles = []
+
+        self.__tiles = my_tiles
+        self.alarms["destroy"] = 1
+
+    def event_alarm(self, alarm_id):
+        # XXX: For some reason, destroying the appropriate object(s) in
+        # the create event causes other, unrelated objects' create
+        # events to not execute. I don't understand why, but until I
+        # track down the source of the problem, it's done here as a
+        # temporary workaround.
+        if alarm_id == "destroy":
+            if self.__tiles:
+                for obj in self.__tiles:
+                    obj.destroy()
+            else:
+                self.destroy()
 
 
 class Rectangle(sge.Object):
@@ -453,6 +568,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                 sprite = None
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)
             objects.append(sobj)
+
+        objects.append(RenderedTiles(0, 0, z))
 
         z += 1
 
