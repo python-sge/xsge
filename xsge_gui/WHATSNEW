@@ -16,6 +16,7 @@ Bugfixes:
 - "items" argument of MenuWindow.from_text not being documented
 - "default" argument of get_menu_selection being ignored (!)
 - Keyboard focused window not always being completely destroyed
+- joystick_threshold not being defined or documented
 
 
 0.8

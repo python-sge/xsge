@@ -86,6 +86,11 @@ the game.
    The sprites used by this module.  They can be safely changed, but be
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
+
+.. data:: joystick_threshold
+
+   The amount of tilt on a joystick that should be considered
+   "triggered" for the purpose of navigating menus.
 """
 
 from __future__ import division
@@ -165,6 +170,7 @@ window_border_bottomright_sprite = None
 window_border_top_sprite = None
 window_border_topleft_sprite = None
 window_border_topright_sprite = None
+joystick_threshold = 0.7
 
 
 class Handler(sge.Object):
