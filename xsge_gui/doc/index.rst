@@ -170,6 +170,20 @@ xsge_gui.Label
 
 .. autoclass:: xsge_gui.Label
 
+xsge_gui.ProgressiveLabel
+-------------------------
+
+.. autoclass:: xsge_gui.ProgressiveLabel
+
+xsge_gui.ProgressiveLabel Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the event methods inherited from
+:class:`xsge_gui.Widget`, the following event methods are also
+available:
+
+.. automethod:: xsge_gui.ProgressiveLabel.event_add_character
+
 xsge_gui.Button
 ---------------
 

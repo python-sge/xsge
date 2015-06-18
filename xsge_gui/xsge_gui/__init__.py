@@ -1330,6 +1330,48 @@ class Label(Widget):
             self.destroy()
 
 
+class ProgressiveLabel(Label):
+
+    """
+    This widget is a version of :class:`xsge_gui.Label` which
+    progressively builds :attr:`text` one character at a time, making it
+    look like the text is being typed in real-time.
+
+    .. attribute:: full_text
+
+       The value that :attr:`text` progressively becomes.
+
+    .. attribute:: rate
+
+       The rate at which :attr:`text` is built in characters per minute.
+    """
+
+    def __init__(self, parent, x, y, z, full_text, font=None, width=None,
+                 height=None, color=None, halign="left", valign="top",
+                 rate=1000):
+        self.full_text = full_text
+        self.rate = rate
+        self.__time_passed = 0
+        super(ProgressiveLabel, self).__init__(
+            parent, x, y, z, "", font=font, width=width, height=height,
+            halign=halign, valign=valign)
+
+    def event_step(self, time_passed, delta_mult):
+        if len(self.text) < len(self.full_text):
+            self.__time_passed += time_passed
+            delay = 60000 / self.rate
+            while self.__time_passed >= delay:
+                self.__time_passed -= delay
+                i = len(self.text)
+                if i < len(self.full_text):
+                    self.text += self.full_text[i]
+                    self.event_add_character()
+
+    def event_add_character(self):
+        """Called when a character is added to :attr:`text`."""
+        pass
+
+
 class Button(Widget):
 
     """

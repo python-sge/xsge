@@ -12,6 +12,7 @@ without any warranty.
 
 Additions:
 + xsge_gui.MenuWindow.event_change_selection
++ xsge_gui.ProgressiveLabel
 
 Bugfixes:
 - Pressing escape in a menu causing an error
