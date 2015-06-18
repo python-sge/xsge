@@ -256,6 +256,8 @@ In addition to the event methods inherited from
 :class:`xsge_gui.Window`, the following event methods are also
 available:
 
+.. automethod:: xsge_gui.MenuWindow.event_change_selection
+
 .. automethod:: xsge_gui.MenuWindow.event_choose
 
 xsge_gui.MenuDialog

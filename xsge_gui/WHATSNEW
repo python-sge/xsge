@@ -7,8 +7,11 @@ without any warranty.
 
 ========================================================================
 
-0.8.1
+0.9
 ------------------------------------------------------------------------
+
+Additions:
++ xsge_gui.MenuWindow.event_change_selection
 
 Bugfixes:
 - Pressing escape in a menu causing an error

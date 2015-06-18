@@ -98,7 +98,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8.1a0"
+__version__ = "0.9a0"
 
 import os
 import weakref
@@ -2112,6 +2112,7 @@ class MenuWindow(Window):
                     i %= len(self.widgets)
                     if self.widgets[i].tab_focus:
                         self.keyboard_focused_widget = self.widgets[i]
+                        self.event_change_selection(i)
                         break
         elif key in ("enter", "kp_enter"):
             try:
@@ -2144,6 +2145,16 @@ class MenuWindow(Window):
 
     def event_joystick_button_press(self, js_name, js_id, button):
         self.event_key_press("enter", "\n")
+
+    def event_change_selection(self, selection):
+        """
+        Called when the current menu item selection is changed.
+
+        Arguments:
+
+        - ``selection`` -- The index of the newly selected widget.
+        """
+        pass
 
     def event_choose(self):
         """Called when a menu item is chosen."""
