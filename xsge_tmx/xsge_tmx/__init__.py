@@ -174,28 +174,11 @@ class RenderedTiles(sge.Object):
 
                     self.sprite.draw_sprite(spr, 0, obj.x, obj.y)
 
-                #obj.destroy()
+                obj.destroy()
 
             self.sprite.draw_unlock()
         else:
-            #self.destroy()
-            my_tiles = []
-
-        self.__tiles = my_tiles
-        self.alarms["destroy"] = 1
-
-    def event_alarm(self, alarm_id):
-        # XXX: For some reason, destroying the appropriate object(s) in
-        # the create event causes other, unrelated objects' create
-        # events to not execute. I don't understand why, but until I
-        # track down the source of the problem, it's done here as a
-        # temporary workaround.
-        if alarm_id == "destroy":
-            if self.__tiles:
-                for obj in self.__tiles:
-                    obj.destroy()
-            else:
-                self.destroy()
+            self.destroy()
 
 
 class Rectangle(sge.Object):
