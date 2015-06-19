@@ -125,7 +125,6 @@ class RenderedTiles(sge.Object):
                 my_tiles.append(obj)
 
         if len(my_tiles) > 1:
-            self.active = False
             self.tangible = False
             self.sprite = sge.Sprite(width=rw, height=rh)
             self.sprite.draw_lock()
