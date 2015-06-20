@@ -1354,7 +1354,7 @@ class ProgressiveLabel(Label):
         self.__time_passed = 0
         super(ProgressiveLabel, self).__init__(
             parent, x, y, z, "", font=font, width=width, height=height,
-            halign=halign, valign=valign)
+            color=color, halign=halign, valign=valign)
 
     def event_step(self, time_passed, delta_mult):
         if len(self.text) < len(self.full_text):
