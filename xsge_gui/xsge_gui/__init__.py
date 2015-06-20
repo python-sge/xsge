@@ -961,6 +961,60 @@ class Dialog(Window):
                         for widget in self.widgets:
                             widget.event_global_mouse_button_release(
                                 event.button)
+                    elif isinstance(event, sge.input.JoystickAxisMove):
+                        self.event_joystick_axis_move(
+                            event.js_name, event.js_id, event.axis, event.value)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_joystick_axis_move(
+                                event.js_name, event.js_id, event.axis,
+                                event.value)
+                        self.event_global_joystick_axis_move(
+                            event.js_name, event.js_id, event.axis, event.value)
+                        for widget in self.widgets:
+                            widget.event_global_joystick_axis_move(
+                                event.js_name, event.js_id, event.axis,
+                                event.value)
+                    elif isinstance(event, sge.input.JoystickHatMove):
+                        self.event_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_joystick_hat_move(
+                                event.js_name, event.js_id, event.hat, event.x,
+                                event.y)
+                        self.event_global_joystick_hat_move(
+                            event.js_name, event.js_id, event.hat, event.x,
+                            event.y)
+                        for widget in self.widgets:
+                            widget.event_global_joystick_hat_move(
+                                event.js_name, event.js_id, event.hat, event.x,
+                                event.y)
+                    elif isinstance(event, sge.input.JoystickButtonPress):
+                        self.event_joystick_button_press(
+                            event.js_name, event.js_id, event.button)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_joystick_button_press(
+                                event.js_name, event.js_id, event.button)
+                        self.event_global_joystick_button_press(
+                            event.js_name, event.js_id, event.button)
+                        for widget in self.widgets:
+                            widget.event_global_joystick_button_press(
+                                event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.JoystickButtonRelease):
+                        self.event_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_joystick_button_release(
+                                event.js_name, event.js_id, event.button)
+                        self.event_global_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
+                        for widget in self.widgets:
+                            widget.event_global_joystick_button_release(
+                                event.js_name, event.js_id, event.button)
                     elif isinstance(event, sge.input.QuitRequest):
                         sge.game.input_events.insert(0, event)
                         self.hide()

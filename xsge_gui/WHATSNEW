@@ -21,6 +21,7 @@ Bugfixes:
 - "default" argument of get_menu_selection being ignored (!)
 - Keyboard focused window not always being completely destroyed
 - joystick_threshold not being defined or documented
+- Joystick events not working in dialogs
 
 
 0.8
