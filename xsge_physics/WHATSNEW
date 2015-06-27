@@ -21,6 +21,7 @@ Misc changes:
 
 Bugfixes:
 - Incorrect number of arguments passed to Collider collision events by MobileWall
+- Incorrect "sticky" horizontal movement
 
 
 0.8.1

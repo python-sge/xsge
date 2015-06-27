@@ -1243,7 +1243,7 @@ class MobileWall(sge.Object):
         old_x = self.x
         self.x += move
         for other in stuck:
-            other.move_y(move, True)
+            other.move_x(move, True)
 
         if move > 0:
             if isinstance(self, SolidRight):
