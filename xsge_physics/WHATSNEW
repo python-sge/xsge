@@ -10,6 +10,9 @@ without any warranty.
 0.9
 ------------------------------------------------------------------------
 
+Additions:
++ xsge_physics.MobileColliderWall
+
 Misc changes:
 * Wall collision events now have the move_loss attribute. This doesn't
   actually do anything (0 is always passed to it), but it prevents these

@@ -1410,3 +1410,121 @@ class MobileWall(sge.Object):
                                          True)
                             self.event_physics_collision_top(other, 0)
                             other.event_physics_collision_bottom(self, 0)
+
+
+class MobileColliderWall(MobileWall, Collider):
+
+    """
+    A parent class for mobile walls that are also colliders.  See the
+    documentation for :class:`xsge_physics.Collider` and
+    :class:`xsge_physics.MobileWall` for more information.
+
+    .. note::
+
+       Due to the way movement is implemented in this class, it is not
+       safe to move this object during its collision events.  Doing so
+       may cause colliders that should be stuck to this object to become
+       un-stuck, or cause this object to pass through colliders it
+       should be pushing.
+    """
+
+    def move_x(self, move, absolute=False):
+        """
+        Move the wall horizontally, handling physics.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`y`.
+        """
+        xprev = self.x
+        Collider.move_x(self, move, absolute)
+        real_move = self.x - xprev
+        self.x = xprev
+        MobileWall.move_x(self, real_move)
+
+    def move_y(self, move, absolute=False):
+        """
+        Move the wall vertically, handling physics.
+
+        Arguments:
+
+        - ``move`` -- The amount to add to :attr:`y`.
+        """
+        yprev = self.y
+        Collider.move_y(self, move, absolute)
+        real_move = self.y - yprev
+        self.y = yprev
+        MobileWall.move_y(self, real_move)
+
+    def event_physics_collision_left(self, other, move_loss):
+        """
+        Called when the left side of the wall collides with a collider,
+        wall, or slope in the sense of the physics system, rather than
+        in the sense of SGE collision detection.  See the documentation
+        for :meth:`xsge_physics.Collider.event_physics_collision_left`
+        for more information.
+
+        .. note::
+
+           Due to the way movement is implemented in this class, it is
+           not safe to move this object during this event.  Doing so may
+           cause colliders that should be stuck to this object to become
+           un-stuck, or cause this object to pass through colliders it
+           should be pushing.
+        """
+        pass
+
+    def event_physics_collision_right(self, other, move_loss):
+        """
+        Called when the right side of the wall collides with a collider,
+        wall, or slope in the sense of the physics system, rather than
+        in the sense of SGE collision detection.  See the documentation
+        for :meth:`xsge_physics.Collider.event_physics_collision_left`
+        for more information.
+
+        .. note::
+
+           Due to the way movement is implemented in this class, it is
+           not safe to move this object during this event.  Doing so may
+           cause colliders that should be stuck to this object to become
+           un-stuck, or cause this object to pass through colliders it
+           should be pushing.
+        """
+        pass
+
+    def event_physics_collision_top(self, other, move_loss):
+        """
+        Called when the top side of the wall collides with a collider,
+        wall, or slope in the sense of the physics system, rather than
+        in the sense of SGE collision detection.  See the documentation
+        for :meth:`xsge_physics.Collider.event_physics_collision_left`
+        for more information.
+
+        .. note::
+
+           Due to the way movement is implemented in this class, it is
+           not safe to move this object during this event.  Doing so may
+           cause colliders that should be stuck to this object to become
+           un-stuck, or cause this object to pass through colliders it
+           should be pushing.
+        """
+        pass
+
+    def event_physics_collision_bottom(self, other, move_loss):
+        """
+        Called when the bottom side of the wall collides with a
+        collider, wall, or slope in the sense of the physics system,
+        rather than in the sense of SGE collision detection.  See the
+        documentation for
+        :meth:`xsge_physics.Collider.event_physics_collision_left` for
+        more information.
+
+        .. note::
+
+           Due to the way movement is implemented in this class, it is
+           not safe to move this object during this event.  Doing so may
+           cause colliders that should be stuck to this object to become
+           un-stuck, or cause this object to pass through colliders it
+           should be pushing.
+        """
+        pass

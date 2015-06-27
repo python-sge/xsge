@@ -170,3 +170,8 @@ xsge_physics.MobileWall methods
 .. automethod:: xsge_physics.MobileWall.move_x
 
 .. automethod:: xsge_physics.MobileWall.move_y
+
+xsge_physics.MobileColliderWall
+-------------------------------
+
+.. autoclass:: xsge_physics.MobileColliderWall
