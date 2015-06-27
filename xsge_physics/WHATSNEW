@@ -7,6 +7,19 @@ without any warranty.
 
 ========================================================================
 
+0.9
+------------------------------------------------------------------------
+
+Misc changes:
+* Wall collision events now have the move_loss attribute. This doesn't
+  actually do anything (0 is always passed to it), but it prevents these
+  events from conflicting with an attempt to inherit from both Collider
+  and a wall class at the same time.
+
+Bugfixes:
+- Incorrect number of arguments passed to Collider collision events by MobileWall
+
+
 0.8.1
 ------------------------------------------------------------------------
 
