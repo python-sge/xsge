@@ -22,6 +22,7 @@ Misc changes:
 Bugfixes:
 - Incorrect number of arguments passed to Collider collision events by MobileWall
 - Incorrect "sticky" horizontal movement
+- Documentation for get_slope_x and get_slope_y being switched
 
 
 0.8.1

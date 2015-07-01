@@ -868,7 +868,7 @@ class SlopeTopLeft(sge.Object):
 
     def get_slope_x(self, y):
         """
-        Get the corresponding y coordinate of a given x coordinate for
+        Get the corresponding x coordinate of a given y coordinate for
         the slope.
         """
         # x = (y - b) / m [b is 0]
@@ -878,7 +878,7 @@ class SlopeTopLeft(sge.Object):
 
     def get_slope_y(self, x):
         """
-        Get the corresponding x coordinate of a given y coordinate for
+        Get the corresponding y coordinate of a given x coordinate for
         the slope.
         """
         # y = mx + b [b is 0]
@@ -932,7 +932,7 @@ class SlopeTopRight(sge.Object):
 
     def get_slope_x(self, y):
         """
-        Get the corresponding y coordinate of a given x coordinate for
+        Get the corresponding x coordinate of a given y coordinate for
         the slope.
         """
         # x = (y - b) / m [b is 0]
@@ -942,7 +942,7 @@ class SlopeTopRight(sge.Object):
 
     def get_slope_y(self, x):
         """
-        Get the corresponding x coordinate of a given y coordinate for
+        Get the corresponding y coordinate of a given x coordinate for
         the slope.
         """
         # y = mx + b [b is 0]
@@ -996,7 +996,7 @@ class SlopeBottomLeft(sge.Object):
 
     def get_slope_x(self, y):
         """
-        Get the corresponding y coordinate of a given x coordinate for
+        Get the corresponding x coordinate of a given y coordinate for
         the slope.
         """
         # x = (y - b) / m [b is 0]
@@ -1006,7 +1006,7 @@ class SlopeBottomLeft(sge.Object):
 
     def get_slope_y(self, x):
         """
-        Get the corresponding x coordinate of a given y coordinate for
+        Get the corresponding y coordinate of a given x coordinate for
         the slope.
         """
         # y = mx + b [b is 0]
