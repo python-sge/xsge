@@ -454,6 +454,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                             objects.extend(row)
 
                         row = [obj]
+
+                    objects.extend(row)
                     
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {"z": z}
