@@ -442,6 +442,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     y += tilemap.tileheight - kwargs["sprite"].height
 
                     obj = cls(x, y, **kwargs)
+                    objects.append(obj)
                     if i % tilemap.width:
                         if tilemap.renderorder.startswith("left"):
                             row.insert(obj)
@@ -455,7 +456,10 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
                         row = [obj]
 
-                    objects.extend(row)
+            if tilemap.renderorder.endswith("up"):
+                objects = row + objects
+            else:
+                objects.extend(row)
                     
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {"z": z}
