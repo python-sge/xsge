@@ -18,6 +18,8 @@ Misc changes:
   actually do anything (0 is always passed to it), but it prevents these
   events from conflicting with an attempt to inherit from both Collider
   and a wall class at the same time.
+* Now takes advantage of object areas to avoid checking unnecessary
+  objects for the purpose of slope sticking.
 
 Bugfixes:
 - Incorrect number of arguments passed to Collider collision events by MobileWall
