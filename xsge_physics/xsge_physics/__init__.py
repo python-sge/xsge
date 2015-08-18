@@ -278,12 +278,7 @@ class Collider(sge.Object):
             if (not self.get_bottom_touching_slope() and
                     not self.get_bottom_touching_wall()):
                 new_bbox_bottom = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, self.bbox_top, self.bbox_width,
-                        sge.game.current_room.height - self.bbox_top) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
+                for other in sge.game.current_room.objects:
                     if (other.bbox_left >= self.bbox_right or
                             other.bbox_right <= self.bbox_left):
                         continue
@@ -308,11 +303,7 @@ class Collider(sge.Object):
             if (not self.get_top_touching_slope() and
                     not self.get_top_touching_wall()):
                 new_bbox_top = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, 0, self.bbox_width, self.bbox_bottom) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
+                for other in sge.game.current_room.objects:
                     if (other.bbox_left >= self.bbox_right or
                             other.bbox_right <= self.bbox_left):
                         continue
@@ -538,13 +529,7 @@ class Collider(sge.Object):
             if (not self.get_right_touching_slope() and
                     not self.get_right_touching_wall()):
                 new_bbox_right = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, self.bbox_top,
-                        sge.game.current_room.width - self.bbox_left,
-                        self.bbox_height) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
+                for other in sge.game.current_room.objects:
                     if (other.bbox_top >= self.bbox_bottom or
                             other.bbox_bottom <= self.bbox_top):
                         continue
@@ -568,11 +553,7 @@ class Collider(sge.Object):
             if (not self.get_left_touching_slope() and
                     not self.get_left_touching_wall()):
                 new_bbox_left = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        0, self.bbox_top, self.bbox_right, self.bbox_height) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
+                for other in sge.game.current_room.objects:
                     if (other.bbox_top >= self.bbox_bottom or
                             other.bbox_bottom <= self.bbox_top):
                         continue
