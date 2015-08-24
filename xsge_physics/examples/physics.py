@@ -164,7 +164,8 @@ def main():
                square, diamond_tl, diamond_tr, diamond_bl, diamond_br]
 
     # Create room
-    sge.game.start_room = sge.Room(objects, background=background)
+    sge.game.start_room = sge.Room(objects, background=background,
+                                   object_area_width=64, object_area_height=64)
 
     sge.game.start()
 

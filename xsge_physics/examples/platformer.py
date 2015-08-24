@@ -88,21 +88,21 @@ class Player(xsge_physics.Collider):
             if self.on_floor or self.on_slope:
                 self.yvelocity = -JUMP_SPEED
 
-    def event_xsge_physics_collision_left(self, other, move_loss):
+    def event_physics_collision_left(self, other, move_loss):
         if isinstance(other, xsge_physics.SolidRight):
             self.xvelocity = 0
 
-    def event_xsge_physics_collision_right(self, other, move_loss):
+    def event_physics_collision_right(self, other, move_loss):
         if isinstance(other, xsge_physics.SolidLeft):
             self.xvelocity = 0
 
-    def event_xsge_physics_collision_top(self, other, move_loss):
+    def event_physics_collision_top(self, other, move_loss):
         if isinstance(other, (xsge_physics.SolidBottom,
                               xsge_physics.SlopeBottomLeft,
                               xsge_physics.SlopeBottomRight)):
             self.yvelocity = 0
 
-    def event_xsge_physics_collision_bottom(self, other, move_loss):
+    def event_physics_collision_bottom(self, other, move_loss):
         if isinstance(other, xsge_physics.SolidTop):
             self.yvelocity = 0
 
