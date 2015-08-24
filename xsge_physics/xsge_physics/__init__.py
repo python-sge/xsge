@@ -281,7 +281,8 @@ class Collider(sge.Object):
                 others = (
                     sge.game.current_room.get_objects_at(
                         self.bbox_left, self.bbox_top, self.bbox_width,
-                        sge.game.current_room.height - self.bbox_top) |
+                        (sge.game.current_room.height - self.bbox_top +
+                         sge.game.current_room.object_area_height)) |
                     sge.game.current_room.object_area_void)
                 for other in others:
                     if (other.bbox_left >= self.bbox_right or
@@ -541,7 +542,8 @@ class Collider(sge.Object):
                 others = (
                     sge.game.current_room.get_objects_at(
                         self.bbox_left, self.bbox_top,
-                        sge.game.current_room.width - self.bbox_left,
+                        (sge.game.current_room.width - self.bbox_left +
+                         sge.game.current_room.object_area_width),
                         self.bbox_height) |
                     sge.game.current_room.object_area_void)
                 for other in others:
