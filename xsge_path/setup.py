@@ -56,6 +56,6 @@ setup(name="xsge_path",
       packages=["xsge_path"],
       package_dir={"xsge_path": "xsge_path"},
       package_data={"xsge_path": ["COPYING"]},
-      requires=["sge (>=0.17, <0.19)"],
+      requires=["sge (>=0.17)"],
       provides=["xsge_path"],
      )

@@ -55,6 +55,6 @@ setup(name="xsge_lighting",
       packages=["xsge_lighting"],
       package_dir={"xsge_lighting": "xsge_lighting"},
       package_data={"xsge_lighting": ["COPYING"]},
-      requires=["sge (>=0.17, <0.19)", "six (>=1.4.0)"],
+      requires=["sge (>=0.17)", "six (>=1.4.0)"],
       provides=["xsge_lighting"],
      )

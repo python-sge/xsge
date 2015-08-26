@@ -57,6 +57,6 @@ setup(name="xsge_physics",
       packages=["xsge_physics"],
       package_dir={"xsge_physics": "xsge_physics"},
       package_data={"xsge_physics": ["COPYING"]},
-      requires=["sge (>=0.17, <0.19)"],
+      requires=["sge (>=0.20)"],
       provides=["xsge_physics"],
      )
