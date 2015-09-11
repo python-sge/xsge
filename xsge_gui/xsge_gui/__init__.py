@@ -98,7 +98,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9"
+__version__ = "0.9.1a0"
 
 import os
 import weakref
@@ -2236,7 +2236,7 @@ class MenuWindow(Window):
         if not x:
             if y < 0:
                 self.event_key_press("up", "")
-            else:
+            elif y > 0:
                 self.event_key_press("down", "")
 
     def event_joystick_button_press(self, js_name, js_id, button):

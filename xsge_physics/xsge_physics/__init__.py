@@ -46,7 +46,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9"
+__version__ = "0.9.1a0"
 
 import math
 
@@ -75,6 +75,233 @@ class Collider(sge.Object):
        :attr:`y` manually will not cause any physics to occur.
     """
 
+    def _do_mxas(self, slope, move, xc, yc, slope_end_x, slope_end_y, absolute):
+        # Return the point to arrive at on the slope with the given X
+        # movement, and the movement remaining after doing this.
+        x = slope.get_slope_x(yc)
+        if round(x, NDIG) == round(xc, NDIG):
+            if absolute:
+                max_mv = slope_end_x - xc
+            else:
+                w_left = slope_end_x - xc
+                h_left = slope_end_y - yc
+                max_mv = math.copysign(math.hypot(w_left, h_left), w_left)
+
+            if (max_mv < 0) == (move < 0):
+                if abs(move) > abs(max_mv):
+                    mv = max_mv
+                    move -= mv
+                else:
+                    mv = move
+                    move = 0
+            else:
+                mv = 0
+
+            if absolute:
+                xc += mv
+            else:
+                h = math.hypot(slope.bbox_width, slope.bbox_height)
+                xc += mv * slope.bbox_width / h
+
+            yc = slope.get_slope_y(xc)
+        else:
+            mv = x - xc
+            if (mv < 0) == (move < 0):
+                if abs(mv) >= abs(move):
+                    mv = move
+                    move = 0
+                else:
+                    move -= mv
+            else:
+                mv = 0
+
+            xc += mv
+
+        return (move, xc, yc)
+
+    def _do_myas(self, slope, move, xc, yc, slope_end_x, slope_end_y, absolute):
+        # Return the point to arrive at on the slope with the given Y
+        # movement, and the movement remaining after doing this.
+        y = slope.get_slope_y(xc)
+        if round(y, NDIG) == round(yc, NDIG):
+            if absolute:
+                max_mv = slope_end_y - yc
+            else:
+                w_left = slope_end_x - xc
+                h_left = slope_end_y - yc
+                max_mv = math.copysign(math.hypot(w_left, h_left), h_left)
+
+            if (max_mv < 0) == (move < 0):
+                if abs(move) > abs(max_mv):
+                    mv = max_mv
+                    move -= mv
+                else:
+                    mv = move
+                    move = 0
+            else:
+                mv = 0
+
+            if absolute:
+                yc += mv
+            else:
+                h = math.hypot(slope.bbox_width, slope.bbox_height)
+                yc += mv * slope.bbox_height / h
+
+            xc = slope.get_slope_x(yc)
+        else:
+            mv = y - yc
+            if (mv < 0) == (move < 0):
+                if abs(mv) >= abs(move):
+                    mv = move
+                    move = 0
+                else:
+                    move -= mv
+            else:
+                mv = 0
+
+            yc += mv
+
+        return (move, xc, yc)
+
+    def _move_x_along_slope(self, slope, move, absolute):
+        # Move along the given slope the given amount, if appropriate,
+        # and return unused movement.
+        if move > 0:
+            if isinstance(slope, SlopeTopLeft):
+                move, self.bbox_right, self.bbox_bottom = self._do_mxas(
+                    slope, move, self.bbox_right, self.bbox_bottom,
+                    slope.bbox_right, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeTopRight):
+                if slope.xsticky_top:
+                    move, self.bbox_left, self.bbox_bottom = self._do_mxas(
+                        slope, move, self.bbox_left, self.bbox_bottom,
+                        slope.bbox_right, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeBottomLeft):
+                move, self.bbox_right, self.bbox_top = self._do_mxas(
+                    slope, move, self.bbox_right, self.bbox_top,
+                    slope.bbox_right, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeBottomRight):
+                if slope.xsticky_bottom:
+                    move, self.bbox_left, self.bbox_top = self._do_mxas(
+                        slope, move, self.bbox_left, self.bbox_top,
+                        slope.bbox_right, slope.bbox_top, absolute)
+        else:
+            if isinstance(slope, SlopeTopLeft):
+                if slope.xsticky_top:
+                    move, self.bbox_right, self.bbox_bottom = self._do_mxas(
+                        slope, move, self.bbox_right, self.bbox_bottom,
+                        slope.bbox_left, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeTopRight):
+                move, self.bbox_left, self.bbox_bottom = self._do_mxas(
+                    slope, move, self.bbox_left, self.bbox_bottom,
+                    slope.bbox_left, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeBottomLeft):
+                if slope.xsticky_bottom:
+                    move, self.bbox_right, self.bbox_top = self._do_mxas(
+                        slope, move, self.bbox_right, self.bbox_top,
+                        slope.bbox_left, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeBottomRight):
+                move, self.bbox_left, self.bbox_top = self._do_mxas(
+                    slope, move, self.bbox_left, self.bbox_top,
+                    slope.bbox_left, slope.bbox_bottom, absolute)
+
+        return move
+
+    def _move_y_along_slope(self, slope, move, absolute):
+        # Move along the given slope the given amount, if appropriate,
+        # and return unused movement.
+        if move > 0:
+            if isinstance(slope, SlopeTopLeft):
+                move, self.bbox_right, self.bbox_bottom = self._do_myas(
+                    slope, move, self.bbox_right, self.bbox_bottom,
+                    slope.bbox_left, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeTopRight):
+                move, self.bbox_left, self.bbox_bottom = self._do_myas(
+                    slope, move, self.bbox_left, self.bbox_bottom,
+                    slope.bbox_right, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeBottomLeft):
+                if slope.ysticky_left:
+                    move, self.bbox_right, self.bbox_top = self._do_myas(
+                        slope, move, self.bbox_right, self.bbox_top,
+                        slope.bbox_right, slope.bbox_bottom, absolute)
+            elif isinstance(slope, SlopeBottomRight):
+                if slope.ysticky_right:
+                    move, self.bbox_left, self.bbox_top = self._do_myas(
+                        slope, move, self.bbox_left, self.bbox_top,
+                        slope.bbox_left, slope.bbox_bottom, absolute)
+        else:
+            if isinstance(slope, SlopeTopLeft):
+                if slope.ysticky_left:
+                    move, self.bbox_right, self.bbox_bottom = self._do_myas(
+                        slope, move, self.bbox_right, self.bbox_bottom,
+                        slope.bbox_right, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeTopRight):
+                if slope.ysticky_right:
+                    move, self.bbox_left, self.bbox_bottom = self._do_myas(
+                        slope, move, self.bbox_left, self.bbox_bottom,
+                        slope.bbox_left, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeBottomLeft):
+                move, self.bbox_right, self.bbox_top = self._do_myas(
+                    slope, move, self.bbox_right, self.bbox_top,
+                    slope.bbox_left, slope.bbox_top, absolute)
+            elif isinstance(slope, SlopeBottomRight):
+                move, self.bbox_left, self.bbox_top = self._do_myas(
+                    slope, move, self.bbox_left, self.bbox_top,
+                    slope.bbox_right, slope.bbox_top, absolute)
+
+        return move
+
+    def _get_dslope_deepest(self, slope1, slope2):
+        # Return the (x, y) coordinates to put the top-left of the
+        # bounding box so that the object is as wedged between the two
+        # slopes as possible.  If the slopes are parallel, this is
+        # impossible, so return None instead.
+        w = self.bbox_width
+        h = self.bbox_height
+
+        if ((isinstance(slope1, SlopeTopLeft) and
+             isinstance(slope2, SlopeTopRight)) or
+                (isinstance(slope1, SlopeBottomLeft) and
+                 isinstance(slope2, SlopeBottomRight)) or
+                (isinstance(slope1, SlopeTopRight) and
+                 isinstance(slope2, SlopeTopLeft)) or
+                (isinstance(slope1, SlopeBottomRight) and
+                 isinstance(slope2, SlopeBottomLeft))):
+            w = 0
+        elif ((isinstance(slope1, SlopeTopLeft) and
+               isinstance(slope2, SlopeBottomLeft)) or
+              (isinstance(slope1, SlopeTopRight) and
+               isinstance(slope2, SlopeBottomRight)) or
+              (isinstance(slope1, SlopeBottomLeft) and
+               isinstance(slope2, SlopeTopLeft)) or
+              (isinstance(slope1, SlopeBottomRight) and
+               isinstance(slope2, SlopeTopRight))):
+            h = 0
+
+        m1 = slope1.bbox_height / slope1.bbox_width
+        m2 = slope2.bbox_height / slope2.bbox_width
+        if isinstance(slope1, (SlopeTopLeft, SlopeBottomRight)):
+            b1 = slope1.bbox_top - m1 * slope1.bbox_right
+        else:
+            b1 = slope1.bbox_top - m1 * slope1.bbox_left
+        if isinstance(slope2, (SlopeTopLeft, SlopeBottomRight)):
+            b2 = slope2.bbox_top - m2 * slope2.bbox_right - h
+        else:
+            b2 = slope2.bbox_top - m2 * slope2.bbox_left - h
+
+        if m1 != m2:
+            x = (b2 - b1) / (m1 - m2) - w
+            y = slope1.get_slope_y(x)
+
+            if isinstance(slope1, (SlopeTopLeft, SlopeBottomLeft)):
+                x -= self.bbox_width
+            if isinstance(slope1, (SlopeTopLeft, SlopeTopRight)):
+                y -= self.bbox_height
+
+            return (x, y)
+        else:
+            return None
+
     def move_x(self, move, absolute=False):
         """
         Move the object horizontally, handling physics.
@@ -88,251 +315,169 @@ class Collider(sge.Object):
           vertical movement caused by slopes will result in a reduction
           of horizontal movement.
         """
-        sticky = False
-        move_mult = 1
-        old_x = self.x
-        old_y = self.y
-        old_bbox_left = self.bbox_left
-        old_bbox_right = self.bbox_right
-        old_bbox_top = self.bbox_top
-        old_bbox_bottom = self.bbox_bottom
-        rold_bbox_top = round(old_bbox_top, NDIG)
-        rold_bbox_bottom = round(old_bbox_bottom, NDIG)
+        smv = move
+        stopper = None
 
-        if move > 0:
-            bbb = round(self.bbox_bottom, NDIG)
-            for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
-                if slope.xsticky_top:
-                    y = round(slope.get_slope_y(self.bbox_left), NDIG)
-                    if bbb == y:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_width / h
-                        break
-                    elif (self.bbox_left <= slope.bbox_left and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
+        while move:
+            old_x = self.x
+            old_y = self.y
+            old_bbox_left = self.bbox_left
+            old_bbox_right = self.bbox_right
+            old_bbox_top = self.bbox_top
+            old_bbox_bottom = self.bbox_bottom
+            rold_bbox_left = round(old_bbox_left, NDIG)
+            rold_bbox_right = round(old_bbox_right, NDIG)
+            rold_bbox_top = round(old_bbox_top, NDIG)
+            rold_bbox_bottom = round(old_bbox_bottom, NDIG)
+            cmv = move
+
+            for slope in (self.get_left_touching_slope() +
+                          self.get_right_touching_slope() +
+                          self.get_top_touching_slope() +
+                          self.get_bottom_touching_slope()):
+                mv = self._move_x_along_slope(slope, move, absolute)
+                if mv != move:
+                    current_slope = slope
+                    move = mv
+                    break
             else:
-                bbt = round(self.bbox_top, NDIG)
-                for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
-                    if slope.xsticky_bottom:
-                        y = round(slope.get_slope_y(self.bbox_left), NDIG)
-                        if bbt == y:
-                            sticky = 2
-                            if not absolute:
-                                h = math.hypot(slope.bbox_width,
-                                               slope.bbox_height)
-                                move_mult = slope.bbox_width / h
-                            break
-                        elif (self.bbox_left <= slope.bbox_left and
-                              not self.collision(slope)):
-                            sticky = 2
-                            break
+                current_slope = None
+                self.x += move
+                move = 0
 
-            self.x += move * move_mult
+            if smv > 0 and cmv > 0:
+                for other in self.collision(SlopeTopLeft):
+                    x = other.get_slope_x(self.bbox_bottom)
+                    if self.collision(other) and self.bbox_right > x:
+                        ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
+                        if rold_bbox_right <= ox:
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_right - x
+                                self.bbox_right = x
+                                stopper = other
+                        elif not self.collision(other, x=old_x):
+                            if current_slope is not None:
+                                mv = other.bbox_left - self.bbox_right
+                                self._move_x_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_right = other.bbox_left
 
-            stopper = None
+                            move = 0
+                            stopper = other
 
-            for other in self.collision(SlopeTopLeft):
-                y = other.get_slope_y(self.bbox_right)
-                if self.bbox_bottom > y:
-                    oy = round(other.get_slope_y(old_bbox_right), NDIG)
-                    if rold_bbox_bottom <= oy:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_width / h
-                            if m < move_mult:
-                                self.x -= move * (move_mult - m)
-                                move_mult = m
-                                y = other.get_slope_y(self.bbox_right)
-                        self.move_y(y - self.bbox_bottom)
-                        x = other.get_slope_x(self.bbox_bottom)
-                        self.bbox_right = min(self.bbox_right, x)
+                for other in self.collision(SlopeBottomLeft):
+                    x = other.get_slope_x(self.bbox_top)
+                    if self.collision(other) and self.bbox_right > x:
+                        ox = round(other.get_slope_x(old_bbox_top), NDIG)
+                        if rold_bbox_right <= ox:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_right - x
+                                self.bbox_right = x
+                        elif not self.collision(other, x=old_x):
+                            if current_slope is not None:
+                                mv = other.bbox_left - self.bbox_right
+                                self._move_x_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_right = other.bbox_left
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SolidLeft):
+                    if (self.collision(other) and
+                            not self.collision(other, x=old_x)):
+                        if current_slope is not None:
+                            mv = other.bbox_left - self.bbox_right
+                            self._move_x_along_slope(current_slope, mv, True)
+                        else:
+                            self.bbox_right = other.bbox_left
+
+                        move = 0
                         stopper = other
-                    elif not self.collision(other, x=old_x):
-                        self.bbox_right = min(self.bbox_right, other.bbox_left)
+            elif smv < 0 and cmv < 0:
+                for other in self.collision(SlopeTopRight):
+                    x = other.get_slope_x(self.bbox_bottom)
+                    if self.collision(other) and self.bbox_left < x:
+                        ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
+                        if rold_bbox_left >= ox:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_left - x
+                                self.bbox_left = x
+                        elif not self.collision(other, x=old_x):
+                            if current_slope is not None:
+                                mv = other.bbox_right - self.bbox_left
+                                self._move_x_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_left = other.bbox_right
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SlopeBottomRight):
+                    x = other.get_slope_x(self.bbox_top)
+                    if self.collision(other) and self.bbox_left < x:
+                        ox = round(other.get_slope_x(old_bbox_top), NDIG)
+                        if rold_bbox_left >= ox:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_left - x
+                                self.bbox_left = x
+                        elif not self.collision(other, x=old_x):
+                            if current_slope is not None:
+                                mv = other.bbox_right - self.bbox_left
+                                self._move_x_along_slope(current_slope, mv,
+                                                          True)
+                            else:
+                                self.bbox_left = other.bbox_right
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SolidRight):
+                    if (self.collision(other) and
+                            not self.collision(other, x=old_x)):
+                        if current_slope is not None:
+                            mv = other.bbox_right - self.bbox_left
+                            self._move_x_along_slope(current_slope, mv, True)
+                        else:
+                            self.bbox_left = other.bbox_right
+
+                        move = 0
                         stopper = other
 
-            for other in self.collision(SlopeBottomLeft):
-                y = other.get_slope_y(self.bbox_right)
-                if self.bbox_top < y:
-                    oy = round(other.get_slope_y(old_bbox_right), NDIG)
-                    if rold_bbox_top >= oy:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_width / h
-                            if m < move_mult:
-                                self.x -= move * (move_mult - m)
-                                move_mult = m
-                                y = other.get_slope_y(self.bbox_right)
-                        self.move_y(y - self.bbox_top)
-                        x = other.get_slope_x(self.bbox_top)
-                        self.bbox_right = min(self.bbox_right, x)
-                        stopper = other
-                    elif not self.collision(other, x=old_x):
-                        self.bbox_right = min(self.bbox_right, other.bbox_left)
-                        stopper = other
-
-            for other in self.collision(SolidLeft):
-                if not self.collision(other, x=old_x):
-                    self.bbox_right = min(self.bbox_right, other.bbox_left)
-                    stopper = other
-
-            if stopper is not None:
-                move_loss = max(0, abs(move) - abs(self.x - old_x))
+        if stopper is not None:
+            move_loss = max(0, abs(smv) - abs(self.x - old_x))
+            if smv > 0:
                 self.event_physics_collision_right(stopper, move_loss)
                 stopper.event_physics_collision_left(self, 0)
-                
-        elif move < 0:
-            bbb = round(self.bbox_bottom, NDIG)
-            for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
-                if slope.xsticky_top:
-                    y = round(slope.get_slope_y(self.bbox_right), NDIG)
-                    if bbb == y:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_width / h
-                        break
-                    elif (self.bbox_right >= slope.bbox_right and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
-                bbt = round(self.bbox_top, NDIG)
-                for slope in self.collision(SlopeBottomLeft, y=(self.y - 1)):
-                    if slope.xsticky_bottom:
-                        y = round(slope.get_slope_y(self.bbox_right), NDIG)
-                        if bbt == y:
-                            sticky = 2
-                            if not absolute:
-                                h = math.hypot(slope.bbox_width,
-                                               slope.bbox_height)
-                                move_mult = slope.bbox_width / h
-                            break
-                        elif (self.bbox_right >= slope.bbox_right and
-                              not self.collision(slope)):
-                            sticky = 2
-                            break
-
-            self.x += move * move_mult
-
-            stopper = None
-
-            for other in self.collision(SlopeTopRight):
-                y = other.get_slope_y(self.bbox_left)
-                if self.bbox_bottom > y:
-                    oy = round(other.get_slope_y(old_bbox_left), NDIG)
-                    if rold_bbox_bottom <= oy:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_width / h
-                            if m < move_mult:
-                                self.x -= move * (move_mult - m)
-                                move_mult = m
-                                y = other.get_slope_y(self.bbox_left)
-                        self.move_y(y - self.bbox_bottom)
-                        x = other.get_slope_x(self.bbox_bottom)
-                        self.bbox_left = max(self.bbox_left, x)
-                        stopper = other
-                    elif not self.collision(other, x=old_x):
-                        self.bbox_left = max(self.bbox_left, other.bbox_right)
-                        stopper = other
-
-            for other in self.collision(SlopeBottomRight):
-                y = other.get_slope_y(self.bbox_left)
-                if self.bbox_top < y:
-                    oy = round(other.get_slope_y(old_bbox_left), NDIG)
-                    if rold_bbox_top >= oy:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_width / h
-                            if m < move_mult:
-                                self.x -= move * (move_mult - m)
-                                move_mult = m
-                                y = other.get_slope_y(self.bbox_left)
-                        self.move_y(y - self.bbox_top)
-                        x = other.get_slope_x(self.bbox_top)
-                        self.bbox_left = max(self.bbox_left, x)
-                        stopper = other
-                    elif not self.collision(other, x=old_x):
-                        self.bbox_left = max(self.bbox_left, other.bbox_right)
-                        stopper = other
-
-            for other in self.collision(SolidRight):
-                if not self.collision(other, x=old_x):
-                    self.bbox_left = max(self.bbox_left, other.bbox_right)
-                    stopper = other
-
-            if stopper is not None:
-                move_loss = max(0, abs(move) - abs(self.x - old_x))
+            elif smv < 0:
                 self.event_physics_collision_left(stopper, move_loss)
                 stopper.event_physics_collision_right(self, 0)
-
-        # Engage stickiness (same whether moving left or right)
-        # 1 = sticking to the floor
-        # 2 = sticking to the ceiling
-        if sticky == 1:
-            if (not self.get_bottom_touching_slope() and
-                    not self.get_bottom_touching_wall()):
-                new_bbox_bottom = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, self.bbox_top, self.bbox_width,
-                        (sge.game.current_room.height - self.bbox_top +
-                         sge.game.current_room.object_area_height)) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
-                    if (other.bbox_left >= self.bbox_right or
-                            other.bbox_right <= self.bbox_left):
-                        continue
-
-                    if isinstance(other, SolidTop):
-                        y = other.bbox_top
-                    elif isinstance(other, SlopeTopLeft):
-                        y = other.get_slope_y(self.bbox_right)
-                    elif isinstance(other, SlopeTopRight):
-                        y = other.get_slope_y(self.bbox_left)
-                    else:
-                        continue
-
-                    if (y >= self.bbox_bottom and
-                            (new_bbox_bottom is None or
-                             y < new_bbox_bottom)):
-                        new_bbox_bottom = y
-
-                if new_bbox_bottom is not None:
-                    self.bbox_bottom = new_bbox_bottom
-        elif sticky == 2:
-            if (not self.get_top_touching_slope() and
-                    not self.get_top_touching_wall()):
-                new_bbox_top = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, 0, self.bbox_width, self.bbox_bottom) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
-                    if (other.bbox_left >= self.bbox_right or
-                            other.bbox_right <= self.bbox_left):
-                        continue
-
-                    if isinstance(other, SolidBottom):
-                        y = other.bbox_bottom
-                    elif isinstance(other, SlopeBottomLeft):
-                        y = other.get_slope_y(self.bbox_right)
-                    elif isinstance(other, SlopeBottomRight):
-                        y = other.get_slope_y(self.bbox_left)
-                    else:
-                        continue
-
-                    if y <= self.bbox_top and (new_bbox_top is None or
-                                               y > new_bbox_top):
-                        new_bbox_top = y
-
-                if new_bbox_top is not None:
-                    self.bbox_top = new_bbox_top
 
     def move_y(self, move, absolute=False):
         """
@@ -347,253 +492,169 @@ class Collider(sge.Object):
           horizontal movement caused by slopes will result in a
           reduction of vertical movement.
         """
-        sticky = False
-        move_mult = 1
-        old_x = self.x
-        old_y = self.y
-        old_bbox_left = self.bbox_left
-        old_bbox_right = self.bbox_right
-        rold_bbox_left = round(old_bbox_left, NDIG)
-        rold_bbox_right = round(old_bbox_right, NDIG)
-        old_bbox_top = self.bbox_top
-        old_bbox_bottom = self.bbox_bottom
+        smv = move
+        stopper = None
 
-        if move > 0:
-            bbr = round(self.bbox_right, NDIG)
-            for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
-                if slope.ysticky_left:
-                    x = round(slope.get_slope_x(self.bbox_top), NDIG)
-                    if bbr == x:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_height / h
-                        break
-                    elif (self.bbox_top <= slope.bbox_top and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
+        while move:
+            old_x = self.x
+            old_y = self.y
+            old_bbox_left = self.bbox_left
+            old_bbox_right = self.bbox_right
+            old_bbox_top = self.bbox_top
+            old_bbox_bottom = self.bbox_bottom
+            rold_bbox_left = round(old_bbox_left, NDIG)
+            rold_bbox_right = round(old_bbox_right, NDIG)
+            rold_bbox_top = round(old_bbox_top, NDIG)
+            rold_bbox_bottom = round(old_bbox_bottom, NDIG)
+            cmv = move
+
+            for slope in (self.get_left_touching_slope() +
+                          self.get_right_touching_slope() +
+                          self.get_top_touching_slope() +
+                          self.get_bottom_touching_slope()):
+                mv = self._move_y_along_slope(slope, move, absolute)
+                if mv != move:
+                    current_slope = slope
+                    move = mv
+                    break
             else:
-                bbl = round(self.bbox_left, NDIG)
-                for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
-                    if slope.ysticky_right:
-                        x = round(slope.get_slope_x(self.bbox_top), NDIG)
-                        if bbl == x:
-                            sticky = 2
-                            if not absolute:
-                                h = math.hypot(slope.bbox_width,
-                                               slope.bbox_height)
-                                move_mult = slope.bbox_height / h
-                            break
-                        elif (self.bbox_top <= slope.bbox_top and
-                              not self.collision(slope)):
-                            sticky = 2
-                            break
+                current_slope = None
+                self.y += move
+                move = 0
 
-            self.y += move * move_mult
+            if smv > 0 and cmv > 0:
+                for other in self.collision(SlopeTopLeft):
+                    y = other.get_slope_y(self.bbox_right)
+                    if self.collision(other) and self.bbox_bottom > y:
+                        oy = round(other.get_slope_y(old_bbox_right), NDIG)
+                        if rold_bbox_bottom <= oy:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_bottom - y
+                                self.bbox_bottom = y
+                        elif not self.collision(other, y=old_y):
+                            if current_slope is not None:
+                                mv = other.bbox_top - self.bbox_bottom
+                                self._move_y_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_bottom = other.bbox_top
 
-            stopper = None
+                            move = 0
+                            stopper = other
 
-            for other in self.collision(SlopeTopLeft):
-                x = other.get_slope_x(self.bbox_bottom)
-                if self.bbox_right > x:
-                    ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
-                    if rold_bbox_right <= ox:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_height / h
-                            if m < move_mult:
-                                self.y -= move * (move_mult - m)
-                                move_mult = m
-                                x = other.get_slope_x(self.bbox_bottom)
-                        self.move_x(x - self.bbox_right)
-                        y = other.get_slope_y(self.bbox_right)
-                        self.bbox_bottom = min(self.bbox_bottom, y)
+                for other in self.collision(SlopeTopRight):
+                    y = other.get_slope_y(self.bbox_left)
+                    if self.collision(other) and self.bbox_bottom > y:
+                        oy = round(other.get_slope_y(old_bbox_left), NDIG)
+                        if rold_bbox_bottom <= oy:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_bottom - y
+                                self.bbox_bottom = y
+                        elif not self.collision(other, y=old_y):
+                            if current_slope is not None:
+                                mv = other.bbox_top - self.bbox_bottom
+                                self._move_y_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_bottom = other.bbox_top
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SolidTop):
+                    if (self.collision(other) and
+                            not self.collision(other, y=old_y)):
+                        if current_slope is not None:
+                            mv = other.bbox_top - self.bbox_bottom
+                            self._move_y_along_slope(current_slope, mv, True)
+                        else:
+                            self.bbox_bottom = other.bbox_top
+
+                        move = 0
                         stopper = other
-                    elif not self.collision(other, y=old_y):
-                        self.bbox_bottom = min(self.bbox_bottom,
-                                               other.bbox_top)
+            elif smv < 0 and cmv < 0:
+                for other in self.collision(SlopeBottomLeft):
+                    y = other.get_slope_y(self.bbox_right)
+                    if self.collision(other) and self.bbox_top < y:
+                        oy = round(other.get_slope_y(old_bbox_right), NDIG)
+                        if rold_bbox_top >= oy:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_top - y
+                                self.bbox_top = y
+                        elif not self.collision(other, y=old_y):
+                            if current_slope is not None:
+                                mv = other.bbox_bottom - self.bbox_top
+                                self._move_y_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_top = other.bbox_bottom
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SlopeBottomRight):
+                    y = other.get_slope_y(self.bbox_left)
+                    if self.collision(other) and self.bbox_top < y:
+                        oy = round(other.get_slope_y(old_bbox_left), NDIG)
+                        if rold_bbox_top >= oy:
+                            stopper = other
+                            if current_slope is not None:
+                                r = self._get_dslope_deepest(current_slope,
+                                                             other)
+                                if r is not None:
+                                    self.bbox_left, self.bbox_top = r
+                            else:
+                                move += self.bbox_top - y
+                                self.bbox_top = y
+                        elif not self.collision(other, y=old_y):
+                            if current_slope is not None:
+                                mv = other.bbox_bottom - self.bbox_top
+                                self._move_y_along_slope(current_slope, mv,
+                                                         True)
+                            else:
+                                self.bbox_top = other.bbox_bottom
+
+                            move = 0
+                            stopper = other
+
+                for other in self.collision(SolidBottom):
+                    if (self.collision(other) and
+                            not self.collision(other, y=old_y)):
+                        if current_slope is not None:
+                            mv = other.bbox_bottom - self.bbox_top
+                            self._move_y_along_slope(current_slope, mv, True)
+                        else:
+                            self.bbox_top = other.bbox_bottom
+
+                        move = 0
                         stopper = other
 
-            for other in self.collision(SlopeTopRight):
-                x = other.get_slope_x(self.bbox_bottom)
-                if self.bbox_left < x:
-                    ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
-                    if rold_bbox_left >= ox:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_height / h
-                            if m < move_mult:
-                                self.y -= move * (move_mult - m)
-                                move_mult = m
-                                x = other.get_slope_x(self.bbox_bottom)
-                        self.move_x(x - self.bbox_left)
-                        y = other.get_slope_y(self.bbox_left)
-                        self.bbox_bottom = min(self.bbox_bottom, y)
-                        stopper = other
-                    elif not self.collision(other, y=old_y):
-                        self.bbox_bottom = min(self.bbox_bottom,
-                                               other.bbox_top)
-                        stopper = other
-
-            for other in self.collision(SolidTop):
-                if not self.collision(other, y=old_y):
-                    self.bbox_bottom = min(self.bbox_bottom, other.bbox_top)
-                    stopper = other
-
-            if stopper is not None:
-                move_loss = max(0, abs(move) - abs(self.y - old_y))
+        if stopper is not None:
+            move_loss = max(0, abs(smv) - abs(self.y - old_y))
+            if smv > 0:
                 self.event_physics_collision_bottom(stopper, move_loss)
                 stopper.event_physics_collision_top(self, 0)
-                
-        elif move < 0:
-            bbr = round(self.bbox_right, NDIG)
-            for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
-                if slope.ysticky_left:
-                    x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
-                    if bbr == x:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_height / h
-                        break
-                    elif (self.bbox_bottom >= slope.bbox_bottom and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
-                bbl = round(self.bbox_left, NDIG)
-                for slope in self.collision(SlopeTopRight, x=(self.x - 1)):
-                    if slope.ysticky_right:
-                        x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
-                        if bbl == x:
-                            sticky = 2
-                            if not absolute:
-                                h = math.hypot(slope.bbox_width,
-                                               slope.bbox_height)
-                                move_mult = slope.bbox_height / h
-                            break
-                        elif (self.bbox_bottom >= slope.bbox_bottom and
-                              not self.collision(slope)):
-                            sticky = 2
-                            break
-
-            self.y += move * move_mult
-
-            stopper = None
-
-            for other in self.collision(SlopeBottomLeft):
-                x = other.get_slope_x(self.bbox_top)
-                if self.bbox_right > x:
-                    ox = round(other.get_slope_x(old_bbox_top), NDIG)
-                    if rold_bbox_right <= ox:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_height / h
-                            if m < move_mult:
-                                self.y -= move * (move_mult - m)
-                                move_mult = m
-                                x = other.get_slope_x(self.bbox_top)
-                        self.move_x(x - self.bbox_right)
-                        y = other.get_slope_y(self.bbox_right)
-                        self.bbox_top = max(self.bbox_top, y)
-                        stopper = other
-                    elif not self.collision(other, y=old_y):
-                        self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                        stopper = other
-
-            for other in self.collision(SlopeBottomRight):
-                x = other.get_slope_x(self.bbox_top)
-                if self.bbox_left < x:
-                    ox = round(other.get_slope_x(old_bbox_top), NDIG)
-                    if rold_bbox_left >= ox:
-                        if not absolute:
-                            h = math.hypot(other.bbox_width, other.bbox_height)
-                            m = other.bbox_height / h
-                            if m < move_mult:
-                                self.y -= move * (move_mult - m)
-                                move_mult = m
-                                x = other.get_slope_x(self.bbox_top)
-                        self.move_x(x - self.bbox_left)
-                        y = other.get_slope_y(self.bbox_left)
-                        self.bbox_top = max(self.bbox_top, y)
-                        stopper = other
-                    elif not self.collision(other, y=old_y):
-                        self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                        stopper = other
-
-            for other in self.collision(SolidBottom):
-                if not self.collision(other, y=old_y):
-                    self.bbox_top = max(self.bbox_top, other.bbox_bottom)
-                    stopper = other
-
-            if stopper is not None:
-                move_loss = max(0, abs(move) - abs(self.y - old_y))
+            elif smv < 0:
                 self.event_physics_collision_top(stopper, move_loss)
                 stopper.event_physics_collision_bottom(self, 0)
-
-        # Engage stickiness (same whether moving left or right)
-        # 1 = sticking to a wall on the right
-        # 2 = sticking to a wall on the left
-        if sticky == 1:
-            if (not self.get_right_touching_slope() and
-                    not self.get_right_touching_wall()):
-                new_bbox_right = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        self.bbox_left, self.bbox_top,
-                        (sge.game.current_room.width - self.bbox_left +
-                         sge.game.current_room.object_area_width),
-                        self.bbox_height) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
-                    if (other.bbox_top >= self.bbox_bottom or
-                            other.bbox_bottom <= self.bbox_top):
-                        continue
-
-                    if isinstance(other, SolidLeft):
-                        x = other.bbox_left
-                    elif isinstance(other, SlopeTopLeft):
-                        x = other.get_slope_x(self.bbox_bottom)
-                    elif isinstance(other, SlopeBottomLeft):
-                        x = other.get_slope_x(self.bbox_top)
-                    else:
-                        continue
-
-                    if x >= self.bbox_right and (new_bbox_right is None or
-                                                 x < new_bbox_right):
-                        new_bbox_right = x
-
-                if new_bbox_right is not None:
-                    self.bbox_right = new_bbox_right
-        elif sticky == 2:
-            if (not self.get_left_touching_slope() and
-                    not self.get_left_touching_wall()):
-                new_bbox_left = None
-                others = (
-                    sge.game.current_room.get_objects_at(
-                        0, self.bbox_top, self.bbox_right, self.bbox_height) |
-                    sge.game.current_room.object_area_void)
-                for other in others:
-                    if (other.bbox_top >= self.bbox_bottom or
-                            other.bbox_bottom <= self.bbox_top):
-                        continue
-
-                    if isinstance(other, SolidRight):
-                        x = other.bbox_right
-                    elif isinstance(other, SlopeTopRight):
-                        x = other.get_slope_x(self.bbox_bottom)
-                    elif isinstance(other, SlopeBottomRight):
-                        x = other.get_slope_x(self.bbox_top)
-                    else:
-                        continue
-
-                    if x <= self.bbox_left and (new_bbox_left is None or
-                                                x > new_bbox_left):
-                        new_bbox_left = x
-
-                if new_bbox_left is not None:
-                    self.bbox_left = new_bbox_left
 
     def get_left_touching_wall(self):
         """
@@ -658,7 +719,7 @@ class Collider(sge.Object):
         for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
             y = round(slope.get_slope_y(self.bbox_left), NDIG)
             if bbt == y or (self.bbox_top <= slope.bbox_top and
-                            not self.collision(sope)):
+                            not self.collision(slope)):
                 r.append(slope)
 
         return r
