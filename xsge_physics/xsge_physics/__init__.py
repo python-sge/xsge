@@ -92,7 +92,7 @@ class Collider(sge.Object):
                     mv = max_mv
                     move -= mv
                 else:
-                    mv = min(move, max_mv)
+                    mv = move if abs(move) < abs(max_mv) else max_mv
                     move = 0
             else:
                 mv = 0
@@ -136,7 +136,7 @@ class Collider(sge.Object):
                     mv = max_mv
                     move -= mv
                 else:
-                    mv = min(move, max_mv)
+                    mv = move if abs(move) < abs(max_mv) else max_mv
                     move = 0
             else:
                 mv = 0
