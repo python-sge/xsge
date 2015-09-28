@@ -36,7 +36,7 @@ This extension provides a simple interface for lighting.
 """.strip()
 
 setup(name="xsge_lighting",
-      version="0.8",
+      version="0.9",
       description="xSGE Lighting Library",
       long_description=long_description,
       author="Julian Marchant",

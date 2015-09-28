@@ -31,7 +31,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.8.1a0"
+__version__ = "0.9a0"
 
 import six
 import sge
@@ -62,7 +62,7 @@ def project_light(x, y, sprite, image=0):
     _lights.append((x, y, sprite, image))
 
 
-def project_darkness(z=100000):
+def project_darkness(z=100000, ambient_light=None):
     """
     This function must be called every frame to maintain darkness.
 
@@ -70,8 +70,14 @@ def project_darkness(z=100000):
 
     - ``z`` -- The Z-axis position of the darkness in the room.
       Anything with a higher Z-axis value will not be affected.
+    - ``ambient_light`` -- A :class:`sge.Color` object indicating the
+      color that should be applied as lighting to the entirety of the
+      darkness.  Set to :const:`None` for no ambient lighting.
     """
     global _lights
+
+    if ambient_light is None:
+        ambient_light = sge.Color("black")
 
     groups = []
     for view in sge.game.current_room.views:
@@ -110,7 +116,7 @@ def project_darkness(z=100000):
         darkness = sge.Sprite(width=width, height=height)
 
         darkness.draw_lock()
-        darkness.draw_rectangle(0, 0, width, height, fill=sge.Color("black"))
+        darkness.draw_rectangle(0, 0, width, height, fill=ambient_light)
         for x, y, sprite, image in _lights:
             darkness.draw_sprite(sprite, image, x - dx, y - dy,
                                  blend_mode=sge.BLEND_RGB_MAXIMUM)

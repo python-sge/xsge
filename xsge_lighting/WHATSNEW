@@ -7,8 +7,12 @@ without any warranty.
 
 ========================================================================
 
-0.8.1
+0.9
 ------------------------------------------------------------------------
+
+Misc changes:
+* project_darkness now takes a "light" argument indicating the normal
+  level of light.
 
 Bugfixes:
 - References to "xsge.lighting" remaining in the documentation
