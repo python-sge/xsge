@@ -11,8 +11,7 @@ without any warranty.
 ------------------------------------------------------------------------
 
 Misc changes:
-* project_darkness now takes a "light" argument indicating the normal
-  level of light.
+* project_darkness now takes an "ambient_light" argument.
 
 Bugfixes:
 - References to "xsge.lighting" remaining in the documentation
