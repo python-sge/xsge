@@ -16,4 +16,6 @@ xsge_lighting Functions
 
 .. autofunction:: xsge_lighting.project_light
 
+.. autofunction:: xsge_lighting.clear_lights
+
 .. autofunction:: xsge_lighting.project_darkness

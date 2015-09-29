@@ -10,8 +10,13 @@ without any warranty.
 0.9
 ------------------------------------------------------------------------
 
+Additions:
++ xsge_lighting.clear_lights
+
 Misc changes:
 * project_darkness now takes an "ambient_light" argument.
+* project_darkness is now based on window projections, which is easier
+  to work with and simpler.
 
 Bugfixes:
 - References to "xsge.lighting" remaining in the documentation
