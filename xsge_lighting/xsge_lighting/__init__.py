@@ -71,7 +71,7 @@ def clear_lights():
     _lights = []
 
 
-def project_darkness(ambient_light=None):
+def project_darkness(z=9000, ambient_light=None):
     """
     This function must be called every frame to maintain darkness.  The
     darkness is projected to the game window, once in each of the
@@ -80,15 +80,10 @@ def project_darkness(ambient_light=None):
     :func:`xsge_lighting.project_light` since the last call of either
     this function or :func:`xsge_lighting.clear_lights`.
 
-    .. note::
-
-       Since window projection is used, any other window projections
-       occurring before the darkness projection will be affected, while
-       any other window projections occurring after the darkness
-       projection will not be affected.
-
     Arguments:
 
+    - ``z`` -- The Z-axis position of the darkness projection relative
+      to other window projections.
     - ``ambient_light`` -- A :class:`sge.Color` object indicating the
       color that should be applied as lighting to the entirety of the
       darkness.  Set to :const:`None` for no ambient lighting.
