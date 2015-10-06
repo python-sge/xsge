@@ -15,6 +15,9 @@ Additions:
 
 Misc changes:
 * project_darkness now takes an "ambient_light" argument.
+* project_darkness now takes a "buffer" argument indicating an extra
+  area around the views to cover in darkness, to work around problems
+  with the darkness not covering the entire view due to view movement.
 
 Bugfixes:
 - References to "xsge.lighting" remaining in the documentation

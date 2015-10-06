@@ -71,7 +71,7 @@ def clear_lights():
     _lights = []
 
 
-def project_darkness(z=100000, ambient_light=None):
+def project_darkness(z=100000, ambient_light=None, buffer=0):
     """
     This function must be called every frame to maintain darkness.
 
@@ -82,6 +82,13 @@ def project_darkness(z=100000, ambient_light=None):
     - ``ambient_light`` -- A :class:`sge.Color` object indicating the
       color that should be applied as lighting to the entirety of the
       darkness.  Set to :const:`None` for no ambient lighting.
+    - ``buffer`` -- An extra portion of the room, in addition to what is
+      covered by the room's views, to cover with darkness.  This can be
+      used to prevent situations where movement of a view at the wrong
+      time causes part of the view to not be properly covered in
+      darkness.  To ensure maximum efficiency, this should be the
+      smallest number possible, i.e. the maximum amount of view movement
+      that can happen in a single frame.
     """
     global _lights
 
@@ -115,10 +122,10 @@ def project_darkness(z=100000, ambient_light=None):
         dx2 = 0
         dy2 = 0
         for view in group:
-            dx = min(dx, view.x)
-            dy = min(dy, view.y)
-            dx2 = max(dx2, view.x + view.width)
-            dy2 = max(dy2, view.y + view.height)
+            dx = min(dx, view.x - buffer)
+            dy = min(dy, view.y - buffer)
+            dx2 = max(dx2, view.x + view.width + buffer)
+            dy2 = max(dy2, view.y + view.height + buffer)
         width = dx2 - dx
         height = dy2 - dy
 
