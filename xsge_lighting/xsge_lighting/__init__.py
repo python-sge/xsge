@@ -71,19 +71,14 @@ def clear_lights():
     _lights = []
 
 
-def project_darkness(z=9000, ambient_light=None):
+def project_darkness(z=100000, ambient_light=None):
     """
-    This function must be called every frame to maintain darkness.  The
-    darkness is projected to the game window, once in each of the
-    current room's views, via :meth:`sge.Game.project_sprite`.  It is
-    reduced appropriately by any lights added with
-    :func:`xsge_lighting.project_light` since the last call of either
-    this function or :func:`xsge_lighting.clear_lights`.
+    This function must be called every frame to maintain darkness.
 
     Arguments:
 
-    - ``z`` -- The Z-axis position of the darkness projection relative
-      to other window projections.
+    - ``z`` -- The Z-axis position of the darkness in the room.
+      Anything with a higher Z-axis value will not be affected.
     - ``ambient_light`` -- A :class:`sge.Color` object indicating the
       color that should be applied as lighting to the entirety of the
       darkness.  Set to :const:`None` for no ambient lighting.
@@ -93,32 +88,49 @@ def project_darkness(z=9000, ambient_light=None):
     if ambient_light is None:
         ambient_light = sge.Color("black")
 
+    groups = []
     for view in sge.game.current_room.views:
-        xscale = view.wport / view.width
-        yscale = view.hport / view.height
+        my_groups = []
+        for i in six.moves.range(len(groups)):
+            for member in groups[i]:
+                if (view.x + view.width > member.x and
+                        view.x < member.x + member.width and
+                        view.y + view.height > member.y and
+                        view.y < member.y + member.height):
+                    my_groups.append(i)
+                    break
 
-        darkness = sge.Sprite(width=view.wport, height=view.hport)
+        if my_groups:
+            g = my_groups[0]
+            groups[g].append(view)
+            for i in my_groups[1:]:
+                groups[g].extend(groups[i])
+                del groups[i]
+        else:
+            groups.append([view])
+
+    for group in groups:
+        dx = sge.game.current_room.width
+        dy = sge.game.current_room.height
+        dx2 = 0
+        dy2 = 0
+        for view in group:
+            dx = min(dx, view.x)
+            dy = min(dy, view.y)
+            dx2 = max(dx2, view.x + view.width)
+            dy2 = max(dy2, view.y + view.height)
+        width = dx2 - dx
+        height = dy2 - dy
+
+        darkness = sge.Sprite(width=width, height=height)
         darkness.draw_lock()
-        darkness.draw_rectangle(0, 0, view.wport, view.hport,
-                                fill=ambient_light)
+        darkness.draw_rectangle(0, 0, width, height, fill=ambient_light)
         for x, y, sprite, image in _lights:
-            x -= view.x
-            y -= view.y
-            left = x - sprite.origin_x
-            top = y - sprite.origin_y
-            w = sprite.width * xscale
-            h = sprite.height * yscale
-            if (left + w > 0 and top + h > 0 and left < view.width and
-                    top < view.height):
-                if xscale != 1 or yscale != 1:
-                    sprite = sprite.copy()
-                    sprite.width = w
-                    sprite.height = h
-                darkness.draw_sprite(sprite, image, x * xscale, y * yscale,
-                                     blend_mode=sge.BLEND_RGB_MAXIMUM)
+            darkness.draw_sprite(sprite, image, x - dx, y - dy,
+                                 blend_mode=sge.BLEND_RGB_MAXIMUM)
         darkness.draw_unlock()
 
-        sge.game.project_sprite(darkness, 0, view.xport, view.yport,
-                                blend_mode=sge.BLEND_RGB_MULTIPLY)
+        sge.game.current_room.project_sprite(darkness, 0, dx, dy, z,
+                                             blend_mode=sge.BLEND_RGB_MULTIPLY)
 
     clear_lights()
