@@ -117,15 +117,17 @@ def project_darkness(z=100000, ambient_light=None, buffer=0):
             groups.append([view])
 
     for group in groups:
-        dx = sge.game.current_room.width
-        dy = sge.game.current_room.height
+        rw = sge.game.current_room.width
+        rh = sge.game.current_room.height
+        dx = rw
+        dy = rh
         dx2 = 0
         dy2 = 0
         for view in group:
-            dx = min(dx, view.x - buffer)
-            dy = min(dy, view.y - buffer)
-            dx2 = max(dx2, view.x + view.width + buffer)
-            dy2 = max(dy2, view.y + view.height + buffer)
+            dx = min(dx, max(0, view.x - buffer))
+            dy = min(dy, max(0, view.y - buffer))
+            dx2 = max(dx2, min(view.x + view.width + buffer, rw))
+            dy2 = max(dy2, min(view.y + view.height + buffer, rh))
         width = dx2 - dx
         height = dy2 - dy
 
