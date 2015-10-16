@@ -256,28 +256,42 @@ class Collider(sge.Object):
         # bounding box so that the object is as wedged between the two
         # slopes as possible.  If the slopes are parallel, this is
         # impossible, so return None instead.
+        #
+        # This basically works by treating the slopes as lines,
+        # offsetting their position based on the width and/or height of
+        # the collider (if applicable), and finding out where the lines
+        # intersect.  For simplicity, this method assumes that the
+        # length of both slopes is infinite.
         w = self.bbox_width
         h = self.bbox_height
 
+        # Make slope1 -- the "master" slope -- consistent.  This is to
+        # prevent an unpleasant jittering effect that can be caused by
+        # very slight discrepancies between the two slopes'
+        # get_slope_y return values.
+        slope1, slope2 = sorted([slope1, slope2], key=id)
+
+        # Find out what edges to not use
         if ((isinstance(slope1, SlopeTopLeft) and
-             isinstance(slope2, SlopeTopRight)) or
+             isinstance(slope2, (SlopeTopLeft, SlopeTopRight))) or
                 (isinstance(slope1, SlopeBottomLeft) and
-                 isinstance(slope2, SlopeBottomRight)) or
+                 isinstance(slope2, (SlopeBottomLeft, SlopeBottomRight))) or
                 (isinstance(slope1, SlopeTopRight) and
-                 isinstance(slope2, SlopeTopLeft)) or
+                 isinstance(slope2, (SlopeTopRight, SlopeTopLeft))) or
                 (isinstance(slope1, SlopeBottomRight) and
-                 isinstance(slope2, SlopeBottomLeft))):
+                 isinstance(slope2, (SlopeBottomRight, SlopeBottomLeft)))):
             w = 0
-        elif ((isinstance(slope1, SlopeTopLeft) and
-               isinstance(slope2, SlopeBottomLeft)) or
+        if ((isinstance(slope1, SlopeTopLeft) and
+             isinstance(slope2, (SlopeTopLeft, SlopeBottomLeft))) or
               (isinstance(slope1, SlopeTopRight) and
-               isinstance(slope2, SlopeBottomRight)) or
+               isinstance(slope2, (SlopeTopRight, SlopeBottomRight))) or
               (isinstance(slope1, SlopeBottomLeft) and
-               isinstance(slope2, SlopeTopLeft)) or
+               isinstance(slope2, (SlopeBottomLeft, SlopeTopLeft))) or
               (isinstance(slope1, SlopeBottomRight) and
-               isinstance(slope2, SlopeTopRight))):
+               isinstance(slope2, (SlopeBottomRight, SlopeTopRight)))):
             h = 0
 
+        # Calculate the lines
         m1 = slope1.bbox_height / slope1.bbox_width
         m2 = slope2.bbox_height / slope2.bbox_width
         if isinstance(slope1, (SlopeTopLeft, SlopeBottomRight)):
@@ -291,6 +305,7 @@ class Collider(sge.Object):
         else:
             b2 = slope2.bbox_top - m2 * slope2.bbox_left - h
 
+        # Find intersection point
         if m1 != m2:
             x = (b2 - b1) / (m1 - m2) - w
             y = slope1.get_slope_y(x)
