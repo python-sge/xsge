@@ -7,6 +7,16 @@ without any warranty.
 
 ========================================================================
 
+0.9.1
+------------------------------------------------------------------------
+
+Misc changes:
+* The way slopes work has been mostly rewritten. The rewrite is
+  intended to fix bugs. HOWEVER, THE REWRITE IS CURRENTLY EVEN BUGGIER
+  THAN THE OLD VERSION, and this new version of xsge_physics is
+  therefore NOT FIT FOR RELEASE.
+
+
 0.9
 ------------------------------------------------------------------------
 
