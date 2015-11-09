@@ -32,7 +32,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9"
+__version__ = "0.9.1a0"
 
 import math
 
@@ -141,7 +141,9 @@ class Path(sge.Object):
             dx = dp[0] + start_x
             dy = dp[1] + start_y
 
-            if math.hypot(dx - obj.x, dy - obj.y) / delta_mult < obj.speed:
+            if (delta_mult and
+                    math.hypot(dx - obj.x,
+                               dy - obj.y) / delta_mult < obj.speed):
                 dest += 1
                 obj.speed = 0
                 obj.move_x(dx - obj.x)
