@@ -49,7 +49,6 @@ from __future__ import unicode_literals
 __version__ = "0.9.1a0"
 
 import math
-import warnings
 
 import sge
 
@@ -272,9 +271,6 @@ class Collider(sge.Object):
         # get_slope_y return values.
         slope1, slope2 = sorted([slope1, slope2], key=id)
 
-        def checkline_below(x, y, m, b): return y >= m * x + b
-        def checkline_above(x, y, m, b): return y <= m * x + b
-
         # Find out what edges to not use
         if ((isinstance(slope1, SlopeTopLeft) and
              isinstance(slope2, (SlopeTopLeft, SlopeTopRight))) or
@@ -305,55 +301,19 @@ class Collider(sge.Object):
             b1 = slope1.bbox_top - m1 * slope1.bbox_left
         if isinstance(slope2, (SlopeTopLeft, SlopeBottomRight)):
             m2 *= -1
-            b2 = slope2.bbox_top - m2 * slope2.bbox_right
+            b2 = slope2.bbox_top - m2 * slope2.bbox_right - h
         else:
-            b2 = slope2.bbox_top - m2 * slope2.bbox_left
-
-        # Choose the appropriate inequalities
-        if isinstance(slope1, (SlopeTopLeft, SlopeTopRight)):
-            checkline1 = checkline_above
-        else:
-            checkline1 = checkline_below
-        if isinstance(slope2, (SlopeTopLeft, SlopeTopRight)):
-            checkline2 = checkline_above
-        else:
-            checkline2 = checkline_below
+            b2 = slope2.bbox_top - m2 * slope2.bbox_left - h
 
         # Find intersection point
         if m1 != m2:
-            x1 = ((b2 - h) - b1) / (m1 - m2) - w
-            x2 = ((b2 + h) - b1) / (m1 - m2) - w
-            x3 = ((b2 - h) - b1) / (m1 - m2) + w
-            x4 = ((b2 + h) - b1) / (m1 - m2) + w
-            y1 = slope1.get_slope_y(x1)
-            y2 = slope1.get_slope_y(x2)
-            y3 = slope1.get_slope_y(x3)
-            y4 = slope1.get_slope_y(x4)
-            bbw = self.bbox_width
-            bbh = self.bbox_height
-            if isinstance(slope1, (SlopeTopLeft, SlopeBottomLeft)):
-                xoffset = -bbw
-            else:
-                xoffset = 0
-            if isinstance(slope1, (SlopeTopLeft, SlopeTopRight)):
-                yoffset = -bbh
-            else:
-                yoffset = 0
+            x = (b2 - b1) / (m1 - m2) - w
+            y = slope1.get_slope_y(x)
 
-            for (xc, yc) in [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]:
-                xc += xoffset
-                yc += yoffset
-                if (checkline1(xc, yc, m1, b1) and
-                        checkline1(xc + bbw, yc + bbh, m1, b1) and
-                        checkline2(xc, yc, m2, b2) and
-                        checkline2(xc + bbw, yc + bbh, m2, b2)):
-                    x = xc
-                    y = yc
-                    break
-            else:
-                w = "Could not find an appropriate intersection point."
-                warnings.warn(w)
-                return None
+            if isinstance(slope1, (SlopeTopLeft, SlopeBottomLeft)):
+                x -= self.bbox_width
+            if isinstance(slope1, (SlopeTopLeft, SlopeTopRight)):
+                y -= self.bbox_height
 
             return (x, y)
         else:
