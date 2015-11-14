@@ -80,6 +80,8 @@ class Collider(sge.Object):
         # movement, and the movement remaining after doing this.
         x = slope.get_slope_x(yc)
         if round(x, NDIG) == round(xc, NDIG):
+            slope_end_x = round(slope_end_x, NDIG)
+            slope_end_y = round(slope_end_y, NDIG)
             if absolute:
                 max_mv = slope_end_x - xc
             else:
@@ -88,11 +90,11 @@ class Collider(sge.Object):
                 max_mv = math.copysign(math.hypot(w_left, h_left), w_left)
 
             if (max_mv < 0) == (move < 0):
-                if abs(move) - abs(max_mv) > 1 / (10 ** NDIG):
+                if abs(move) > abs(max_mv):
                     mv = max_mv
                     move -= mv
                 else:
-                    mv = min(move, max_mv)
+                    mv = move
                     move = 0
             else:
                 mv = 0
@@ -124,6 +126,8 @@ class Collider(sge.Object):
         # movement, and the movement remaining after doing this.
         y = slope.get_slope_y(xc)
         if round(y, NDIG) == round(yc, NDIG):
+            slope_end_x = round(slope_end_x, NDIG)
+            slope_end_y = round(slope_end_y, NDIG)
             if absolute:
                 max_mv = slope_end_y - yc
             else:
@@ -132,11 +136,11 @@ class Collider(sge.Object):
                 max_mv = math.copysign(math.hypot(w_left, h_left), h_left)
 
             if (max_mv < 0) == (move < 0):
-                if abs(move) - abs(max_mv) > 1 / (10 ** NDIG):
+                if abs(move) > abs(max_mv):
                     mv = max_mv
                     move -= mv
                 else:
-                    mv = min(move, max_mv)
+                    mv = move
                     move = 0
             else:
                 mv = 0
