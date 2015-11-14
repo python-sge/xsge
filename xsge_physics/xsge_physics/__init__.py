@@ -413,17 +413,6 @@ class Collider(sge.Object):
                             move = 0
                             stopper = other
 
-                for other in self.collision(SlopeTopRight):
-                    x = other.get_slope_x(self.bbox_bottom)
-                    if self.collision(other) and self.bbox_left < x:
-                        ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
-                        if rold_bbox_left >= ox:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
-
                 for other in self.collision(SolidLeft):
                     if (self.collision(other) and
                             not self.collision(other, x=old_x)):
@@ -485,28 +474,6 @@ class Collider(sge.Object):
 
                             move = 0
                             stopper = other
-
-                for other in self.collision(SlopeTopLeft):
-                    x = other.get_slope_x(self.bbox_bottom)
-                    if self.collision(other) and self.bbox_right > x:
-                        ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
-                        if rold_bbox_right <= ox:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
-
-                for other in self.collision(SlopeBottomLeft):
-                    x = other.get_slope_x(self.bbox_top)
-                    if self.collision(other) and self.bbox_right > x:
-                        ox = round(other.get_slope_x(old_bbox_top), NDIG)
-                        if rold_bbox_right <= ox:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
 
                 for other in self.collision(SolidRight):
                     if (self.collision(other) and
@@ -623,28 +590,6 @@ class Collider(sge.Object):
                             move = 0
                             stopper = other
 
-                for other in self.collision(SlopeBottomLeft):
-                    y = other.get_slope_y(self.bbox_right)
-                    if self.collision(other) and self.bbox_top < y:
-                        oy = round(other.get_slope_y(old_bbox_right), NDIG)
-                        if rold_bbox_top >= oy:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
-
-                for other in self.collision(SlopeBottomRight):
-                    y = other.get_slope_y(self.bbox_left)
-                    if self.collision(other) and self.bbox_top < y:
-                        oy = round(other.get_slope_y(old_bbox_left), NDIG)
-                        if rold_bbox_top >= oy:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
-
                 for other in self.collision(SolidTop):
                     if (self.collision(other) and
                             not self.collision(other, y=old_y)):
@@ -706,28 +651,6 @@ class Collider(sge.Object):
 
                             move = 0
                             stopper = other
-
-                for other in self.collision(SlopeTopLeft):
-                    y = other.get_slope_y(self.bbox_right)
-                    if self.collision(other) and self.bbox_bottom > y:
-                        oy = round(other.get_slope_y(old_bbox_right), NDIG)
-                        if rold_bbox_bottom <= oy:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
-
-                for other in self.collision(SlopeTopRight):
-                    y = other.get_slope_y(self.bbox_left)
-                    if self.collision(other) and self.bbox_bottom > y:
-                        oy = round(other.get_slope_y(old_bbox_left), NDIG)
-                        if rold_bbox_bottom <= oy:
-                            if current_slope is not None:
-                                r = self._get_dslope_deepest(current_slope,
-                                                             other)
-                                if r is not None:
-                                    self.bbox_left, self.bbox_top = r
 
                 for other in self.collision(SolidBottom):
                     if (self.collision(other) and
