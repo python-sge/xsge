@@ -2236,7 +2236,7 @@ class MenuWindow(Window):
         if not x:
             if y < 0:
                 self.event_key_press("up", "")
-            elif y > 0:
+            else:
                 self.event_key_press("down", "")
 
     def event_joystick_button_press(self, js_name, js_id, button):
