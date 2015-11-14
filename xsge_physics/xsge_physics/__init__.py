@@ -80,8 +80,6 @@ class Collider(sge.Object):
         # movement, and the movement remaining after doing this.
         x = slope.get_slope_x(yc)
         if round(x, NDIG) == round(xc, NDIG):
-            slope_end_x = round(slope_end_x, NDIG)
-            slope_end_y = round(slope_end_y, NDIG)
             if absolute:
                 max_mv = slope_end_x - xc
             else:
@@ -126,8 +124,6 @@ class Collider(sge.Object):
         # movement, and the movement remaining after doing this.
         y = slope.get_slope_y(xc)
         if round(y, NDIG) == round(yc, NDIG):
-            slope_end_x = round(slope_end_x, NDIG)
-            slope_end_y = round(slope_end_y, NDIG)
             if absolute:
                 max_mv = slope_end_y - yc
             else:
@@ -189,7 +185,7 @@ class Collider(sge.Object):
                     move, self.bbox_left, self.bbox_top = self._do_mxas(
                         slope, move, self.bbox_left, self.bbox_top,
                         slope.bbox_right, slope.bbox_top, absolute)
-        elif move < 0:
+        else:
             if isinstance(slope, SlopeTopLeft):
                 if slope.xsticky_top:
                     move, self.bbox_right, self.bbox_bottom = self._do_mxas(
@@ -233,7 +229,7 @@ class Collider(sge.Object):
                     move, self.bbox_left, self.bbox_top = self._do_myas(
                         slope, move, self.bbox_left, self.bbox_top,
                         slope.bbox_left, slope.bbox_bottom, absolute)
-        elif move < 0:
+        else:
             if isinstance(slope, SlopeTopLeft):
                 if slope.ysticky_left:
                     move, self.bbox_right, self.bbox_bottom = self._do_myas(
