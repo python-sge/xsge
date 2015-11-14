@@ -281,12 +281,10 @@ class Collider(sge.Object):
         m1 = slope1.bbox_height / slope1.bbox_width
         m2 = slope2.bbox_height / slope2.bbox_width
         if isinstance(slope1, (SlopeTopLeft, SlopeBottomRight)):
-            m1 *= -1
             b1 = slope1.bbox_top - m1 * slope1.bbox_right
         else:
             b1 = slope1.bbox_top - m1 * slope1.bbox_left
         if isinstance(slope2, (SlopeTopLeft, SlopeBottomRight)):
-            m2 *= -1
             b2 = slope2.bbox_top - m2 * slope2.bbox_right - h
         else:
             b2 = slope2.bbox_top - m2 * slope2.bbox_left - h
