@@ -46,7 +46,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9"
+__version__ = "0.9.1a1"
 
 import math
 
@@ -658,7 +658,7 @@ class Collider(sge.Object):
         for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
             y = round(slope.get_slope_y(self.bbox_left), NDIG)
             if bbt == y or (self.bbox_top <= slope.bbox_top and
-                            not self.collision(sope)):
+                            not self.collision(slope)):
                 r.append(slope)
 
         return r

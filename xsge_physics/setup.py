@@ -38,7 +38,7 @@ for other types of games.
 """.strip()
 
 setup(name="xsge_physics",
-      version="0.9",
+      version="0.9.1a1",
       description="xSGE Physics Framework",
       long_description=long_description,
       author="Julian Marchant",
