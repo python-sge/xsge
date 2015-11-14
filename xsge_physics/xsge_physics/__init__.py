@@ -309,12 +309,26 @@ class Collider(sge.Object):
         else:
             b2 = slope2.bbox_top - m2 * slope2.bbox_left
 
+        # Choose the appropriate inequalities
+        if isinstance(slope1, (SlopeTopLeft, SlopeTopRight)):
+            checkline1 = checkline_above
+        else:
+            checkline1 = checkline_below
+        if isinstance(slope2, (SlopeTopLeft, SlopeTopRight)):
+            checkline2 = checkline_above
+        else:
+            checkline2 = checkline_below
+
         # Find intersection point
         if m1 != m2:
             x1 = ((b2 - h) - b1) / (m1 - m2) - w
-            x2 = ((b2 + h) - b1) / (m1 - m2) + w
+            x2 = ((b2 + h) - b1) / (m1 - m2) - w
+            x3 = ((b2 - h) - b1) / (m1 - m2) + w
+            x4 = ((b2 + h) - b1) / (m1 - m2) + w
             y1 = slope1.get_slope_y(x1)
             y2 = slope1.get_slope_y(x2)
+            y3 = slope1.get_slope_y(x3)
+            y4 = slope1.get_slope_y(x4)
             bbw = self.bbox_width
             bbh = self.bbox_height
             if isinstance(slope1, (SlopeTopLeft, SlopeBottomLeft)):
@@ -326,10 +340,13 @@ class Collider(sge.Object):
             else:
                 yoffset = 0
 
-            for (xc, yc) in [(x1, y1), (x2, y2)]:
+            for (xc, yc) in [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]:
                 xc += xoffset
                 yc += yoffset
-                if slope1.bbox_left <= xc <= slope1.bbox_right:
+                if (checkline1(xc, yc, m1, b1) and
+                        checkline1(xc + bbw, yc + bbh, m1, b1) and
+                        checkline2(xc, yc, m2, b2) and
+                        checkline2(xc + bbw, yc + bbh, m2, b2)):
                     x = xc
                     y = yc
                     break
@@ -338,7 +355,6 @@ class Collider(sge.Object):
                 warnings.warn(w)
                 return None
 
-            print(x, y)
             return (x, y)
         else:
             return None
