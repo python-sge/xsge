@@ -75,7 +75,7 @@ class Collider(sge.Object):
        :attr:`y` manually will not cause any physics to occur.
     """
 
-    def move_x(self, move, absolute=False):
+    def move_x(self, move, absolute=False, do_events=True):
         """
         Move the object horizontally, handling physics.
 
@@ -87,6 +87,8 @@ class Collider(sge.Object):
           of vertical movement caused by slopes.  Otherwise, any
           vertical movement caused by slopes will result in a reduction
           of horizontal movement.
+        - ``do_events`` -- Whether or not physics collision events
+          should be executed when appropriate.
         """
         sticky = False
         move_mult = 1
@@ -147,7 +149,7 @@ class Collider(sge.Object):
                                 self.x -= move * (move_mult - m)
                                 move_mult = m
                                 y = other.get_slope_y(self.bbox_right)
-                        self.move_y(y - self.bbox_bottom)
+                        self.move_y(y - self.bbox_bottom, do_events=do_events)
                         x = other.get_slope_x(self.bbox_bottom)
                         self.bbox_right = min(self.bbox_right, x)
                         stopper = other
@@ -167,7 +169,7 @@ class Collider(sge.Object):
                                 self.x -= move * (move_mult - m)
                                 move_mult = m
                                 y = other.get_slope_y(self.bbox_right)
-                        self.move_y(y - self.bbox_top)
+                        self.move_y(y - self.bbox_top, do_events=do_events)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_right = min(self.bbox_right, x)
                         stopper = other
@@ -180,7 +182,7 @@ class Collider(sge.Object):
                     self.bbox_right = min(self.bbox_right, other.bbox_left)
                     stopper = other
 
-            if stopper is not None:
+            if do_events and stopper is not None:
                 move_loss = max(0, abs(move) - abs(self.x - old_x))
                 self.event_physics_collision_right(stopper, move_loss)
                 stopper.event_physics_collision_left(self, 0)
@@ -233,7 +235,7 @@ class Collider(sge.Object):
                                 self.x -= move * (move_mult - m)
                                 move_mult = m
                                 y = other.get_slope_y(self.bbox_left)
-                        self.move_y(y - self.bbox_bottom)
+                        self.move_y(y - self.bbox_bottom, do_events=do_events)
                         x = other.get_slope_x(self.bbox_bottom)
                         self.bbox_left = max(self.bbox_left, x)
                         stopper = other
@@ -253,7 +255,7 @@ class Collider(sge.Object):
                                 self.x -= move * (move_mult - m)
                                 move_mult = m
                                 y = other.get_slope_y(self.bbox_left)
-                        self.move_y(y - self.bbox_top)
+                        self.move_y(y - self.bbox_top, do_events=do_events)
                         x = other.get_slope_x(self.bbox_top)
                         self.bbox_left = max(self.bbox_left, x)
                         stopper = other
@@ -266,7 +268,7 @@ class Collider(sge.Object):
                     self.bbox_left = max(self.bbox_left, other.bbox_right)
                     stopper = other
 
-            if stopper is not None:
+            if do_events and stopper is not None:
                 move_loss = max(0, abs(move) - abs(self.x - old_x))
                 self.event_physics_collision_left(stopper, move_loss)
                 stopper.event_physics_collision_right(self, 0)
@@ -334,7 +336,7 @@ class Collider(sge.Object):
                 if new_bbox_top is not None:
                     self.bbox_top = new_bbox_top
 
-    def move_y(self, move, absolute=False):
+    def move_y(self, move, absolute=False, do_events=True):
         """
         Move the object vertically, handling physics.
 
@@ -346,6 +348,8 @@ class Collider(sge.Object):
           of horizontal movement caused by slopes.  Otherwise, any
           horizontal movement caused by slopes will result in a
           reduction of vertical movement.
+        - ``do_events`` -- Whether or not physics collision events
+          should be executed when appropriate.
         """
         sticky = False
         move_mult = 1
@@ -406,7 +410,7 @@ class Collider(sge.Object):
                                 self.y -= move * (move_mult - m)
                                 move_mult = m
                                 x = other.get_slope_x(self.bbox_bottom)
-                        self.move_x(x - self.bbox_right)
+                        self.move_x(x - self.bbox_right, do_events=do_events)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_bottom = min(self.bbox_bottom, y)
                         stopper = other
@@ -427,7 +431,7 @@ class Collider(sge.Object):
                                 self.y -= move * (move_mult - m)
                                 move_mult = m
                                 x = other.get_slope_x(self.bbox_bottom)
-                        self.move_x(x - self.bbox_left)
+                        self.move_x(x - self.bbox_left, do_events=do_events)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_bottom = min(self.bbox_bottom, y)
                         stopper = other
@@ -441,7 +445,7 @@ class Collider(sge.Object):
                     self.bbox_bottom = min(self.bbox_bottom, other.bbox_top)
                     stopper = other
 
-            if stopper is not None:
+            if do_events and stopper is not None:
                 move_loss = max(0, abs(move) - abs(self.y - old_y))
                 self.event_physics_collision_bottom(stopper, move_loss)
                 stopper.event_physics_collision_top(self, 0)
@@ -494,7 +498,7 @@ class Collider(sge.Object):
                                 self.y -= move * (move_mult - m)
                                 move_mult = m
                                 x = other.get_slope_x(self.bbox_top)
-                        self.move_x(x - self.bbox_right)
+                        self.move_x(x - self.bbox_right, do_events=do_events)
                         y = other.get_slope_y(self.bbox_right)
                         self.bbox_top = max(self.bbox_top, y)
                         stopper = other
@@ -514,7 +518,7 @@ class Collider(sge.Object):
                                 self.y -= move * (move_mult - m)
                                 move_mult = m
                                 x = other.get_slope_x(self.bbox_top)
-                        self.move_x(x - self.bbox_left)
+                        self.move_x(x - self.bbox_left, do_events=do_events)
                         y = other.get_slope_y(self.bbox_left)
                         self.bbox_top = max(self.bbox_top, y)
                         stopper = other
@@ -527,7 +531,7 @@ class Collider(sge.Object):
                     self.bbox_top = max(self.bbox_top, other.bbox_bottom)
                     stopper = other
 
-            if stopper is not None:
+            if do_events and stopper is not None:
                 move_loss = max(0, abs(move) - abs(self.y - old_y))
                 self.event_physics_collision_top(stopper, move_loss)
                 stopper.event_physics_collision_bottom(self, 0)
