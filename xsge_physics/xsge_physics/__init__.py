@@ -157,7 +157,7 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_bottom)
-                        diff = x - self.bbox_right
+                        diff = self.bbox_right - x
                         if diff > 0:
                             self.bbox_right = x
                             if self.bbox_bottom == y:
@@ -183,7 +183,7 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_top)
-                        diff = x - self.bbox_right
+                        diff = self.bbox_right - x
                         if diff > 0:
                             self.bbox_right = x
                             if self.bbox_top == y:
@@ -255,7 +255,7 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_bottom)
-                        diff = x - self.bbox_left
+                        diff = self.bbox_left - x
                         if diff < 0:
                             self.bbox_left = x
                             if self.bbox_bottom == y:
@@ -281,7 +281,7 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_top)
-                        diff = x - self.bbox_left
+                        diff = self.bbox_left - x
                         if diff < 0:
                             self.bbox_left = x
                             if self.bbox_top == y:
@@ -447,7 +447,7 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_right)
-                        diff = y - self.bbox_bottom
+                        diff = self.bbox_bottom - y
                         if diff > 0:
                             self.bbox_bottom = y
                             if self.bbox_right == x:
@@ -474,7 +474,7 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_left)
-                        diff = y - self.bbox_bottom
+                        diff = self.bbox_bottom - y
                         if diff > 0:
                             self.bbox_bottom = y
                             if self.bbox_left == x:
@@ -547,7 +547,7 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_right)
-                        diff = y - self.bbox_top
+                        diff = self.bbox_top - y
                         if diff < 0:
                             self.bbox_top = y
                             if self.bbox_right == x:
@@ -573,7 +573,7 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_left)
-                        diff = y - self.bbox_top
+                        diff = self.bbox_top - y
                         if diff < 0:
                             self.bbox_top = y
                             if self.bbox_left == x:
