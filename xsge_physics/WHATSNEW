@@ -14,6 +14,9 @@ Misc changes:
 * Collider.move_x and Collider.move_y now take a "do_events" argument
   controlling whether or not physics collision events should be
   executed.
+* Collider.move_x and Collider.move_y now take an "exclude_events"
+  argument specifying certain walls that should not trigger physics
+  collision events.
 
 
 0.9
