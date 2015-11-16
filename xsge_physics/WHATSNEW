@@ -20,6 +20,7 @@ Misc changes:
 
 Bugfixes:
 - Failure to properly stick to slopes when moving down
+- Failure to move past the top of slopes
 
 
 0.9

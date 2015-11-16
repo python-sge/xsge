@@ -142,7 +142,10 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SlopeTopLeft):
+            slopes = self.collision(SlopeTopLeft)
+            def key(s, self=self): return s.get_slope_x(self.bbox_bottom)
+            slopes.sort(key=key)
+            for other in slopes:
                 y = other.get_slope_y(self.bbox_right)
                 if self.bbox_bottom > y:
                     oy = round(other.get_slope_y(old_bbox_right), NDIG)
@@ -168,7 +171,10 @@ class Collider(sge.Object):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
                         stopper = other
 
-            for other in self.collision(SlopeBottomLeft):
+            slopes = self.collision(SlopeBottomLeft)
+            def key(s, self=self): return s.get_slope_x(self.bbox_top)
+            slopes.sort(key=key)
+            for other in slopes:
                 y = other.get_slope_y(self.bbox_right)
                 if self.bbox_top < y:
                     oy = round(other.get_slope_y(old_bbox_right), NDIG)
@@ -240,7 +246,10 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SlopeTopRight):
+            slopes = self.collision(SlopeTopRight)
+            def key(s, self=self): return -s.get_slope_x(self.bbox_bottom)
+            slopes.sort(key=key)
+            for other in slopes:
                 y = other.get_slope_y(self.bbox_left)
                 if self.bbox_bottom > y:
                     oy = round(other.get_slope_y(old_bbox_left), NDIG)
@@ -266,7 +275,10 @@ class Collider(sge.Object):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
                         stopper = other
 
-            for other in self.collision(SlopeBottomRight):
+            slopes = self.collision(SlopeBottomRight)
+            def key(s, self=self): return -s.get_slope_x(self.bbox_top)
+            slopes.sort(key=key)
+            for other in slopes:
                 y = other.get_slope_y(self.bbox_left)
                 if self.bbox_top < y:
                     oy = round(other.get_slope_y(old_bbox_left), NDIG)
@@ -432,7 +444,10 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SlopeTopLeft):
+            slopes = self.collision(SlopeTopLeft)
+            def key(s, self=self): return s.get_slope_y(self.bbox_right)
+            slopes.sort(key=key)
+            for other in slopes:
                 x = other.get_slope_x(self.bbox_bottom)
                 if self.bbox_right > x:
                     ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
@@ -459,7 +474,10 @@ class Collider(sge.Object):
                                                other.bbox_top)
                         stopper = other
 
-            for other in self.collision(SlopeTopRight):
+            slopes = self.collision(SlopeTopRight)
+            def key(s, self=self): return s.get_slope_y(self.bbox_left)
+            slopes.sort(key=key)
+            for other in slopes:
                 x = other.get_slope_x(self.bbox_bottom)
                 if self.bbox_left < x:
                     ox = round(other.get_slope_x(old_bbox_bottom), NDIG)
@@ -532,7 +550,10 @@ class Collider(sge.Object):
 
             stopper = None
 
-            for other in self.collision(SlopeBottomLeft):
+            slopes = self.collision(SlopeBottomLeft)
+            def key(s, self=self): return -s.get_slope_y(self.bbox_right)
+            slopes.sort(key=key)
+            for other in slopes:
                 x = other.get_slope_x(self.bbox_top)
                 if self.bbox_right > x:
                     ox = round(other.get_slope_x(old_bbox_top), NDIG)
@@ -558,6 +579,9 @@ class Collider(sge.Object):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
                         stopper = other
 
+            slopes = self.collision(SlopeBottomRight)
+            def key(s, self=self): return -s.get_slope_y(self.bbox_left)
+            slopes.sort(key=key)
             for other in self.collision(SlopeBottomRight):
                 x = other.get_slope_x(self.bbox_top)
                 if self.bbox_left < x:
