@@ -157,7 +157,12 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_bottom)
-                        self.bbox_right = min(self.bbox_right, x)
+                        diff = x - self.bbox_right
+                        if diff > 0:
+                            self.bbox_right = x
+                            if self.bbox_bottom == y:
+                                self.move_x(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
@@ -178,7 +183,12 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_top)
-                        self.bbox_right = min(self.bbox_right, x)
+                        diff = x - self.bbox_right
+                        if diff > 0:
+                            self.bbox_right = x
+                            if self.bbox_top == y:
+                                self.move_x(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
@@ -245,7 +255,12 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_bottom, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_bottom)
-                        self.bbox_left = max(self.bbox_left, x)
+                        diff = x - self.bbox_left
+                        if diff < 0:
+                            self.bbox_left = x
+                            if self.bbox_bottom == y:
+                                self.move_x(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
@@ -266,7 +281,12 @@ class Collider(sge.Object):
                         self.move_y(y - self.bbox_top, do_events=do_events,
                                     exclude_events=exclude_events)
                         x = other.get_slope_x(self.bbox_top)
-                        self.bbox_left = max(self.bbox_left, x)
+                        diff = x - self.bbox_left
+                        if diff < 0:
+                            self.bbox_left = x
+                            if self.bbox_top == y:
+                                self.move_x(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
@@ -427,7 +447,12 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_right)
-                        self.bbox_bottom = min(self.bbox_bottom, y)
+                        diff = y - self.bbox_bottom
+                        if diff > 0:
+                            self.bbox_bottom = y
+                            if self.bbox_right == x:
+                                self.move_y(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
@@ -449,7 +474,12 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_left)
-                        self.bbox_bottom = min(self.bbox_bottom, y)
+                        diff = y - self.bbox_bottom
+                        if diff > 0:
+                            self.bbox_bottom = y
+                            if self.bbox_left == x:
+                                self.move_y(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
@@ -517,7 +547,12 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_right, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_right)
-                        self.bbox_top = max(self.bbox_top, y)
+                        diff = y - self.bbox_top
+                        if diff < 0:
+                            self.bbox_top = y
+                            if self.bbox_right == x:
+                                self.move_y(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
@@ -538,7 +573,12 @@ class Collider(sge.Object):
                         self.move_x(x - self.bbox_left, do_events=do_events,
                                     exclude_events=exclude_events)
                         y = other.get_slope_y(self.bbox_left)
-                        self.bbox_top = max(self.bbox_top, y)
+                        diff = y - self.bbox_top
+                        if diff < 0:
+                            self.bbox_top = y
+                            if self.bbox_left == x:
+                                self.move_y(diff, do_events=do_events,
+                                            exclude_events=exclude_events)
                         stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
