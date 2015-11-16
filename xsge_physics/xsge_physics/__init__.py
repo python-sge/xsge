@@ -917,7 +917,8 @@ class SlopeTopLeft(sge.Object):
         # x = (y - b) / m [b is 0]
         m = -self.bbox_height / self.bbox_width
         y -= self.bbox_top
-        return y / m + self.bbox_right
+        x = y / m + self.bbox_right
+        return max(self.bbox_left, min(x, self.bbox_right))
 
     def get_slope_y(self, x):
         """
@@ -927,7 +928,8 @@ class SlopeTopLeft(sge.Object):
         # y = mx + b [b is 0]
         m = -self.bbox_height / self.bbox_width
         x -= self.bbox_left
-        return m * x + self.bbox_bottom
+        y = m * x + self.bbox_bottom
+        return max(self.bbox_top, min(y, self.bbox_bottom))
 
     def event_physics_collision_left(self, other, move_loss):
         """
@@ -981,7 +983,8 @@ class SlopeTopRight(sge.Object):
         # x = (y - b) / m [b is 0]
         m = self.bbox_height / self.bbox_width
         y -= self.bbox_top
-        return y / m + self.bbox_left
+        x = y / m + self.bbox_left
+        return max(self.bbox_left, min(x, self.bbox_right))
 
     def get_slope_y(self, x):
         """
@@ -991,7 +994,8 @@ class SlopeTopRight(sge.Object):
         # y = mx + b [b is 0]
         m = self.bbox_height / self.bbox_width
         x -= self.bbox_left
-        return m * x + self.bbox_top
+        y = m * x + self.bbox_top
+        return max(self.bbox_top, min(y, self.bbox_bottom))
 
     def event_physics_collision_right(self, other, move_loss):
         """
@@ -1045,7 +1049,8 @@ class SlopeBottomLeft(sge.Object):
         # x = (y - b) / m [b is 0]
         m = self.bbox_height / self.bbox_width
         y -= self.bbox_top
-        return y / m + self.bbox_left
+        x = y / m + self.bbox_left
+        return max(self.bbox_left, min(x, self.bbox_right))
 
     def get_slope_y(self, x):
         """
@@ -1055,7 +1060,8 @@ class SlopeBottomLeft(sge.Object):
         # y = mx + b [b is 0]
         m = self.bbox_height / self.bbox_width
         x -= self.bbox_left
-        return m * x + self.bbox_top
+        y = m * x + self.bbox_top
+        return max(self.bbox_top, min(y, self.bbox_bottom))
 
     def event_physics_collision_left(self, other, move_loss):
         """
@@ -1109,7 +1115,8 @@ class SlopeBottomRight(sge.Object):
         # x = (y - b) / m [b is 0]
         m = -self.bbox_height / self.bbox_width
         y -= self.bbox_top
-        return y / m + self.bbox_right
+        x = y / m + self.bbox_right
+        return max(self.bbox_left, min(x, self.bbox_right))
 
     def get_slope_y(self, x):
         """
@@ -1119,7 +1126,8 @@ class SlopeBottomRight(sge.Object):
         # y = mx + b [b is 0]
         m = -self.bbox_height / self.bbox_width
         x -= self.bbox_left
-        return m * x + self.bbox_bottom
+        y = m * x + self.bbox_bottom
+        return max(self.bbox_top, min(y, self.bbox_bottom))
 
     def event_physics_collision_right(self, other, move_loss):
         """

@@ -18,6 +18,9 @@ Misc changes:
   argument specifying certain walls that should not trigger physics
   collision events.
 
+Bugfixes:
+- Failure to properly stick to slopes when moving down
+
 
 0.9
 ------------------------------------------------------------------------
