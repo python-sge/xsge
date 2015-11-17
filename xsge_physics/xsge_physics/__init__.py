@@ -105,6 +105,36 @@ class Collider(sge.Object):
         old_bbox_bottom = self.bbox_bottom
         rold_bbox_top = round(old_bbox_top, NDIG)
         rold_bbox_bottom = round(old_bbox_bottom, NDIG)
+        on_floor = None
+        on_ceil = None
+
+        def get_on_floor(on_floor, self=self, old_x=old_x, old_y=old_y):
+            if on_floor is not None:
+                return on_floor
+            else:
+                new_x = self.x
+                new_y = self.y
+                self.x = old_x
+                self.y = old_y
+                on_floor = (self.get_bottom_touching_wall() or
+                            self.get_bottom_touching_slope())
+                self.x = new_x
+                self.y = new_y
+                return on_floor
+
+        def get_on_ceil(on_ceil, self=self, old_x=old_x, old_y=old_y):
+            if on_ceil is not None:
+                return on_ceil
+            else:
+                new_x = self.x
+                new_y = self.y
+                self.x = old_x
+                self.y = old_y
+                on_ceil = (self.get_top_touching_wall() or
+                           self.get_top_touching_slope())
+                self.x = new_x
+                self.y = new_y
+                return on_ceil
 
         if move > 0:
             bbb = round(self.bbox_bottom, NDIG)
@@ -166,7 +196,10 @@ class Collider(sge.Object):
                             if self.bbox_bottom == y:
                                 self.move_x(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_floor = get_on_floor(on_floor)
+                        if on_floor:
+                            stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
                         stopper = other
@@ -195,7 +228,10 @@ class Collider(sge.Object):
                             if self.bbox_top == y:
                                 self.move_x(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_ceil = get_on_ceil(on_ceil)
+                        if on_ceil:
+                            stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_right = min(self.bbox_right, other.bbox_left)
                         stopper = other
@@ -270,7 +306,10 @@ class Collider(sge.Object):
                             if self.bbox_bottom == y:
                                 self.move_x(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_floor = get_on_floor(on_floor)
+                        if on_floor:
+                            stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
                         stopper = other
@@ -299,7 +338,10 @@ class Collider(sge.Object):
                             if self.bbox_top == y:
                                 self.move_x(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_ceil = get_on_ceil(on_ceil)
+                        if on_ceil:
+                            stopper = other
                     elif not self.collision(other, x=old_x):
                         self.bbox_left = max(self.bbox_left, other.bbox_right)
                         stopper = other
@@ -407,6 +449,36 @@ class Collider(sge.Object):
         rold_bbox_right = round(old_bbox_right, NDIG)
         old_bbox_top = self.bbox_top
         old_bbox_bottom = self.bbox_bottom
+        on_right = None
+        on_left = None
+
+        def get_on_right(on_right, self=self, old_x=old_x, old_y=old_y):
+            if on_right is not None:
+                return on_right
+            else:
+                new_x = self.x
+                new_y = self.y
+                self.x = old_x
+                self.y = old_y
+                on_right = (self.get_right_touching_wall() or
+                            self.get_right_touching_slope())
+                self.x = new_x
+                self.y = new_y
+                return on_right
+
+        def get_on_left(on_left, self=self, old_x=old_x, old_y=old_y):
+            if on_left is not None:
+                return on_left
+            else:
+                new_x = self.x
+                new_y = self.y
+                self.x = old_x
+                self.y = old_y
+                on_left = (self.get_left_touching_wall() or
+                           self.get_left_touching_slope())
+                self.x = new_x
+                self.y = new_y
+                return on_left
 
         if move > 0:
             bbr = round(self.bbox_right, NDIG)
@@ -468,7 +540,10 @@ class Collider(sge.Object):
                             if self.bbox_right == x:
                                 self.move_y(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_right = get_on_right(on_right)
+                        if on_right:
+                            stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
                                                other.bbox_top)
@@ -498,7 +573,10 @@ class Collider(sge.Object):
                             if self.bbox_left == x:
                                 self.move_y(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_left = get_on_left(on_left)
+                        if on_left:
+                            stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_bottom = min(self.bbox_bottom,
                                                other.bbox_top)
@@ -574,7 +652,10 @@ class Collider(sge.Object):
                             if self.bbox_right == x:
                                 self.move_y(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_right = get_on_right(on_right)
+                        if on_right:
+                            stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
                         stopper = other
@@ -603,7 +684,10 @@ class Collider(sge.Object):
                             if self.bbox_left == x:
                                 self.move_y(diff, do_events=do_events,
                                             exclude_events=exclude_events)
-                        stopper = other
+
+                        on_left = get_on_left(on_left)
+                        if on_left:
+                            stopper = other
                     elif not self.collision(other, y=old_y):
                         self.bbox_top = max(self.bbox_top, other.bbox_bottom)
                         stopper = other

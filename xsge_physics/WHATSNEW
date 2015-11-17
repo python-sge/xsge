@@ -17,6 +17,9 @@ Misc changes:
 * Collider.move_x and Collider.move_y now take an "exclude_events"
   argument specifying certain walls that should not trigger physics
   collision events.
+* Physics collision events are no longer called due to slopes you were
+  already logically on (i.e. you were on a wall or slope corresponding
+  with the direction being moved in already).
 
 Bugfixes:
 - Failure to properly stick to slopes when moving down
