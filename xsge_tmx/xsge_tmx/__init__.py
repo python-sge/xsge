@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9.1"
+__version__ = "0.9.2a0"
 
 import os
 
@@ -336,7 +336,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
     tile_cls = {}
     tile_sprites = {}
     tile_kwargs = {}
-    for tileset in tilemap.tilesets:
+    for tileset in sorted(tilemap.tilesets, key=lambda T: T.firstgid):
         if tileset.image is not None:
             if tileset.image.source is not None:
                 source = tileset.image.source
@@ -363,12 +363,17 @@ def load(fname, cls=sge.Room, types=None, z=0):
                 width=tileset.tilewidth, height=tileset.tileheight)
 
             for i in six.moves.range(ts_sprite.frames):
+                gid = tileset.firstgid + i
                 if tileset.name in types:
-                    tile_cls[tileset.firstgid + i] = types[tileset.name]
+                    tile_cls[gid] = types[tileset.name]
+                elif gid in tile_cls:
+                    del tile_cls[gid]
+                if gid in tile_kwargs:
+                    del tile_kwargs[gid]
                 t_sprite = sge.Sprite(width=tileset.tilewidth,
                                       height=tileset.tileheight)
                 t_sprite.draw_sprite(ts_sprite, i, 0, 0)
-                tile_sprites[tileset.firstgid + i] = t_sprite
+                tile_sprites[gid] = t_sprite
 
         tileset_kwargs = {}
         for prop in tileset.properties:

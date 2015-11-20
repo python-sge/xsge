@@ -38,7 +38,7 @@ than building a level editor yourself.
 """.strip()
 
 setup(name="xsge_tmx",
-      version="0.9.1",
+      version="0.9.2a0",
       description="xSGE TMX Library",
       long_description=long_description,
       author="Julian Marchant",
