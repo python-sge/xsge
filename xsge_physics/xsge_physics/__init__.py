@@ -1627,7 +1627,7 @@ class MobileColliderWall(MobileWall, Collider):
        should be pushing.
     """
 
-    def move_x(self, move, absolute=False):
+    def move_x(self, move, absolute=False, do_events=True, exclude_events=()):
         """
         Move the wall horizontally, handling physics.
 
@@ -1636,12 +1636,12 @@ class MobileColliderWall(MobileWall, Collider):
         - ``move`` -- The amount to add to :attr:`y`.
         """
         xprev = self.x
-        Collider.move_x(self, move, absolute)
+        Collider.move_x(self, move, absolute, do_events, exclude_events)
         real_move = self.x - xprev
         self.x = xprev
         MobileWall.move_x(self, real_move)
 
-    def move_y(self, move, absolute=False):
+    def move_y(self, move, absolute=False, do_events=True, exclude_events=()):
         """
         Move the wall vertically, handling physics.
 
@@ -1650,7 +1650,7 @@ class MobileColliderWall(MobileWall, Collider):
         - ``move`` -- The amount to add to :attr:`y`.
         """
         yprev = self.y
-        Collider.move_y(self, move, absolute)
+        Collider.move_y(self, move, absolute, do_events, exclude_events)
         real_move = self.y - yprev
         self.y = yprev
         MobileWall.move_y(self, real_move)
