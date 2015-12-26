@@ -24,14 +24,17 @@ INSTALLATION
 First, install the dependencies:
 
 - Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
-- SGE Game Engine 0.18 <http://stellarengine.nongnu.org>
+- SGE Game Engine 0.18 or later <http://stellarengine.nongnu.org>
 - Six 1.4.0 or later <https://pypi.python.org/pypi/six>
 - tmx 1.2.2 or later <https://savannah.nongnu.org/projects/python-tmx>
 
 Once you have all the dependencies, install this package with the
-included setup.py script, e.g.:
+included setup.py script, e.g. with "python setup.py install".
 
-    python setup.py install
+Alternatively, you can just place the "xsge_tmx" folder into the same
+directory as the Python program that uses it. This can be a good idea
+for the distribution of a game, since it reduces the number of
+dependencies the user needs to install.
 
 USAGE
 
