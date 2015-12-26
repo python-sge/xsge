@@ -38,7 +38,7 @@ than building a level editor yourself.
 """.strip()
 
 setup(name="xsge_tmx",
-      version="0.9.3a0",
+      version="0.10a0",
       description="xSGE TMX Library",
       long_description=long_description,
       author="Julian Marchant",
@@ -57,7 +57,7 @@ setup(name="xsge_tmx",
       packages=["xsge_tmx"],
       package_dir={"xsge_tmx": "xsge_tmx"},
       package_data={"xsge_tmx": ["COPYING"]},
-      requires=["sge (>=0.18)", "six (>=1.4.0)", "tmx (>=1.2.2)",
+      requires=["sge (>=0.18)", "six (>=1.4.0)", "tmx (>=1.4)",
                 "xsge_path"],
       provides=["xsge_tmx"],
      )

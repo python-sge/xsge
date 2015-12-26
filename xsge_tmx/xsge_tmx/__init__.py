@@ -420,6 +420,9 @@ def load(fname, cls=sge.Room, types=None, z=0):
             default_cls = types.get(layer.name, Decoration)
             default_kwargs = {"z": z}
 
+            offsetx = layer.offsetx
+            offsety = layer.offsety
+
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
 
@@ -446,7 +449,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     y = (i // tilemap.width) * tilemap.tileheight
                     y += tilemap.tileheight - kwargs["sprite"].height
 
-                    obj = cls(x, y, **kwargs)
+                    obj = cls(x + offsetx, y + offsety, **kwargs)
                     objects.append(obj)
                     if i % tilemap.width:
                         if tilemap.renderorder.startswith("left"):
@@ -469,6 +472,9 @@ def load(fname, cls=sge.Room, types=None, z=0):
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {"z": z}
 
+            offsetx = layer.offsetx
+            offsety = layer.offsety
+
             for prop in layer.properties:
                 default_kwargs[prop.name] = _nconvert(prop.value)
 
@@ -478,7 +484,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     for prop in obj.properties:
                         kwargs[prop.name] = _nconvert(prop.value)
 
-                    views.append(sge.View(obj.x, obj.y, **kwargs))
+                    views.append(sge.View(obj.x + offsetx, obj.y + offsety,
+                                          **kwargs))
             else:
                 default_cls = types.get(layer.name)
 
@@ -530,7 +537,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         for prop in obj.properties:
                             kwargs[prop.name] = _nconvert(prop.value)
 
-                        objects.append(cls(x, y, **kwargs))
+                        objects.append(cls(x + offsetx, y + offsety, **kwargs))
                     elif obj.ellipse:
                         if cls is None:
                             cls = Ellipse
@@ -538,23 +545,24 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         sprite.draw_ellipse(0, 0, obj.width, obj.height,
                                             fill=color)
                         kwargs["sprite"] = sprite
-                        objects.append(cls(obj.x, obj.y, **kwargs))
+                        objects.append(cls(obj.x + offsetx, obj.y + offsety,
+                                           **kwargs))
                     elif obj.polygon:
                         if cls is None:
                             cls = Polygon
                         xoff, yoff = obj.polygon[0]
                         p = [(x - xoff, y - yoff) for x, y in obj.polygon[1:]]
                         kwargs["points"] = p
-                        objects.append(cls(obj.x + xoff, obj.y + yoff,
-                                           **kwargs))
+                        objects.append(cls(obj.x + xoff + offsetx,
+                                           obj.y + yoff + offsety, **kwargs))
                     elif obj.polyline:
                         if cls is None:
                             cls = Polyline
                         xoff, yoff = obj.polyline[0]
                         p = [(x - xoff, y - yoff) for x, y in obj.polyline[1:]]
                         kwargs["points"] = p
-                        objects.append(cls(obj.x + xoff, obj.y + yoff,
-                                           **kwargs))
+                        objects.append(cls(obj.x + xoff + offsetx,
+                                           obj.y + yoff + offsety, **kwargs))
                     else:
                         if cls is None:
                             cls = Rectangle
@@ -562,7 +570,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                         sprite.draw_rectangle(0, 0, obj.width, obj.height,
                                               fill=color)
                         kwargs["sprite"] = sprite
-                        objects.append(cls(obj.x, obj.y, **kwargs))
+                        objects.append(cls(obj.x + offsetx, obj.y + offsety,
+                                           **kwargs))
         elif isinstance(layer, tmx.ImageLayer):
             cls = types.get(layer.name, Decoration)
             kwargs = {"z": z}
