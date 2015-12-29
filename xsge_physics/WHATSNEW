@@ -7,6 +7,16 @@ without any warranty.
 
 ========================================================================
 
+0.11
+------------------------------------------------------------------------
+
+Additions:
++ xsge_physics.MobileWall.push_left
++ xsge_physics.MobileWall.push_right
++ xsge_physics.MobileWall.push_up
++ xsge_physics.MobileWall.push_down
+
+
 0.10
 ------------------------------------------------------------------------
 
