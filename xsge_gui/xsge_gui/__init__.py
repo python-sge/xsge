@@ -119,9 +119,9 @@ import sge
 
 
 __all__ = ["Handler", "Window", "Dialog", "Widget", "Label", "Button",
-           "CheckBox", "RadioButton", "ProgressBar", "TextBox",
-           "MessageDialog", "TextEntryDialog", "init", "show_message",
-           "get_text_entry"]
+           "CheckBox", "RadioButton", "ProgressBar", "TextBox", "MenuItem",
+           "MenuWindow", "MenuDialog", "MessageDialog", "TextEntryDialog",
+           "init", "show_message", "get_text_entry"]
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
 TEXTBOX_MIN_EDGE = 4
@@ -2236,7 +2236,7 @@ class MenuWindow(Window):
         if not x:
             if y < 0:
                 self.event_key_press("up", "")
-            else:
+            elif y > 0:
                 self.event_key_press("down", "")
 
     def event_joystick_button_press(self, js_name, js_id, button):
