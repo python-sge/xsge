@@ -87,6 +87,170 @@ the game.
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
 
+.. data:: next_window_keys
+
+   A list of keys which, when pressed, will give keyboard focus to the
+   next available window.
+
+   Default value: ``[]``
+
+.. data:: previous_window_keys
+
+   A list of keys which, when pressed, will give keyboard focus to the
+   previous available window.
+
+   Default value: ``[]``
+
+.. data:: next_widget_keys
+
+   A list of keys which, when pressed, will give keyboard focus to the
+   next available widget on the window which has keyboard focus.
+
+   Default value: ``["tab"]``
+
+.. data:: previous_widget_keys
+
+   A list of keys which, when pressed, will give keyboard focus to the
+   previous available widget on the window which has keyboard focus.
+
+   Default value: ``[]``
+
+.. data:: left_keys
+
+   A list of keys to treat as left arrows.
+
+   Default value: ``["left"]``
+
+.. data:: right_keys
+
+   A list of keys to treat as right arrows.
+
+   Default value: ``["right"]``
+
+.. data:: up_keys
+
+   A list of keys to treat as up arrows.
+
+   Default value: ``["up"]``
+
+.. data:: down_keys
+
+   A list of keys to treat as down arrows.
+
+   Default value: ``["down"]``
+
+.. data:: enter_keys
+
+   A list of keys to treat as Enter keys.
+
+   Default value: ``["enter", "kp_enter"]``
+
+.. data:: escape_keys
+
+   A list of keys to treat as Escape keys.
+
+   Default value: ``["escape"]``
+
+.. data:: next_window_joystick_events
+
+   A list of tuples indicating joystick events which will give keyboard
+   focus to the next available window.
+
+   The tuples should contain, in order, the following values:
+
+   1. The number of the joystick, where ``0`` is the first joystick.
+
+   2. The type of event.  See the documentation for
+      :class:`sge.input.JoystickEvent` for more information.
+
+   3. The number of the joystick control, where ``0`` is the first
+      control of its type on the joystick.
+
+   Default value: ``[]``
+
+.. data:: previous_window_joystick_events
+
+   A list of tuples indicating joystick events which will give keyboard
+   focus to the previous available window.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[]``
+
+.. data:: next_widget_joystick_events
+
+   A list of tuples indicating joystick events which will give keyboard
+   focus to the next available widget on the window which has keyboard
+   focus.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "button", 8)]``
+
+.. data:: previous_widget_joystick_events
+
+   A list of tuples indicating joystick events which will give keyboard
+   focus to the previous available widget on the window which has
+   keyboard focus.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[]``
+
+.. data:: left_joystick_events
+
+   A list of tuples indicating joystick events to treat as left arrows.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "axis-", 0), (0, "hat_left", 0)]``
+
+.. data:: right_joystick_events
+
+   A list of tuples indicating joystick events to treat as right arrows.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "axis+", 0), (0, "hat_right", 0)]``
+
+.. data:: up_joystick_events
+
+   A list of tuples indicating joystick events to treat as up arrows.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "axis-", 1), (0, "hat_up", 0)]``
+
+.. data:: down_joystick_events
+
+   A list of tuples indicating joystick events to treat as down arrows.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "axis+", 1), (0, "hat_down", 0)]``
+
+.. data:: enter_joystick_events
+
+   A list of tuples indicating joystick events to treat as Enter keys.
+
+   See the documentation for :attr:`next_window_joystick_events` for
+   more information.
+
+   Default value: ``[(0, "button", 9)]``
+
+.. data:: escape_joystick_events
+
+   A list of tuples indicating joystick events to treat as Escape keys.
+
+   Default value: ``[]``
+
 .. data:: joystick_threshold
 
    The amount of tilt on a joystick that should be considered
@@ -98,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.9.2a0"
+__version__ = "0.10a0"
 
 import os
 import weakref
@@ -127,6 +291,8 @@ DATA = os.path.join(os.path.dirname(__file__), "data")
 TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
+
+_joystick_prev = {}
 
 window_background_color = sge.Color("#A4A4A4")
 keyboard_focused_box_color = sge.Color((0, 0, 0, 170))
@@ -170,6 +336,26 @@ window_border_bottomright_sprite = None
 window_border_top_sprite = None
 window_border_topleft_sprite = None
 window_border_topright_sprite = None
+next_window_keys = []
+previous_window_keys = []
+next_widget_keys = ["tab"]
+previous_widget_keys = []
+left_keys = ["left"]
+right_keys = ["right"]
+up_keys = ["up"]
+down_keys = ["down"]
+enter_keys = ["enter", "kp_enter"]
+escape_keys = ["escape"]
+next_window_joystick_events = []
+previous_window_joystick_events = []
+next_widget_joystick_events = [(0, "button", 8)]
+previous_widget_joystick_events = []
+left_joystick_events = [(0, "axis-", 0), (0, "hat_left", 0)]
+right_joystick_events = [(0, "axis+", 0), (0, "hat_right", 0)]
+up_joystick_events = [(0, "axis-", 1), (0, "hat_up", 0)]
+down_joystick_events = [(0, "axis+", 1), (0, "hat_down", 0)]
+enter_joystick_events = [(0, "button", 9)]
+escape_joystick_events = []
 joystick_threshold = 0.7
 
 
@@ -198,6 +384,16 @@ class Handler(sge.Object):
         super(Handler, self).__init__(0, 0, visible=False, tangible=False)
         self.windows = []
         self.keyboard_focused_window = None
+
+    def _kb_focus_move(self, n):
+        if self.windows:
+            if self.keyboard_focused_window in self.windows:
+                i = self.windows.index(self.keyboard_focused_window) + n
+                i %= len(self.windows)
+            else:
+                i = 0 if n > 0 else -1
+
+            self.keyboard_focused_window = self.windows[i]
 
     def get_mouse_focused_window(self):
         """
@@ -233,6 +429,11 @@ class Handler(sge.Object):
             window.refresh()
 
     def event_key_press(self, key, char):
+        if key in next_window_keys:
+            self._kb_focus_move(1)
+        if key in previous_window_keys:
+            self._kb_focus_move(-1)
+
         window = self.keyboard_focused_window
         if window is not None:
             window.event_key_press(key, char)
@@ -362,6 +563,33 @@ class Handler(sge.Object):
                 widget.event_global_joystick_button_release(js_name, js_id,
                                                             button)
 
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        global _joystick_prev
+
+        js = (js_id, input_type, input_id)
+        prev = _joystick_prev.get(js, 0)
+        _joystick_prev[js] = value
+        if value >= joystick_threshold and prev < joystick_threshold:
+            if js in next_window_joystick_events:
+                self._kb_focus_move(1)
+            if js in previous_window_joystick_events:
+                self._kb_focus_move(-1)
+
+        window = self.keyboard_focused_window
+        if window is not None:
+            window.event_joystick(js_name, js_id, input_type, input_id, value)
+            widget = window.keyboard_focused_widget
+            if widget is not None:
+                widget.event_joystick_button_release(
+                    js_name, js_id, input_type, input_id, value)
+
+        for window in self.windows[:]:
+            window.event_global_joystick(js_name, js_id, input_type, input_id,
+                                         value)
+            for widget in window.widgets:
+                widget.event_global_joystick(js_name, js_id, input_type,
+                                             input_id, value)
+
 
 class Window(object):
 
@@ -447,6 +675,16 @@ class Window(object):
         else:
             self._background_color = window_background_color
 
+    @property
+    def keyboard_focused_widget(self):
+        return self.__keyboard_focused_widget
+
+    @keyboard_focused_widget.setter
+    def keyboard_focused_widget(self, value):
+        if value != self.__keyboard_focused_widget:
+            self.__keyboard_focused_widget = value
+            self.event_change_keyboard_focus()
+
     def __init__(self, parent, x, y, width, height, title="",
                  background_color=None, border=True):
         self.parent = parent
@@ -458,12 +696,27 @@ class Window(object):
         self.background_color = background_color
         self.border = border
         self.widgets = []
-        self.keyboard_focused_widget = None
+        self.__keyboard_focused_widget = None
         self._border_grab = None
         self._close_button_pressed = False
 
         self.sprite = sge.Sprite(width=1, height=1)
         self.redraw()
+
+    def _kb_focus_move(self, d):
+        assert d
+        if self.widgets:
+            try:
+                i = self.widgets.index(self.keyboard_focused_widget)
+            except ValueError:
+                i = -1 if d > 0 else 0
+
+            for _ in six.moves.range(len(self.widgets)):
+                i += d
+                i %= len(self.widgets)
+                if self.widgets[i].tab_focus:
+                    self.keyboard_focused_widget = self.widgets[i]
+                    break
 
     def show(self):
         """Add this window to its parent handler."""
@@ -667,25 +920,34 @@ class Window(object):
         """
         pass
 
+    def event_change_keyboard_focus(self):
+        """
+        Called when :attr:`keyboard_focused_widget` changes.
+        """
+        pass
+
     def event_key_press(self, key, char):
         """
         Called when a key is pressed while this window has keyboard
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
         """
-        if key == "tab":
-            if self.widgets:
-                try:
-                    i = self.widgets.index(self.keyboard_focused_widget)
-                except ValueError:
-                    i = -1
-
-                for _ in six.moves.range(len(self.widgets)):
-                    i += 1
-                    i %= len(self.widgets)
-                    if self.widgets[i].tab_focus:
-                        self.keyboard_focused_widget = self.widgets[i]
-                        break
+        if key in next_widget_keys:
+            self._kb_focus_move(1)
+        if key in previous_widget_keys:
+            self._kb_focus_move(-1)
+        if key in left_keys:
+            self.event_press_left()
+        if key in right_keys:
+            self.event_press_right()
+        if key in up_keys:
+            self.event_press_up()
+        if key in down_keys:
+            self.event_press_down()
+        if key in enter_keys:
+            self.event_press_enter()
+        if key in escape_keys:
+            self.event_press_escape()
 
     def event_key_release(self, key):
         """
@@ -693,7 +955,18 @@ class Window(object):
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
         """
-        pass
+        if key in left_keys:
+            self.event_release_left()
+        if key in right_keys:
+            self.event_release_right()
+        if key in up_keys:
+            self.event_release_up()
+        if key in down_keys:
+            self.event_release_down()
+        if key in enter_keys:
+            self.event_release_enter()
+        if key in escape_keys:
+            self.event_release_escape()
 
     def event_mouse_button_press(self, button):
         """
@@ -748,6 +1021,144 @@ class Window(object):
         Called when a joystick button is released while this window has
         keyboard focus.  See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        """
+        Called when a joystick event occurs while this window has
+        keyboard focus.  See the documentation for
+        :class:`sge.inputJoystickEvent` for more information.
+        """
+        global _joystick_prev
+
+        js = (js_id, input_type, input_id)
+        prev = _joystick_prev.get(js, 0)
+        _joystick_prev[js] = value
+        if value >= joystick_threshold and prev < joystick_threshold:
+            if js in next_widget_joystick_events:
+                self._kb_focus_move(1)
+            if js in previous_widget_joystick_events:
+                self._kb_focus_move(-1)
+            if js in left_joystick_events:
+                self.event_press_left()
+            if js in right_joystick_events:
+                self.event_press_right()
+            if js in up_joystick_events:
+                self.event_press_up()
+            if js in down_joystick_events:
+                self.event_press_down()
+            if js in enter_joystick_events:
+                self.event_press_enter()
+            if js in escape_joystick_events:
+                self.event_press_escape()
+        elif value < joystick_threshold and prev >= joystick_threshold:
+            if js in left_joystick_events:
+                self.event_release_left()
+            if js in right_joystick_events:
+                self.event_release_right()
+            if js in up_joystick_events:
+                self.event_release_up()
+            if js in down_joystick_events:
+                self.event_release_down()
+            if js in enter_joystick_events:
+                self.event_release_enter()
+            if js in escape_joystick_events:
+                self.event_release_escape()
+
+    def event_press_left(self):
+        """
+        Called when a key in :data:`left_keys` or a joystick event in
+        :data:`left_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_right(self):
+        """
+        Called when a key in :data:`right_keys` or a joystick event in
+        :data:`right_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_up(self):
+        """
+        Called when a key in :data:`up_keys` or a joystick event in
+        :data:`up_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_down(self):
+        """
+        Called when a key in :data:`down_keys` or a joystick event in
+        :data:`down_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_enter(self):
+        """
+        Called when a key in :data:`enter_keys` or a joystick event in
+        :data:`enter_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_escape(self):
+        """
+        Called when a key in :data:`escape_keys` or a joystick event in
+        :data:`enter_joystick_events` is pressed while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_left(self):
+        """
+        Called when a key in :data:`left_keys` or a joystick event in
+        :data:`left_joystick_events` is released while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_right(self):
+        """
+        Called when a key in :data:`right_keys` or a joystick event in
+        :data:`right_joystick_events` is released while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_up(self):
+        """
+        Called when a key in :data:`up_keys` or a joystick event in
+        :data:`up_joystick_events` is released while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_down(self):
+        """
+        Called when a key in :data:`down_keys` or a joystick event in
+        :data:`down_joystick_events` is released while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_enter(self):
+        """
+        Called when a key in :data:`enter_keys` or a joystick event in
+        :data:`enter_joystick_events` is released while this window has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_escape(self):
+        """
+        Called when a key in :data:`escape_keys` or a joystick event in
+        :data:`enter_joystick_events` is released while this window has
+        keyboard focus.
         """
         pass
 
@@ -865,6 +1276,15 @@ class Window(object):
         Called when a joystick button is released, regardless of which
         window has keyboard focus.  See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_global_joystick(self, js_name, js_id, input_type, input_id,
+                              value):
+        """
+        Called when a joystick event occurs, regardless of which window
+        has keyboard focus.  See the documentation for
+        :class:`sge.inputJoystickEvent` for more information.
         """
         pass
 
@@ -1047,6 +1467,309 @@ class Dialog(Window):
             sge.game.input_events = []
 
 
+class MenuWindow(Window):
+
+    """
+    Meant to  be used with :class:`xsge_gui.MenuItem` widgets to create
+    keyboard-navigated menus.  Has no border by default.  If one of the
+    keys in :data:`enter_keys` or one of the joystick events in
+    :data:`enter_joystick_events` is pressed, :attr:`choice` is set to
+    the index of the widget which currently has keyboard focus, the
+    window is closed, and :meth:`event_choose` is called.  If one of the
+    keys in :data:`escape_keys` or one of the joystick events in
+    :data:`escape_joystick_events` is pressed, the window is closed and
+    :meth:`event_choose` is called.
+
+    .. attribute:: choice
+
+       The menu item chosen.  If no menu item has been chosen, it is set
+       to :const:`None`.
+
+    See the documentation for :class:`xsge_gui.Window` for more
+    information.
+    """
+
+    def __init__(self, parent, x, y, width, height, title="",
+                 background_color=sge.Color("#0000"), border=False):
+        super(MenuWindow, self).__init__(parent, x, y, width, height, title,
+                                         background_color, border)
+        self.choice = None
+
+    def event_step(self, time_passed, delta_mult):
+        if self.keyboard_focused_widget is None and self.widgets:
+            self.keyboard_focused_widget = self.widgets[0]
+
+    def event_press_enter(self):
+        try:
+            self.choice = self.widgets.index(self.keyboard_focused_widget)
+        except ValueError:
+            pass
+
+        self.event_choose()
+        self.destroy()
+
+    def event_press_escape(self):
+        self.event_choose()
+        self.destroy()
+
+    def event_choose(self):
+        """Called when a menu item is chosen."""
+        pass
+
+    @classmethod
+    def from_text(cls, parent, x, y, items, font_normal=None,
+                  color_normal=None, font_selected=None, color_selected=None,
+                  background_color=sge.Color("#0000"), height=None, margin=0,
+                  halign="left", valign="top"):
+        """
+        Return a menu created automatically from a list of strings.
+
+        Arguments:
+
+        - ``x`` -- The horizontal location of the window within the
+          room.  Affected by ``halign``.
+        - ``y`` -- The vertical location of the window within the room.
+          Affected by ``valign``.
+        - ``items`` -- A list of strings to use as the menu's items.
+        - ``font_normal`` -- The default font to use.
+        - ``color_normal`` -- The default color to use.
+        - ``font_selected`` -- The font to use for the currently
+          selected item.  If set to :const:`None`, the default font will
+          be used.
+        - ``color_selected`` -- The color to use for the currently
+          selected item.  If set to :const:`None`, the default color
+          will be used.
+        - ``height`` -- The height of the menu.  If set to
+          :const:`None`, it will be the sum of the items' height.
+        - ``margin`` -- The size of the margin around the menu.
+        - ``halign`` -- The horizontal alignment of the menu.  See the
+          documentation for :meth:`sge.Sprite.draw_text` for more
+          information.
+        - ``valign`` -- The vertical alignment of the menu.  See the
+          documentation for :meth:`sge.Sprite.draw_text` for more
+          information.
+        """
+        if font_selected is None: font_selected = font_normal
+        if color_selected is None: color_selected = color_normal
+        width = 0
+        item_h = 0
+        item_sprites = []
+        for item in items:
+            n_spr = sge.Sprite.from_text(font_normal, item, color=color_normal,
+                                         halign=halign, valign=valign)
+            s_spr = sge.Sprite.from_text(font_selected, item,
+                                         color=color_selected, halign=halign,
+                                         valign=valign)
+            width = max(width, n_spr.width, s_spr.width)
+            item_h = max(item_h, n_spr.height, s_spr.height)
+            item_sprites.append((n_spr, s_spr))
+
+        if height is None:
+            height = item_h * len(items)
+
+        width += 2 * margin
+        height += 2 * margin
+
+        origin_x = {"left": 0, "right": width,
+                    "center": width / 2}.get(halign.lower(), 0)
+        origin_y = {"top": 0, "bottom": height,
+                    "middle": height / 2}.get(valign.lower(), 0)
+
+        x -= origin_x
+        y -= origin_y
+
+        self = cls(parent, x, y, width, height,
+                   background_color=background_color)
+
+        ih = height - 2 * margin
+        ih += ((height - margin - item_h) - ih *
+               ((len(item_sprites) - 1) / len(item_sprites)))
+        for i in six.moves.range(len(item_sprites)):
+            n_spr, s_spr = item_sprites[i]
+            iy = n_spr.origin_y + margin + ih * i / len(item_sprites)
+            MenuItem(self, origin_x, iy, i, sprite_normal=n_spr,
+                     sprite_selected=s_spr)
+
+        return self
+
+
+class MenuDialog(MenuWindow, Dialog):
+
+    """
+    This dialog allows the user to cycle through its tab-focusable
+    widgets with the arrow keys.  If the Enter key or a joystick button
+    is pressed, :attr:`choice` is set to the index of the currently
+    selected widget, the window is closed, and :meth:`event_choose` is
+    called.  If the Escape key is pressed, the window is closed and
+    :meth:`event_choose` is called.
+
+    Has no border by default.  Meant to  be used with
+    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
+    menus.
+
+    .. attribute:: choice
+
+       The menu item chosen.  If no menu item has been chosen, it is set
+       to :const:`None`.
+
+    See the documentation for :class:`xsge_gui.Dialog` for more
+    information.
+    """
+
+    pass
+
+
+class MessageDialog(Dialog):
+
+    """
+    This dialog shows a message box and accepts button input.  All
+    buttons cause the dialog to close and set :attr:`choice` to the
+    button pressed.
+
+    .. attribute:: choice
+
+       The button clicked.  If a button hasn't been clicked (i.e. the
+       dialog hasn't yet been closed or was closed by clicking on the
+       close button), it is set to :const:`None`.
+
+    See the documentation for :class:`xsge_gui.Dialog` for more
+    information.
+    """
+
+    def __init__(self, parent, message="", title="Message", buttons=("Ok",),
+                 default=-1, width=320, height=None):
+        """See :func:`xsge_gui.show_message`."""
+        button_w = max(1, int(round((width - DIALOG_PADDING *
+                                     (len(buttons) + 1)) / len(buttons))))
+        button_h = button_sprite.height
+        label_w = max(1, width - DIALOG_PADDING * 2)
+
+        if height is None:
+            height = (default_font.get_height(message, width=label_w) +
+                      button_h + DIALOG_PADDING * 3)
+
+        x = sge.game.width / 2 - width / 2
+        y = sge.game.height / 2 - height / 2
+        super(MessageDialog, self).__init__(parent, x, y, width, height,
+                                            title=title)
+        label_h = max(1, height - button_h - DIALOG_PADDING * 3)
+        Label(self, DIALOG_PADDING, DIALOG_PADDING, 0, message, width=label_w,
+              height=label_h)
+
+        y = height - button_h - DIALOG_PADDING
+        for i in six.moves.range(len(buttons)):
+            x = i * (button_w + DIALOG_PADDING) + DIALOG_PADDING
+            button = Button(self, x, y, 0, buttons[i], width=button_w)
+
+            def event_press(self=button, x=i):
+                parent = self.parent()
+                if parent is not None:
+                    parent._return_button(x)
+
+            button.event_press = event_press
+
+            if i in (default, len(buttons) + default):
+                self.keyboard_focused_widget = button
+
+        self.choice = None
+
+    def _return_button(self, x):
+        # Return button with index ``x``.
+        self.choice = x
+        self.destroy()
+
+    def event_press_escape(self):
+        self.destroy()
+
+
+class TextEntryDialog(Dialog):
+
+    """
+    This dialog shows a message and has the user enter some text.  Two
+    buttons are shown: a "Cancel" button that closes the dialog, and an
+    "Ok" button that sets :attr:`text` to the text entered and then
+    closes the dialog.
+
+    .. attribute:: text
+
+       The text entered after the "Ok" button is clicked.  If the "Ok"
+       button hasn't been clicked, this is :const:`None`.
+
+    See the documentation for :class:`xsge_gui.Dialog` for more
+    information.
+    """
+
+    def __init__(self, parent, message="", title="Text Entry", text="",
+                 width=320, height=None):
+        """See :func:`xsge_gui.get_text_entry`."""
+        button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
+        button_h = button_sprite.height
+        textbox_w = max(1, width - DIALOG_PADDING * 2)
+        textbox_h = textbox_sprite.height
+        label_w = textbox_w
+
+        if height is None:
+            height = (default_font.get_height(message, width=label_w) +
+                      button_h + textbox_h + DIALOG_PADDING * 4)
+
+        x = sge.game.width / 2 - width / 2
+        y = sge.game.height / 2 - height / 2
+        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
+                                              title=title)
+        label_h = max(1, height - button_h - textbox_h - DIALOG_PADDING * 4)
+
+        x = DIALOG_PADDING
+        y = DIALOG_PADDING
+        Label(self, x, y, 0, message, width=label_w, height=label_h)
+
+        y = label_h + DIALOG_PADDING * 2
+        self.textbox = TextBox(self, x, y, 0, width=textbox_w, text=text)
+        if text:
+            self.textbox._selected = (0, len(text))
+
+        def event_key_press(key, char, self=self.textbox):
+            if key in ("enter", "kp_enter"):
+                parent = self.parent()
+                if parent is not None:
+                    parent._return_text(self.text)
+            else:
+                TextBox.event_key_press(self, key, char)
+
+        self.textbox.event_key_press = event_key_press
+
+        y = height - button_h - DIALOG_PADDING
+        x = DIALOG_PADDING
+        button = Button(self, x, y, 0, "Cancel", width=button_w)
+
+        def event_press(self=button):
+            parent = self.parent()
+            if parent is not None:
+                parent.destroy()
+
+        button.event_press = event_press
+
+        x = button_w + DIALOG_PADDING * 2
+        button = Button(self, x, y, 0, "Ok", width=button_w)
+
+        def event_press(self=button):
+            parent = self.parent()
+            if parent is not None:
+                parent._return_text(parent.textbox.text)
+
+        button.event_press = event_press
+
+        self.text = None
+        self.keyboard_focused_widget = self.textbox
+
+    def _return_text(self, s):
+        # Return ``s`` as this dialog's text.
+        self.text = s
+        self.destroy()
+
+    def event_press_escape(self):
+        self.destroy()
+
+
 class Widget(object):
 
     """
@@ -1164,7 +1887,18 @@ class Widget(object):
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
         """
-        pass
+        if key in left_keys:
+            self.event_press_left()
+        if key in right_keys:
+            self.event_press_right()
+        if key in up_keys:
+            self.event_press_up()
+        if key in down_keys:
+            self.event_press_down()
+        if key in enter_keys:
+            self.event_press_enter()
+        if key in escape_keys:
+            self.event_press_escape()
 
     def event_key_release(self, key):
         """
@@ -1172,7 +1906,18 @@ class Widget(object):
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
         """
-        pass
+        if key in left_keys:
+            self.event_release_left()
+        if key in right_keys:
+            self.event_release_right()
+        if key in up_keys:
+            self.event_release_up()
+        if key in down_keys:
+            self.event_release_down()
+        if key in enter_keys:
+            self.event_release_enter()
+        if key in escape_keys:
+            self.event_release_escape()
 
     def event_mouse_button_press(self, button):
         """
@@ -1227,6 +1972,140 @@ class Widget(object):
         Called when a joystick button is released while this widget has
         keyboard focus.  See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_joystick(self, js_name, js_id, input_type, input_id, value):
+        """
+        Called when a joystick event occurs while this widget has
+        keyboard focus.  See the documentation for
+        :class:`sge.input.JoystickEvent` for more information.
+        """
+        global _joystick_prev
+
+        js = (js_id, input_type, input_id)
+        prev = _joystick_prev.get(js, 0)
+        _joystick_prev[js] = value
+        if value >= joystick_threshold and prev < joystick_threshold:
+            if js in left_joystick_events:
+                self.event_press_left()
+            if js in right_joystick_events:
+                self.event_press_right()
+            if js in up_joystick_events:
+                self.event_press_up()
+            if js in down_joystick_events:
+                self.event_press_down()
+            if js in enter_joystick_events:
+                self.event_press_enter()
+            if js in escape_joystick_events:
+                self.event_press_escape()
+        elif value < joystick_threshold and prev >= joystick_threshold:
+            if js in left_joystick_events:
+                self.event_release_left()
+            if js in right_joystick_events:
+                self.event_release_right()
+            if js in up_joystick_events:
+                self.event_release_up()
+            if js in down_joystick_events:
+                self.event_release_down()
+            if js in enter_joystick_events:
+                self.event_release_enter()
+            if js in escape_joystick_events:
+                self.event_release_escape()
+
+    def event_press_left(self):
+        """
+        Called when a key in :data:`left_keys` or a joystick event in
+        :data:`left_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_right(self):
+        """
+        Called when a key in :data:`right_keys` or a joystick event in
+        :data:`right_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_up(self):
+        """
+        Called when a key in :data:`up_keys` or a joystick event in
+        :data:`up_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_down(self):
+        """
+        Called when a key in :data:`down_keys` or a joystick event in
+        :data:`down_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_enter(self):
+        """
+        Called when a key in :data:`enter_keys` or a joystick event in
+        :data:`enter_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_press_escape(self):
+        """
+        Called when a key in :data:`escape_keys` or a joystick event in
+        :data:`enter_joystick_events` is pressed while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_left(self):
+        """
+        Called when a key in :data:`left_keys` or a joystick event in
+        :data:`left_joystick_events` is released while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_right(self):
+        """
+        Called when a key in :data:`right_keys` or a joystick event in
+        :data:`right_joystick_events` is released while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_up(self):
+        """
+        Called when a key in :data:`up_keys` or a joystick event in
+        :data:`up_joystick_events` is released while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_down(self):
+        """
+        Called when a key in :data:`down_keys` or a joystick event in
+        :data:`down_joystick_events` is released while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_enter(self):
+        """
+        Called when a key in :data:`enter_keys` or a joystick event in
+        :data:`enter_joystick_events` is released while this widget has
+        keyboard focus.
+        """
+        pass
+
+    def event_release_escape(self):
+        """
+        Called when a key in :data:`escape_keys` or a joystick event in
+        :data:`enter_joystick_events` is released while this widget has
+        keyboard focus.
         """
         pass
 
@@ -1299,6 +2178,15 @@ class Widget(object):
         Called when a joystick button is released, regardless of which
         widget has keyboard focus.  See the documentation for
         :class:`sge.input.JoystickButtonRelease` for more information.
+        """
+        pass
+
+    def event_global_joystick(self, js_name, js_id, input_type, input_id,
+                              value):
+        """
+        Called when a joystick event occurs, regardless of which window
+        has keyboard focus.  See the documentation for
+        :class:`sge.inputJoystickEvent` for more information.
         """
         pass
 
@@ -1541,15 +2429,6 @@ class Button(Widget):
             else:
                 self.sprite = self.sprite_normal
 
-    def event_key_press(self, key, char):
-        if key in ("enter", "kp_enter"):
-            self._pressed = True
-
-    def event_key_release(self, key):
-        if key in ("enter", "kp_enter"):
-            if self._pressed:
-                self.event_press()
-
     def event_mouse_button_press(self, button):
         if button == "left":
             self._pressed = True
@@ -1559,9 +2438,8 @@ class Button(Widget):
             if self._pressed:
                 self.event_press()
 
-    def event_global_key_release(self, key):
-        if key in ("enter", "kp_enter"):
-            self._pressed = False
+    def event_press_enter(self):
+        self.event_press()
 
     def event_global_mouse_button_release(self, button):
         if button == "left":
@@ -1599,16 +2477,6 @@ class CheckBox(Widget):
         else:
             self.sprite = checkbox_off_sprite
 
-    def event_key_press(self, key, char):
-        if key in ("enter", "kp_enter"):
-            self._pressed = True
-
-    def event_key_release(self, key):
-        if key in ("enter", "kp_enter"):
-            if self._pressed:
-                self.enabled = not self.enabled
-                self.event_toggle()
-
     def event_mouse_button_press(self, button):
         if button == "left":
             self._pressed = True
@@ -1616,12 +2484,11 @@ class CheckBox(Widget):
     def event_mouse_button_release(self, button):
         if button == "left":
             if self._pressed:
-                self.enabled = not self.enabled
-                self.event_toggle()
+                self.event_press_enter()
 
-    def event_global_key_release(self, key):
-        if key in ("enter", "kp_enter"):
-            self._pressed = False
+    def event_press_enter(self):
+        self.enabled = not self.enabled
+        self.event_toggle()
 
     def event_global_mouse_button_release(self, button):
         if button == "left":
@@ -1652,7 +2519,7 @@ class RadioButton(CheckBox):
         else:
             self.sprite = radiobutton_off_sprite
 
-    def _enable(self):
+    def event_press_enter(self):
         # Enable the radiobutton, disable any others, and call
         # event_toggle.
         if not self.enabled:
@@ -1666,16 +2533,6 @@ class RadioButton(CheckBox):
                             widget.event_toggle()
 
             self.event_toggle()
-
-    def event_key_release(self, key):
-        if key in ("enter", "kp_enter"):
-            if self._pressed:
-                self._enable()
-
-    def event_mouse_button_release(self, button):
-        if button == "left":
-            if self._pressed:
-                self._enable()
 
     def event_toggle(self):
         """
@@ -2158,362 +3015,6 @@ class MenuItem(Widget):
 
     def event_step(self, time_passed, delta_mult):
         self.__frame += delta_mult
-
-
-class MenuWindow(Window):
-
-    """
-    This window allows the user to cycle through its tab-focusable
-    widgets with the arrow keys.  If the Enter key or a joystick button
-    is pressed, :attr:`choice` is set to the index of the currently
-    selected widget, the window is closed, and :meth:`event_choose` is
-    called.  If the Escape key is pressed, the window is closed and
-    :meth:`event_choose` is called.
-
-    Has no border by default.  Meant to  be used with
-    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
-    menus.
-
-    .. attribute:: choice
-
-       The menu item chosen.  If no menu item has been chosen, it is set
-       to :const:`None`.
-
-    See the documentation for :class:`xsge_gui.Window` for more
-    information.
-    """
-
-    def __init__(self, parent, x, y, width, height, title="",
-                 background_color=sge.Color("#0000"), border=False):
-        super(MenuWindow, self).__init__(parent, x, y, width, height, title,
-                                         background_color, border)
-        self.__axes = {}
-        self.choice = None
-
-    def event_step(self, time_passed, delta_mult):
-        if self.keyboard_focused_widget is None and self.widgets:
-            self.keyboard_focused_widget = self.widgets[0]
-
-    def event_key_press(self, key, char):
-        if key in ("up", "down"):
-            if self.widgets:
-                try:
-                    i = self.widgets.index(self.keyboard_focused_widget)
-                except ValueError:
-                    i = -1
-
-                d = -1 if key == "up" else 1
-                for _ in six.moves.range(len(self.widgets)):
-                    i += d
-                    i %= len(self.widgets)
-                    if self.widgets[i].tab_focus:
-                        self.keyboard_focused_widget = self.widgets[i]
-                        self.event_change_selection(i)
-                        break
-        elif key in ("enter", "kp_enter"):
-            try:
-                self.choice = self.widgets.index(self.keyboard_focused_widget)
-            except ValueError:
-                pass
-
-            self.event_choose()
-            self.destroy()
-        elif key == "escape":
-            self.event_choose()
-            self.destroy()
-
-    def event_joystick_axis_move(self, js_name, js_id, axis, value):
-        if axis == 1:
-            prev = self.__axes.get((js_id, axis), 0)
-            self.__axes[(js_id, axis)] = value
-
-            if prev > -joystick_threshold and value <= -joystick_threshold:
-                self.event_key_press("up", "")
-            elif prev < joystick_threshold and value >= joystick_threshold:
-                self.event_key_press("down", "")
-
-    def event_joystick_hat_move(self, js_name, js_id, hat, x, y):
-        if not x:
-            if y < 0:
-                self.event_key_press("up", "")
-            elif y > 0:
-                self.event_key_press("down", "")
-
-    def event_joystick_button_press(self, js_name, js_id, button):
-        self.event_key_press("enter", "\n")
-
-    def event_change_selection(self, selection):
-        """
-        Called when the current menu item selection is changed.
-
-        Arguments:
-
-        - ``selection`` -- The index of the newly selected widget.
-        """
-        pass
-
-    def event_choose(self):
-        """Called when a menu item is chosen."""
-        pass
-
-    @classmethod
-    def from_text(cls, parent, x, y, items, font_normal=None,
-                  color_normal=None, font_selected=None, color_selected=None,
-                  background_color=sge.Color("#0000"), height=None, margin=0,
-                  halign="left", valign="top"):
-        """
-        Return a menu created automatically from a list of strings.
-
-        Arguments:
-
-        - ``x`` -- The horizontal location of the window within the
-          room.  Affected by ``halign``.
-        - ``y`` -- The vertical location of the window within the room.
-          Affected by ``valign``.
-        - ``items`` -- A list of strings to use as the menu's items.
-        - ``font_normal`` -- The default font to use.
-        - ``color_normal`` -- The default color to use.
-        - ``font_selected`` -- The font to use for the currently
-          selected item.  If set to :const:`None`, the default font will
-          be used.
-        - ``color_selected`` -- The color to use for the currently
-          selected item.  If set to :const:`None`, the default color
-          will be used.
-        - ``height`` -- The height of the menu.  If set to
-          :const:`None`, it will be the sum of the items' height.
-        - ``margin`` -- The size of the margin around the menu.
-        - ``halign`` -- The horizontal alignment of the menu.  See the
-          documentation for :meth:`sge.Sprite.draw_text` for more
-          information.
-        - ``valign`` -- The vertical alignment of the menu.  See the
-          documentation for :meth:`sge.Sprite.draw_text` for more
-          information.
-        """
-        if font_selected is None: font_selected = font_normal
-        if color_selected is None: color_selected = color_normal
-        width = 0
-        item_h = 0
-        item_sprites = []
-        for item in items:
-            n_spr = sge.Sprite.from_text(font_normal, item, color=color_normal,
-                                         halign=halign, valign=valign)
-            s_spr = sge.Sprite.from_text(font_selected, item,
-                                         color=color_selected, halign=halign,
-                                         valign=valign)
-            width = max(width, n_spr.width, s_spr.width)
-            item_h = max(item_h, n_spr.height, s_spr.height)
-            item_sprites.append((n_spr, s_spr))
-
-        if height is None:
-            height = item_h * len(items)
-
-        width += 2 * margin
-        height += 2 * margin
-
-        origin_x = {"left": 0, "right": width,
-                    "center": width / 2}.get(halign.lower(), 0)
-        origin_y = {"top": 0, "bottom": height,
-                    "middle": height / 2}.get(valign.lower(), 0)
-
-        x -= origin_x
-        y -= origin_y
-
-        self = cls(parent, x, y, width, height,
-                   background_color=background_color)
-
-        ih = height - 2 * margin
-        ih += ((height - margin - item_h) - ih *
-               ((len(item_sprites) - 1) / len(item_sprites)))
-        for i in six.moves.range(len(item_sprites)):
-            n_spr, s_spr = item_sprites[i]
-            iy = n_spr.origin_y + margin + ih * i / len(item_sprites)
-            MenuItem(self, origin_x, iy, i, sprite_normal=n_spr,
-                     sprite_selected=s_spr)
-
-        return self
-
-
-class MenuDialog(MenuWindow, Dialog):
-
-    """
-    This dialog allows the user to cycle through its tab-focusable
-    widgets with the arrow keys.  If the Enter key or a joystick button
-    is pressed, :attr:`choice` is set to the index of the currently
-    selected widget, the window is closed, and :meth:`event_choose` is
-    called.  If the Escape key is pressed, the window is closed and
-    :meth:`event_choose` is called.
-
-    Has no border by default.  Meant to  be used with
-    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
-    menus.
-
-    .. attribute:: choice
-
-       The menu item chosen.  If no menu item has been chosen, it is set
-       to :const:`None`.
-
-    See the documentation for :class:`xsge_gui.Dialog` for more
-    information.
-    """
-
-    pass
-
-
-class MessageDialog(Dialog):
-
-    """
-    This dialog shows a message box and accepts button input.  All
-    buttons cause the dialog to close and set :attr:`choice` to the
-    button pressed.
-
-    .. attribute:: choice
-
-       The button clicked.  If a button hasn't been clicked (i.e. the
-       dialog hasn't yet been closed or was closed by clicking on the
-       close button), it is set to :const:`None`.
-
-    See the documentation for :class:`xsge_gui.Dialog` for more
-    information.
-    """
-
-    def __init__(self, parent, message="", title="Message", buttons=("Ok",),
-                 default=-1, width=320, height=None):
-        """See :func:`xsge_gui.show_message`."""
-        button_w = max(1, int(round((width - DIALOG_PADDING *
-                                     (len(buttons) + 1)) / len(buttons))))
-        button_h = button_sprite.height
-        label_w = max(1, width - DIALOG_PADDING * 2)
-
-        if height is None:
-            height = (default_font.get_height(message, width=label_w) +
-                      button_h + DIALOG_PADDING * 3)
-
-        x = sge.game.width / 2 - width / 2
-        y = sge.game.height / 2 - height / 2
-        super(MessageDialog, self).__init__(parent, x, y, width, height,
-                                            title=title)
-        label_h = max(1, height - button_h - DIALOG_PADDING * 3)
-        Label(self, DIALOG_PADDING, DIALOG_PADDING, 0, message, width=label_w,
-              height=label_h)
-
-        y = height - button_h - DIALOG_PADDING
-        for i in six.moves.range(len(buttons)):
-            x = i * (button_w + DIALOG_PADDING) + DIALOG_PADDING
-            button = Button(self, x, y, 0, buttons[i], width=button_w)
-
-            def event_press(self=button, x=i):
-                parent = self.parent()
-                if parent is not None:
-                    parent._return_button(x)
-
-            button.event_press = event_press
-
-            if i in (default, len(buttons) + default):
-                self.keyboard_focused_widget = button
-
-        self.choice = None
-
-    def _return_button(self, x):
-        # Return button with index ``x``.
-        self.choice = x
-        self.destroy()
-
-    def event_key_press(self, key, char):
-        if key == "escape":
-            self.destroy()
-        else:
-            super(MessageDialog, self).event_key_press(key, char)
-
-
-class TextEntryDialog(Dialog):
-
-    """
-    This dialog shows a message and has the user enter some text.  Two
-    buttons are shown: a "Cancel" button that closes the dialog, and an
-    "Ok" button that sets :attr:`text` to the text entered and then
-    closes the dialog.
-
-    .. attribute:: text
-
-       The text entered after the "Ok" button is clicked.  If the "Ok"
-       button hasn't been clicked, this is :const:`None`.
-
-    See the documentation for :class:`xsge_gui.Dialog` for more
-    information.
-    """
-
-    def __init__(self, parent, message="", title="Text Entry", text="",
-                 width=320, height=None):
-        """See :func:`xsge_gui.get_text_entry`."""
-        button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
-        button_h = button_sprite.height
-        textbox_w = max(1, width - DIALOG_PADDING * 2)
-        textbox_h = textbox_sprite.height
-        label_w = textbox_w
-
-        if height is None:
-            height = (default_font.get_height(message, width=label_w) +
-                      button_h + textbox_h + DIALOG_PADDING * 4)
-
-        x = sge.game.width / 2 - width / 2
-        y = sge.game.height / 2 - height / 2
-        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
-                                              title=title)
-        label_h = max(1, height - button_h - textbox_h - DIALOG_PADDING * 4)
-
-        x = DIALOG_PADDING
-        y = DIALOG_PADDING
-        Label(self, x, y, 0, message, width=label_w, height=label_h)
-
-        y = label_h + DIALOG_PADDING * 2
-        self.textbox = TextBox(self, x, y, 0, width=textbox_w, text=text)
-        if text:
-            self.textbox._selected = (0, len(text))
-
-        def event_key_press(key, char, self=self.textbox):
-            if key in ("enter", "kp_enter"):
-                parent = self.parent()
-                if parent is not None:
-                    parent._return_text(self.text)
-            else:
-                TextBox.event_key_press(self, key, char)
-
-        self.textbox.event_key_press = event_key_press
-
-        y = height - button_h - DIALOG_PADDING
-        x = DIALOG_PADDING
-        button = Button(self, x, y, 0, "Cancel", width=button_w)
-
-        def event_press(self=button):
-            parent = self.parent()
-            if parent is not None:
-                parent.destroy()
-
-        button.event_press = event_press
-
-        x = button_w + DIALOG_PADDING * 2
-        button = Button(self, x, y, 0, "Ok", width=button_w)
-
-        def event_press(self=button):
-            parent = self.parent()
-            if parent is not None:
-                parent._return_text(parent.textbox.text)
-
-        button.event_press = event_press
-
-        self.text = None
-        self.keyboard_focused_widget = self.textbox
-
-    def _return_text(self, s):
-        # Return ``s`` as this dialog's text.
-        self.text = s
-        self.destroy()
-
-    def event_key_press(self, key, char):
-        if key == "escape":
-            self.destroy()
-        else:
-            super(TextEntryDialog, self).event_key_press(key, char)
 
 
 def init():

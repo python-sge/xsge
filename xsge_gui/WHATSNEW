@@ -7,8 +7,67 @@ without any warranty.
 
 ========================================================================
 
-0.9.2
+0.10
 ------------------------------------------------------------------------
+
+Additions:
++ xsge_gui.next_window_keys
++ xsge_gui.previous_window_keys
++ xsge_gui.next_widget_keys
++ xsge_gui.previous_widget_keys
++ xsge_gui.left_keys
++ xsge_gui.right_keys
++ xsge_gui.up_keys
++ xsge_gui.down_keys
++ xsge_gui.enter_keys
++ xsge_gui.escape_keys
++ xsge_gui.next_window_joystick_events
++ xsge_gui.previous_window_joystick_events
++ xsge_gui.next_widget_joystick_events
++ xsge_gui.previous_widget_joystick_events
++ xsge_gui.left_joystick_events
++ xsge_gui.right_joystick_events
++ xsge_gui.up_joystick_events
++ xsge_gui.down_joystick_events
++ xsge_gui.enter_joystick_events
++ xsge_gui.escape_joystick_events
++ xsge_gui.Window.event_change_keyboard_focus
++ xsge_gui.Window.event_joystick
++ xsge_gui.Window.event_global_joystick
++ xsge_gui.Window.event_press_left
++ xsge_gui.Window.event_press_right
++ xsge_gui.Window.event_press_up
++ xsge_gui.Window.event_press_down
++ xsge_gui.Window.event_press_enter
++ xsge_gui.Window.event_press_escape
++ xsge_gui.Window.event_release_left
++ xsge_gui.Window.event_release_right
++ xsge_gui.Window.event_release_up
++ xsge_gui.Window.event_release_down
++ xsge_gui.Window.event_release_enter
++ xsge_gui.Window.event_release_escape
++ xsge_gui.Widget.event_joystick
++ xsge_gui.Widget.event_global_joystick
++ xsge_gui.Widget.event_press_left
++ xsge_gui.Widget.event_press_right
++ xsge_gui.Widget.event_press_up
++ xsge_gui.Widget.event_press_down
++ xsge_gui.Widget.event_press_enter
++ xsge_gui.Widget.event_press_escape
++ xsge_gui.Widget.event_release_left
++ xsge_gui.Widget.event_release_right
++ xsge_gui.Widget.event_release_up
++ xsge_gui.Widget.event_release_down
++ xsge_gui.Widget.event_release_enter
++ xsge_gui.Widget.event_release_escape
+
+Removals:
+- xsge_gui.MenuWindow.event_change_selection
+
+Misc changes:
+* MenuWindow no longer uses the arrow keys for navigation. To get this
+  behavior again, simply assign the arrow keys to next_widget_keys and
+  previous_widget_keys.
 
 Bugfixes:
 - Releasing hat causing menu entry to move down

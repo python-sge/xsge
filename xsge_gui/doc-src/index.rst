@@ -55,6 +55,8 @@ xsge_gui.Window Event Methods
 
 .. automethod:: xsge_gui.Window.event_step
 
+.. automethod:: xsge_gui.Window.event_change_keyboard_focus
+
 .. automethod:: xsge_gui.Window.event_key_press
 
 .. automethod:: xsge_gui.Window.event_key_release
@@ -72,6 +74,32 @@ xsge_gui.Window Event Methods
 .. automethod:: xsge_gui.Window.event_joystick_button_press
 
 .. automethod:: xsge_gui.Window.event_joystick_button_release
+
+.. automethod:: xsge_gui.Window.event_joystick
+
+.. automethod:: xsge_gui.Window.event_press_left
+
+.. automethod:: xsge_gui.Window.event_press_right
+
+.. automethod:: xsge_gui.Window.event_press_up
+
+.. automethod:: xsge_gui.Window.event_press_down
+
+.. automethod:: xsge_gui.Window.event_press_enter
+
+.. automethod:: xsge_gui.Window.event_press_escape
+
+.. automethod:: xsge_gui.Window.event_release_left
+
+.. automethod:: xsge_gui.Window.event_release_right
+
+.. automethod:: xsge_gui.Window.event_release_up
+
+.. automethod:: xsge_gui.Window.event_release_down
+
+.. automethod:: xsge_gui.Window.event_release_enter
+
+.. automethod:: xsge_gui.Window.event_release_escape
 
 .. automethod:: xsge_gui.Window.event_titlebar_mouse_button_press
 
@@ -95,6 +123,8 @@ xsge_gui.Window Event Methods
 
 .. automethod:: xsge_gui.Window.event_global_joystick_button_release
 
+.. automethod:: xsge_gui.Window.event_global_joystick
+
 .. automethod:: xsge_gui.Window.event_close
 
 xsge_gui.Dialog
@@ -109,6 +139,51 @@ In addition to methods inherited from :class:`xsge_gui.Window`, the
 following methods are also available:
 
 .. automethod:: xsge_gui.Dialog.show
+
+xsge_gui.MenuWindow
+-------------------
+
+.. autoclass:: xsge_gui.MenuWindow
+
+xsge_gui.MenuWindow Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the methods inherited from :class:`xsge_gui.Window`, the
+following methods are also available:
+
+.. automethod:: xsge_gui.MenuWindow.from_text
+
+xsge_gui.MenuWindow Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the event methods inherited from
+:class:`xsge_gui.Window`, the following event methods are also
+available:
+
+.. automethod:: xsge_gui.MenuWindow.event_choose
+
+xsge_gui.MenuDialog
+-------------------
+
+.. autoclass:: xsge_gui.MenuDialog
+
+xsge_gui.MenuDialog Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the methods inherited from :class:`xsge_gui.Dialog`, the
+following methods are also available:
+
+.. automethod:: xsge_gui.MenuDialog.from_text
+
+xsge_gui.MessageDialog
+----------------------
+
+.. autoclass:: xsge_gui.MessageDialog
+
+xsge_gui.TextEntryDialog
+------------------------
+
+.. autoclass:: xsge_gui.TextEntryDialog
 
 xsge_gui.Widget
 ---------------
@@ -146,6 +221,32 @@ xsge_gui.Widget Event Methods
 .. automethod:: xsge_gui.Widget.event_joystick_button_press
 
 .. automethod:: xsge_gui.Widget.event_joystick_button_release
+
+.. automethod:: xsge_gui.Widget.event_joystick
+
+.. automethod:: xsge_gui.Widget.event_press_left
+
+.. automethod:: xsge_gui.Widget.event_press_right
+
+.. automethod:: xsge_gui.Widget.event_press_up
+
+.. automethod:: xsge_gui.Widget.event_press_down
+
+.. automethod:: xsge_gui.Widget.event_press_enter
+
+.. automethod:: xsge_gui.Widget.event_press_escape
+
+.. automethod:: xsge_gui.Widget.event_release_left
+
+.. automethod:: xsge_gui.Widget.event_release_right
+
+.. automethod:: xsge_gui.Widget.event_release_up
+
+.. automethod:: xsge_gui.Widget.event_release_down
+
+.. automethod:: xsge_gui.Widget.event_release_enter
+
+.. automethod:: xsge_gui.Widget.event_release_escape
 
 .. automethod:: xsge_gui.Widget.event_global_key_press
 
@@ -249,53 +350,6 @@ xsge_gui.MenuItem
 -----------------
 
 .. autoclass:: xsge_gui.MenuItem
-
-xsge_gui.MenuWindow
--------------------
-
-.. autoclass:: xsge_gui.MenuWindow
-
-xsge_gui.MenuWindow Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In addition to the methods inherited from :class:`xsge_gui.Window`, the
-following methods are also available:
-
-.. automethod:: xsge_gui.MenuWindow.from_text
-
-xsge_gui.MenuWindow Event Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In addition to the event methods inherited from
-:class:`xsge_gui.Window`, the following event methods are also
-available:
-
-.. automethod:: xsge_gui.MenuWindow.event_change_selection
-
-.. automethod:: xsge_gui.MenuWindow.event_choose
-
-xsge_gui.MenuDialog
--------------------
-
-.. autoclass:: xsge_gui.MenuDialog
-
-xsge_gui.MenuDialog Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In addition to the methods inherited from :class:`xsge_gui.Dialog`, the
-following methods are also available:
-
-.. automethod:: xsge_gui.MenuDialog.from_text
-
-xsge_gui.MessageDialog
-----------------------
-
-.. autoclass:: xsge_gui.MessageDialog
-
-xsge_gui.TextEntryDialog
-------------------------
-
-.. autoclass:: xsge_gui.TextEntryDialog
 
 xsge_gui Functions
 ==================
