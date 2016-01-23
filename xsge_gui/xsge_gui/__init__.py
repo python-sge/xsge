@@ -675,16 +675,6 @@ class Window(object):
         else:
             self._background_color = window_background_color
 
-    @property
-    def keyboard_focused_widget(self):
-        return self._keyboard_focused_widget
-
-    @keyboard_focused_widget.setter
-    def keyboard_focused_widget(self, value):
-        if value != self._keyboard_focused_widget:
-            self._keyboard_focused_widget = value
-            self.event_change_keyboard_focus()
-
     def __init__(self, parent, x, y, width, height, title="",
                  background_color=None, border=True):
         self.parent = parent
@@ -696,7 +686,7 @@ class Window(object):
         self.background_color = background_color
         self.border = border
         self.widgets = []
-        self._keyboard_focused_widget = None
+        self.keyboard_focused_widget = None
         self._border_grab = None
         self._close_button_pressed = False
 
@@ -716,6 +706,7 @@ class Window(object):
                 i %= len(self.widgets)
                 if self.widgets[i].tab_focus:
                     self.keyboard_focused_widget = self.widgets[i]
+                    self.event_change_keyboard_focus()
                     break
 
     def show(self):
@@ -922,7 +913,8 @@ class Window(object):
 
     def event_change_keyboard_focus(self):
         """
-        Called when :attr:`keyboard_focused_widget` changes.
+        Called when :attr:`keyboard_focused_widget` changes as a result
+        of a key or joystick event being pressed.
         """
         pass
 
@@ -1497,7 +1489,7 @@ class MenuWindow(Window):
 
     def event_step(self, time_passed, delta_mult):
         if self.keyboard_focused_widget is None and self.widgets:
-            self._keyboard_focused_widget = self.widgets[0]
+            self.keyboard_focused_widget = self.widgets[0]
 
     def event_press_enter(self):
         try:
@@ -1669,7 +1661,7 @@ class MessageDialog(Dialog):
             button.event_press = event_press
 
             if i in (default, len(buttons) + default):
-                self._keyboard_focused_widget = button
+                self.keyboard_focused_widget = button
 
         self.choice = None
 
@@ -1759,7 +1751,7 @@ class TextEntryDialog(Dialog):
         button.event_press = event_press
 
         self.text = None
-        self._keyboard_focused_widget = self.textbox
+        self.keyboard_focused_widget = self.textbox
 
     def _return_text(self, s):
         # Return ``s`` as this dialog's text.
