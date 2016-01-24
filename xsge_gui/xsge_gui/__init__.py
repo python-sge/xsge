@@ -292,8 +292,6 @@ TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
 
-_joystick_prev = {}
-
 window_background_color = sge.Color("#A4A4A4")
 keyboard_focused_box_color = sge.Color((0, 0, 0, 170))
 text_color = sge.Color("black")
@@ -384,6 +382,7 @@ class Handler(sge.Object):
         super(Handler, self).__init__(0, 0, visible=False, tangible=False)
         self.windows = []
         self.keyboard_focused_window = None
+        self._joystick_prev = {}
 
     def _kb_focus_move(self, n):
         if self.windows:
@@ -564,11 +563,9 @@ class Handler(sge.Object):
                                                             button)
 
     def event_joystick(self, js_name, js_id, input_type, input_id, value):
-        global _joystick_prev
-
         js = (js_id, input_type, input_id)
-        prev = _joystick_prev.get(js, 0)
-        _joystick_prev[js] = value
+        prev = self._joystick_prev.get(js, 0)
+        self._joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in next_window_joystick_events:
                 self._kb_focus_move(1)
@@ -580,8 +577,8 @@ class Handler(sge.Object):
             window.event_joystick(js_name, js_id, input_type, input_id, value)
             widget = window.keyboard_focused_widget
             if widget is not None:
-                widget.event_joystick_button_release(
-                    js_name, js_id, input_type, input_id, value)
+                widget.event_joystick(js_name, js_id, input_type, input_id,
+                                      value)
 
         for window in self.windows[:]:
             window.event_global_joystick(js_name, js_id, input_type, input_id,
@@ -689,6 +686,7 @@ class Window(object):
         self.keyboard_focused_widget = None
         self._border_grab = None
         self._close_button_pressed = False
+        self._joystick_prev = {}
 
         self.sprite = sge.Sprite(width=1, height=1)
         self.redraw()
@@ -1022,11 +1020,9 @@ class Window(object):
         keyboard focus.  See the documentation for
         :class:`sge.inputJoystickEvent` for more information.
         """
-        global _joystick_prev
-
         js = (js_id, input_type, input_id)
-        prev = _joystick_prev.get(js, 0)
-        _joystick_prev[js] = value
+        prev = self._joystick_prev.get(js, 0)
+        self._joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in next_widget_joystick_events:
                 self._kb_focus_move(1)
@@ -1427,6 +1423,21 @@ class Dialog(Window):
                         for widget in self.widgets:
                             widget.event_global_joystick_button_release(
                                 event.js_name, event.js_id, event.button)
+                    elif isinstance(event, sge.input.JoystickEvent):
+                        self.event_joystick(event.js_name, event.js_id,
+                                            event.input_type, event.input_id,
+                                            event.value)
+                        widget = self.keyboard_focused_widget
+                        if widget is not None:
+                            widget.event_joystick(
+                                event.js_name, event.js_id, event.input_type,
+                                event.input_id, event.value)
+                        self.event_global_joystick_button_release(
+                            event.js_name, event.js_id, event.button)
+                        for widget in self.widgets:
+                            widget.event_global_joystick(
+                                event.js_name, event.js_id, event.input_type,
+                                event.input_id, event.value)
                     elif isinstance(event, sge.input.QuitRequest):
                         sge.game.input_events.insert(0, event)
                         self.hide()
@@ -1830,6 +1841,7 @@ class Widget(object):
             self.sprite = sprite
         else:
             self.sprite = sge.Sprite(width=1, height=1)
+        self._joystick_prev = {}
 
     def destroy(self):
         """Destroy this widget."""
@@ -1973,11 +1985,9 @@ class Widget(object):
         keyboard focus.  See the documentation for
         :class:`sge.input.JoystickEvent` for more information.
         """
-        global _joystick_prev
-
         js = (js_id, input_type, input_id)
-        prev = _joystick_prev.get(js, 0)
-        _joystick_prev[js] = value
+        prev = self._joystick_prev.get(js, 0)
+        self._joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in left_joystick_events:
                 self.event_press_left()
