@@ -1,5 +1,5 @@
 # setup.py
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -41,7 +41,7 @@ setup(name="xsge_tmx",
       version="0.10a0",
       description="xSGE TMX Library",
       long_description=long_description,
-      author="Julian Marchant",
+      author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
       classifiers=["Development Status :: 3 - Alpha",
@@ -57,7 +57,7 @@ setup(name="xsge_tmx",
       packages=["xsge_tmx"],
       package_dir={"xsge_tmx": "xsge_tmx"},
       package_data={"xsge_tmx": ["COPYING"]},
-      requires=["sge (>=0.18)", "six (>=1.4.0)", "tmx (>=1.4.1)",
+      requires=["sge (>=0.23)", "six (>=1.4.0)", "tmx (>=1.4.1)",
                 "xsge_path"],
       provides=["xsge_tmx"],
      )

@@ -1,5 +1,5 @@
 # xSGE Path
-# Copyright (c) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (c) 2014-2016 onpon4 <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,15 +42,15 @@ import sge
 __all__ = ["Path"]
 
 
-class Path(sge.Object):
+class Path(sge.dsp.Object):
 
     """
     Class for paths: objects which define movement patterns for other
     objects.  Paths are defined as a series of points for an object to
     follow.
 
-    This class is derived from :class:`sge.Object` and inherits all of
-    that class's attributes and methods.
+    This class is derived from :class:`sge.dsp.Object` and inherits all
+    of that class's attributes and methods.
 
     .. note::
 

@@ -1,5 +1,5 @@
 # setup.py
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -41,7 +41,7 @@ setup(name="xsge_physics",
       version="0.10.1a0",
       description="xSGE Physics Framework",
       long_description=long_description,
-      author="Julian Marchant",
+      author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
       classifiers=["Development Status :: 3 - Alpha",
@@ -57,6 +57,6 @@ setup(name="xsge_physics",
       packages=["xsge_physics"],
       package_dir={"xsge_physics": "xsge_physics"},
       package_data={"xsge_physics": ["COPYING"]},
-      requires=["sge (>=0.20)"],
+      requires=["sge (>=0.23)"],
       provides=["xsge_physics"],
      )

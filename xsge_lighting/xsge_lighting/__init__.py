@@ -1,5 +1,5 @@
 # xSGE Lighting Library
-# Copyright (c) 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (c) 2015, 2016 onpon4 <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,9 +79,9 @@ def project_darkness(z=100000, ambient_light=None, buffer=0):
 
     - ``z`` -- The Z-axis position of the darkness in the room.
       Anything with a higher Z-axis value will not be affected.
-    - ``ambient_light`` -- A :class:`sge.Color` object indicating the
-      color that should be applied as lighting to the entirety of the
-      darkness.  Set to :const:`None` for no ambient lighting.
+    - ``ambient_light`` -- A :class:`sge.gfx.Color` object indicating
+      the color that should be applied as lighting to the entirety of
+      the darkness.  Set to :const:`None` for no ambient lighting.
     - ``buffer`` -- An extra portion of the room, in addition to what is
       covered by the room's views, to cover with darkness.  This can be
       used to prevent situations where movement of a view at the wrong
@@ -93,7 +93,7 @@ def project_darkness(z=100000, ambient_light=None, buffer=0):
     global _lights
 
     if ambient_light is None:
-        ambient_light = sge.Color("black")
+        ambient_light = sge.gfx.Color("black")
 
     groups = []
     for view in sge.game.current_room.views:
@@ -131,7 +131,7 @@ def project_darkness(z=100000, ambient_light=None, buffer=0):
         width = dx2 - dx
         height = dy2 - dy
 
-        darkness = sge.Sprite(width=width, height=height)
+        darkness = sge.gfx.Sprite(width=width, height=height)
         darkness.draw_lock()
         darkness.draw_rectangle(0, 0, width, height, fill=ambient_light)
         for x, y, sprite, image in _lights:

@@ -1,5 +1,5 @@
 # setup.py
-# Copyright (C) 2012, 2013, 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -39,7 +39,7 @@ setup(name="xsge_lighting",
       version="0.9.1a0",
       description="xSGE Lighting Library",
       long_description=long_description,
-      author="Julian Marchant",
+      author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
       classifiers=["Development Status :: 3 - Alpha",
@@ -55,6 +55,6 @@ setup(name="xsge_lighting",
       packages=["xsge_lighting"],
       package_dir={"xsge_lighting": "xsge_lighting"},
       package_data={"xsge_lighting": ["COPYING"]},
-      requires=["sge (>=0.17)", "six (>=1.4.0)"],
+      requires=["sge (>=0.23)", "six (>=1.4.0)"],
       provides=["xsge_lighting"],
      )

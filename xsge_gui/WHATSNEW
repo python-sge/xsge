@@ -68,6 +68,7 @@ Misc changes:
 * MenuWindow no longer uses the arrow keys for navigation. To get this
   behavior again, simply assign the arrow keys to next_widget_keys and
   previous_widget_keys.
+* Updated to SGE 0.23.
 
 Bugfixes:
 - Releasing hat causing menu entry to move down

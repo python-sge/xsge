@@ -1,5 +1,5 @@
 # xSGE TMX Library
-# Copyright (c) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (c) 2014-2016 onpon4 <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,12 +50,12 @@ import xsge_path
 __all__ = ["load"]
 
 
-class Decoration(sge.Object):
+class Decoration(sge.dsp.Object):
 
     """
     Default class for tiles and image layers.  Identical to
-    :class:`sge.Object`, except that it is intangible and doesn't check
-    for collisions by default.
+    :class:`sge.dsp.Object`, except that it is intangible and doesn't
+    check for collisions by default.
     """
 
     def __init__(self, x, y, z=0, sprite=None, visible=True, active=False,
@@ -84,7 +84,7 @@ class Decoration(sge.Object):
             image_alpha=image_alpha, image_blend=image_blend)
 
 
-class RenderedTiles(sge.Object):
+class RenderedTiles(sge.dsp.Object):
 
     """
     An object of this class takes all :class:`xsge_tmx.Decoration`
@@ -126,24 +126,26 @@ class RenderedTiles(sge.Object):
 
         if len(my_tiles) > 1:
             self.tangible = False
-            self.sprite = sge.Sprite(width=rw, height=rh)
+            self.sprite = sge.gfx.Sprite(width=rw, height=rh)
             self.sprite.draw_lock()
             for obj in my_tiles:
                 if obj.visible and obj.image_alpha:
                     spr = obj.sprite.copy()
 
                     if obj.image_blend is not None:
-                        bspr = sge.Sprite(width=spr.width, height=spr.height)
+                        bspr = sge.gfx.Sprite(width=spr.width,
+                                              height=spr.height)
                         bspr.draw_rectangle(0, 0, bspr.width, bspr.height,
                                             fill=obj.image_blend)
                         spr.draw_sprite(bspr, 0, 0, 0,
                                         blend_mode=sge.BLEND_RGB_MULTIPLY)
 
                     if obj.image_alpha < 255:
-                        bspr = sge.Sprite(width=spr.width, height=spr.height)
-                        bspr.draw_rectangle(0, 0, bspr.width, bspr.height,
-                                            fill=sge.Color((255, 255, 255,
-                                                            obj.image_alpha)))
+                        bspr = sge.gfx.Sprite(width=spr.width,
+                                              height=spr.height)
+                        bspr.draw_rectangle(
+                            0, 0, bspr.width, bspr.height, fill=sge.gfx.Color(
+                                (255, 255, 255, obj.image_alpha)))
                         spr.draw_sprite(bspr, 0, 0, 0,
                                         blend_mode=sge.BLEND_RGB_MULTIPLY)
 
@@ -181,11 +183,11 @@ class RenderedTiles(sge.Object):
             self.destroy()
 
 
-class Rectangle(sge.Object):
+class Rectangle(sge.dsp.Object):
 
     """
     Default class for rectangle objects.  Identical to
-    :class:`sge.Object`, except that it is invisible by default.
+    :class:`sge.dsp.Object`, except that it is invisible by default.
     """
 
     def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
@@ -214,12 +216,12 @@ class Rectangle(sge.Object):
             image_alpha=image_alpha, image_blend=image_blend)
 
 
-class Ellipse(sge.Object):
+class Ellipse(sge.dsp.Object):
 
     """
     Default class for ellipse objects.  Identical to
-    :class:`sge.Object`, except that it is invisible and uses ellipse
-    collision detection by default.
+    :class:`sge.dsp.Object`, except that it is invisible and uses
+    ellipse collision detection by default.
     """
 
     def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,
@@ -264,15 +266,15 @@ class Polyline(xsge_path.Path):
     """
 
 
-def load(fname, cls=sge.Room, types=None, z=0):
+def load(fname, cls=sge.dsp.Room, types=None, z=0):
     """
     Load the TMX file ``fname`` and return a room of the class ``cls``.
 
     The way the map generates the room, in general, is to convert all
-    tiles, objects, and image layers into :class:`sge.Object` objects.
-    As a special exception, the object layer with the name "views"
-    defines the views in the room; these objects are converted into
-    :class:`sge.View` objects.
+    tiles, objects, and image layers into :class:`sge.dsp.Object`
+    objects.  As a special exception, the object layer with the name
+    "views" defines the views in the room; these objects are converted
+    into :class:`sge.dsp.View` objects.
 
     Objects are given Z-axis positions based on the ordering of the
     layers in the TMX file: ``z`` is the Z-axis position of the first
@@ -281,10 +283,10 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
     Except for views, all tiles, objects, and image layers can be
     defined to be converted into any class derived from
-    :class:`sge.Object` via the ``types`` argument, which should be a
-    dictionary matching strings to corresponding :class:`sge.Object`
-    classes, or :const:`None`, which is equivalent to ``{}``.  Classes
-    are determined in the following ways:
+    :class:`sge.dsp.Object` via the ``types`` argument, which should be
+    a dictionary matching strings to corresponding
+    :class:`sge.dsp.Object` classes, or :const:`None`, which is
+    equivalent to ``{}``.  Classes are determined in the following ways:
 
     - Tiles are converted to the class connected to, in order of
       preference, the name of the tileset or the name of the tile layer.
@@ -348,7 +350,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
             n, e = os.path.splitext(os.path.basename(source))
             d = os.path.dirname(source)
-            fs = sge.Sprite(n, d)
+            fs = sge.gfx.Sprite(n, d)
             fwidth = fs.width - tileset.margin
             fheight = fs.height - tileset.margin
 
@@ -357,7 +359,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
             rows = int((fheight - tileset.margin + tileset.spacing) /
                        (tileset.tileheight + tileset.spacing))
 
-            ts_sprite = sge.Sprite.from_tileset(
+            ts_sprite = sge.gfx.Sprite.from_tileset(
                 source, x=tileset.margin, y=tileset.margin, columns=columns,
                 rows=rows, xsep=tileset.spacing, ysep=tileset.spacing,
                 width=tileset.tilewidth, height=tileset.tileheight)
@@ -370,8 +372,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     del tile_cls[gid]
                 if gid in tile_kwargs:
                     del tile_kwargs[gid]
-                t_sprite = sge.Sprite(width=tileset.tilewidth,
-                                      height=tileset.tileheight)
+                t_sprite = sge.gfx.Sprite(width=tileset.tilewidth,
+                                          height=tileset.tileheight)
                 t_sprite.draw_sprite(ts_sprite, i, 0, 0)
                 tile_sprites[gid] = t_sprite
 
@@ -393,7 +395,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
 
                 n, e = os.path.splitext(os.path.basename(source))
                 d = os.path.dirname(source)
-                tile_sprites[i] = sge.Sprite(n, d)
+                tile_sprites[i] = sge.gfx.Sprite(n, d)
 
             if tileset.name in types:
                 tile_cls[i] = types[tileset.name]
@@ -408,7 +410,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
     if tilemap.backgroundcolor is not None:
         if not tilemap.backgroundcolor.startswith("#"):
             tilemap.backgroundcolor = "#" + tilemap.backgroundcolor
-        color = sge.Color(tilemap.backgroundcolor)
+        color = sge.gfx.Color(tilemap.backgroundcolor)
         background = sge.Background([], color)
     else:
         background = None
@@ -484,15 +486,15 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     for prop in obj.properties:
                         kwargs[prop.name] = _nconvert(prop.value)
 
-                    views.append(sge.View(obj.x + offsetx, obj.y + offsety,
-                                          **kwargs))
+                    views.append(sge.dsp.View(obj.x + offsetx, obj.y + offsety,
+                                              **kwargs))
             else:
                 default_cls = types.get(layer.name)
 
                 if layer.color is not None:
                     if not layer.color.startswith("#"):
                         layer.color = "#" + layer.color
-                    color = sge.Color(layer.color)
+                    color = sge.gfx.Color(layer.color)
                 else:
                     color = None
 
@@ -541,7 +543,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     elif obj.ellipse:
                         if cls is None:
                             cls = Ellipse
-                        sprite = sge.Sprite(width=obj.width, height=obj.height)
+                        sprite = sge.gfx.Sprite(width=obj.width,
+                                                height=obj.height)
                         sprite.draw_ellipse(0, 0, obj.width, obj.height,
                                             fill=color)
                         kwargs["sprite"] = sprite
@@ -566,7 +569,8 @@ def load(fname, cls=sge.Room, types=None, z=0):
                     else:
                         if cls is None:
                             cls = Rectangle
-                        sprite = sge.Sprite(width=obj.width, height=obj.height)
+                        sprite = sge.gfx.Sprite(width=obj.width,
+                                                height=obj.height)
                         sprite.draw_rectangle(0, 0, obj.width, obj.height,
                                               fill=color)
                         kwargs["sprite"] = sprite
@@ -582,7 +586,7 @@ def load(fname, cls=sge.Room, types=None, z=0):
             if layer.image.source is not None:
                 n, e = os.path.splitext(os.path.basename(layer.image.source))
                 d = os.path.dirname(layer.image.source)
-                sprite = sge.Sprite(n, d)
+                sprite = sge.gfx.Sprite(n, d)
             else:
                 sprite = None
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)

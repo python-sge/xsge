@@ -1,5 +1,5 @@
 # xSGE GUI Toolkit
-# Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2014-2016 onpon4 <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ This extension provides a simple toolkit for adding GUIs to a SGE game
 as well as support for modal dialog boxes.
 
 To use this extension, you must call :func:`xsge_gui.init` sometime
-between the creation of the :class:`sge.Game` object and the start of
-the game.
+between the creation of the :class:`sge.dsp.Game` object and the start
+of the game.
 
 .. data:: window_background_color
           keyboard_focused_box_color
@@ -292,14 +292,14 @@ TEXTBOX_MIN_EDGE = 4
 TEXTBOX_CURSOR_BLINK_TIME = 500
 DIALOG_PADDING = 8
 
-window_background_color = sge.Color("#A4A4A4")
-keyboard_focused_box_color = sge.Color((0, 0, 0, 170))
-text_color = sge.Color("black")
-button_text_color = sge.Color("black")
-textbox_text_color = sge.Color("black")
-textbox_text_selected_color = sge.Color("white")
-textbox_highlight_color = sge.Color("blue")
-title_text_color = sge.Color("white")
+window_background_color = sge.gfx.Color("#A4A4A4")
+keyboard_focused_box_color = sge.gfx.Color((0, 0, 0, 170))
+text_color = sge.gfx.Color("black")
+button_text_color = sge.gfx.Color("black")
+textbox_text_color = sge.gfx.Color("black")
+textbox_text_selected_color = sge.gfx.Color("white")
+textbox_highlight_color = sge.gfx.Color("blue")
+title_text_color = sge.gfx.Color("white")
 default_font = None
 button_font = None
 textbox_font = None
@@ -357,7 +357,7 @@ escape_joystick_events = []
 joystick_threshold = 0.7
 
 
-class Handler(sge.Object):
+class Handler(sge.dsp.Object):
 
     """
     An object of this class needs to exist in any room where windows are
@@ -688,7 +688,7 @@ class Window(object):
         self._close_button_pressed = False
         self._joystick_prev = {}
 
-        self.sprite = sge.Sprite(width=1, height=1)
+        self.sprite = sge.gfx.Sprite(width=1, height=1)
         self.redraw()
 
     def _kb_focus_move(self, d):
@@ -904,7 +904,7 @@ class Window(object):
     def event_step(self, time_passed, delta_mult):
         """
         Called once every frame, before refreshing.  See the
-        documentation for :meth:`sge.Game.event_step` for more
+        documentation for :meth:`sge.dsp.Game.event_step` for more
         information.
         """
         pass
@@ -1309,7 +1309,7 @@ class Dialog(Window):
         """
         parent = self.parent()
         if parent is not None:
-            screenshot = sge.Sprite.from_screenshot()
+            screenshot = sge.gfx.Sprite.from_screenshot()
             super(Dialog, self).show()
             parent.keyboard_focused_window = self
             while self in parent.windows:
@@ -1493,7 +1493,7 @@ class MenuWindow(Window):
     """
 
     def __init__(self, parent, x, y, width, height, title="",
-                 background_color=sge.Color("#0000"), border=False):
+                 background_color=sge.gfx.Color("#0000"), border=False):
         super(MenuWindow, self).__init__(parent, x, y, width, height, title,
                                          background_color, border)
         self.choice = None
@@ -1522,8 +1522,8 @@ class MenuWindow(Window):
     @classmethod
     def from_text(cls, parent, x, y, items, font_normal=None,
                   color_normal=None, font_selected=None, color_selected=None,
-                  background_color=sge.Color("#0000"), height=None, margin=0,
-                  halign="left", valign="top"):
+                  background_color=sge.gfx.Color("#0000"), height=None,
+                  margin=0, halign="left", valign="top"):
         """
         Return a menu created automatically from a list of strings.
 
@@ -1546,10 +1546,10 @@ class MenuWindow(Window):
           :const:`None`, it will be the sum of the items' height.
         - ``margin`` -- The size of the margin around the menu.
         - ``halign`` -- The horizontal alignment of the menu.  See the
-          documentation for :meth:`sge.Sprite.draw_text` for more
+          documentation for :meth:`sge.gfx.Sprite.draw_text` for more
           information.
         - ``valign`` -- The vertical alignment of the menu.  See the
-          documentation for :meth:`sge.Sprite.draw_text` for more
+          documentation for :meth:`sge.gfx.Sprite.draw_text` for more
           information.
         """
         if font_selected is None: font_selected = font_normal
@@ -1558,11 +1558,12 @@ class MenuWindow(Window):
         item_h = 0
         item_sprites = []
         for item in items:
-            n_spr = sge.Sprite.from_text(font_normal, item, color=color_normal,
-                                         halign=halign, valign=valign)
-            s_spr = sge.Sprite.from_text(font_selected, item,
-                                         color=color_selected, halign=halign,
-                                         valign=valign)
+            n_spr = sge.gfx.Sprite.from_text(
+                font_normal, item, color=color_normal, halign=halign,
+                valign=valign)
+            s_spr = sge.gfx.Sprite.from_text(
+                font_selected, item, color=color_selected, halign=halign,
+                valign=valign)
             width = max(width, n_spr.width, s_spr.width)
             item_h = max(item_h, n_spr.height, s_spr.height)
             item_sprites.append((n_spr, s_spr))
@@ -1840,7 +1841,7 @@ class Widget(object):
         if sprite is not None:
             self.sprite = sprite
         else:
-            self.sprite = sge.Sprite(width=1, height=1)
+            self.sprite = sge.gfx.Sprite(width=1, height=1)
         self._joystick_prev = {}
 
     def destroy(self):
@@ -1880,7 +1881,7 @@ class Widget(object):
     def event_step(self, time_passed, delta_mult):
         """
         Called once every frame, before refreshing.  See the
-        documentation for :meth:`sge.Game.event_step` for more
+        documentation for :meth:`sge.dsp.Game.event_step` for more
         information.
         """
         pass
@@ -2211,24 +2212,24 @@ class Label(Widget):
     .. attribute:: width
 
        The width of the imaginary rectangle the text is drawn in.  See
-       the documentation for :meth:`sge.Sprite.draw_text` for more
+       the documentation for :meth:`sge.gfx.Sprite.draw_text` for more
        information.
 
     .. attribute:: height
 
        The height of the imaginary rectangle the text is drawn in.  See
-       the documentation for :meth:`sge.Sprite.draw_text` for more
+       the documentation for :meth:`sge.gfx.Sprite.draw_text` for more
        information.
 
     .. attribute:: halign
 
        The horizontal alignment of the text.  See the documentation for
-       :meth:`sge.Sprite.draw_text` for more information.
+       :meth:`sge.gfx.Sprite.draw_text` for more information.
 
     .. attribute:: valign
 
        The vertical alignment of the text.  See the documentation for
-       :meth:`sge.Sprite.draw_text` for more information.
+       :meth:`sge.gfx.Sprite.draw_text` for more information.
 
     See the documentation for :class:`xsge_gui.Widget` for more
     information.
@@ -2333,7 +2334,7 @@ class Button(Widget):
     .. attribute:: halign
 
        The horizontal alignment of the text.  See the documentation for
-       :meth:`sge.Sprite.draw_text` for more information.
+       :meth:`sge.gfx.Sprite.draw_text` for more information.
 
     See the documentation for :class:`xsge_gui.Widget` for more
     information.
@@ -2361,7 +2362,7 @@ class Button(Widget):
 
         left = button_left_sprite.width
         right = sprite_w - button_right_sprite.width
-        self.sprite_normal = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_normal = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_normal.draw_lock()
         for i in six.moves.range(left, right, button_sprite.width):
             self.sprite_normal.draw_sprite(button_sprite, 0, i, 0)
@@ -2377,7 +2378,7 @@ class Button(Widget):
                     button_selected_right_sprite.width)
         left = button_selected_left_sprite.width
         right = sprite_w - button_selected_right_sprite.width
-        self.sprite_selected = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_selected = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_selected.draw_lock()
         for i in six.moves.range(left, right, button_selected_sprite.width):
             self.sprite_selected.draw_sprite(button_selected_sprite, 0, i, 0)
@@ -2394,7 +2395,7 @@ class Button(Widget):
                     button_pressed_right_sprite.width)
         left = button_pressed_left_sprite.width
         right = sprite_w - button_pressed_right_sprite.width
-        self.sprite_pressed = sge.Sprite(width=sprite_w, height=h)
+        self.sprite_pressed = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_pressed.draw_lock()
         for i in six.moves.range(left, right, button_pressed_sprite.width):
             self.sprite_pressed.draw_sprite(button_pressed_sprite, 0, i, 0)
@@ -2564,7 +2565,7 @@ class ProgressBar(Widget):
 
     def __init__(self, parent, x, y, z, width=128, progress=0):
         super(ProgressBar, self).__init__(parent, x, y, z,
-                                          sge.Sprite(width=1, height=1))
+                                          sge.gfx.Sprite(width=1, height=1))
         self.width = width
         self.progress = progress
         self.redraw()
@@ -2626,7 +2627,7 @@ class TextBox(Widget):
 
     def __init__(self, parent, x, y, z, width=32, text="", text_limit=1000):
         super(TextBox, self).__init__(parent, x, y, z,
-                                      sge.Sprite(width=1, height=1))
+                                      sge.gfx.Sprite(width=1, height=1))
         self.width = width
         self.text = text
         self.text_limit = text_limit
@@ -2703,8 +2704,8 @@ class TextBox(Widget):
             elif self._text_x + cursor_x > text_area_w - min_edge:
                 self._text_x = text_area_w - min_edge - cursor_x
 
-            text_sprite = sge.Sprite(width=text_area_w,
-                                     height=textbox_sprite.height)
+            text_sprite = sge.gfx.Sprite(width=text_area_w,
+                                         height=textbox_sprite.height)
             text_sprite.draw_lock()
 
             text_sprite.draw_text(textbox_font, self.text[tl:tr], text_x,
@@ -3023,8 +3024,8 @@ def init():
     """
     Prepare this module for use.  This function in particular creates
     the sprites and fonts it uses for windows and widgets.  Because of
-    this, it must not be called until after a :class:`sge.Game` object
-    has been created.
+    this, it must not be called until after a :class:`sge.dsp.Game`
+    object has been created.
     """
     global default_font
     global button_font
@@ -3062,61 +3063,66 @@ def init():
     global window_border_topleft_sprite
     global window_border_topright_sprite
 
-    default_font = sge.Font([os.path.join(DATA, "DroidSans.ttf"),
-                             "Droid Sans"], size=12)
-    button_font = sge.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
-                            "Droid Sans"], size=12)
+    default_font = sge.gfx.Font([os.path.join(DATA, "DroidSans.ttf"),
+                                 "Droid Sans"], size=12)
+    button_font = sge.gfx.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
+                                "Droid Sans"], size=12)
     textbox_font = default_font
-    title_font = sge.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
-                           "Droid Sans"], size=14)
+    title_font = sge.gfx.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
+                               "Droid Sans"], size=14)
 
     try:
-        button_sprite = sge.Sprite("button", DATA)
-        button_left_sprite = sge.Sprite("button_left", DATA)
-        button_right_sprite = sge.Sprite("button_right", DATA)
-        button_pressed_sprite = sge.Sprite("button_pressed", DATA)
-        button_pressed_left_sprite = sge.Sprite("button_pressed_left", DATA)
-        button_pressed_right_sprite = sge.Sprite("button_pressed_right", DATA)
-        button_selected_sprite = sge.Sprite("button_selected", DATA)
-        button_selected_left_sprite = sge.Sprite("button_selected_left", DATA)
-        button_selected_right_sprite = sge.Sprite("button_selected_right",
-                                                  DATA)
-        checkbox_off_sprite = sge.Sprite("checkbox_off", DATA)
-        checkbox_on_sprite = sge.Sprite("checkbox_on", DATA)
-        progressbar_sprite = sge.Sprite("progressbar", DATA)
-        progressbar_left_sprite = sge.Sprite("progressbar_left", DATA)
-        progressbar_right_sprite = sge.Sprite("progressbar_right", DATA)
-        progressbar_container_sprite = sge.Sprite("progressbar_container",
-                                                  DATA)
-        progressbar_container_left_sprite = sge.Sprite(
+        button_sprite = sge.gfx.Sprite("button", DATA)
+        button_left_sprite = sge.gfx.Sprite("button_left", DATA)
+        button_right_sprite = sge.gfx.Sprite("button_right", DATA)
+        button_pressed_sprite = sge.gfx.Sprite("button_pressed", DATA)
+        button_pressed_left_sprite = sge.gfx.Sprite("button_pressed_left",
+                                                    DATA)
+        button_pressed_right_sprite = sge.gfx.Sprite("button_pressed_right",
+                                                     DATA)
+        button_selected_sprite = sge.gfx.Sprite("button_selected", DATA)
+        button_selected_left_sprite = sge.gfx.Sprite("button_selected_left",
+                                                     DATA)
+        button_selected_right_sprite = sge.gfx.Sprite("button_selected_right",
+                                                      DATA)
+        checkbox_off_sprite = sge.gfx.Sprite("checkbox_off", DATA)
+        checkbox_on_sprite = sge.gfx.Sprite("checkbox_on", DATA)
+        progressbar_sprite = sge.gfx.Sprite("progressbar", DATA)
+        progressbar_left_sprite = sge.gfx.Sprite("progressbar_left", DATA)
+        progressbar_right_sprite = sge.gfx.Sprite("progressbar_right", DATA)
+        progressbar_container_sprite = sge.gfx.Sprite("progressbar_container",
+                                                      DATA)
+        progressbar_container_left_sprite = sge.gfx.Sprite(
             "progressbar_container_left", DATA)
-        progressbar_container_right_sprite = sge.Sprite(
+        progressbar_container_right_sprite = sge.gfx.Sprite(
             "progressbar_container_right", DATA)
-        radiobutton_off_sprite = sge.Sprite("radiobutton_off", DATA)
-        radiobutton_on_sprite = sge.Sprite("radiobutton_on", DATA)
-        textbox_sprite = sge.Sprite("textbox", DATA)
-        textbox_left_sprite = sge.Sprite("textbox_left", DATA)
-        textbox_right_sprite = sge.Sprite("textbox_right", DATA)
-        window_border_left_sprite = sge.Sprite("window_border_left", DATA)
-        window_border_right_sprite = sge.Sprite("window_border_right", DATA)
-        window_border_bottom_sprite = sge.Sprite("window_border_bottom", DATA)
-        window_border_bottomleft_sprite = sge.Sprite(
+        radiobutton_off_sprite = sge.gfx.Sprite("radiobutton_off", DATA)
+        radiobutton_on_sprite = sge.gfx.Sprite("radiobutton_on", DATA)
+        textbox_sprite = sge.gfx.Sprite("textbox", DATA)
+        textbox_left_sprite = sge.gfx.Sprite("textbox_left", DATA)
+        textbox_right_sprite = sge.gfx.Sprite("textbox_right", DATA)
+        window_border_left_sprite = sge.gfx.Sprite("window_border_left", DATA)
+        window_border_right_sprite = sge.gfx.Sprite("window_border_right",
+                                                    DATA)
+        window_border_bottom_sprite = sge.gfx.Sprite("window_border_bottom",
+                                                     DATA)
+        window_border_bottomleft_sprite = sge.gfx.Sprite(
             "window_border_bottomleft", DATA)
-        window_border_bottomright_sprite = sge.Sprite(
+        window_border_bottomright_sprite = sge.gfx.Sprite(
             "window_border_bottomright", DATA)
-        window_border_top_sprite = sge.Sprite("window_border_top", DATA)
-        window_border_topleft_sprite = sge.Sprite("window_border_topleft",
-                                                  DATA)
-        window_border_topright_sprite = sge.Sprite("window_border_topright",
-                                                   DATA)
+        window_border_top_sprite = sge.gfx.Sprite("window_border_top", DATA)
+        window_border_topleft_sprite = sge.gfx.Sprite("window_border_topleft",
+                                                      DATA)
+        window_border_topright_sprite = sge.gfx.Sprite(
+            "window_border_topright", DATA)
     except IOError:
-        button_sprite = sge.Sprite(width=1, height=24)
+        button_sprite = sge.gfx.Sprite(width=1, height=24)
         button_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
         button_sprite.draw_rectangle(0, 1, 1, 22, fill="white")
-        button_left_sprite = sge.Sprite(width=10, height=24)
+        button_left_sprite = sge.gfx.Sprite(width=10, height=24)
         button_left_sprite.draw_rectangle(0, 0, 10, 24, fill="black")
         button_right_sprite = button_left_sprite
-        button_selected_sprite = sge.Sprite(width=1, height=24)
+        button_selected_sprite = sge.gfx.Sprite(width=1, height=24)
         button_selected_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
         button_selected_sprite.draw_rectangle(0, 1, 1, 22, fill="aqua")
         button_selected_left_sprite = button_left_sprite
@@ -3124,44 +3130,44 @@ def init():
         button_pressed_sprite = button_selected_sprite
         button_pressed_left_sprite = button_selected_left_sprite
         button_pressed_right_sprite = button_selected_right_sprite
-        checkbox_off_sprite = sge.Sprite(width=16, height=16)
+        checkbox_off_sprite = sge.gfx.Sprite(width=16, height=16)
         checkbox_off_sprite.draw_rectangle(0, 0, 16, 16, fill="white",
                                            outline="black")
-        checkbox_on_sprite = sge.Sprite(width=16, height=16)
+        checkbox_on_sprite = sge.gfx.Sprite(width=16, height=16)
         checkbox_on_sprite.draw_sprite(checkbox_off_sprite, 0, 0, 0)
         checkbox_on_sprite.draw_line(0, 0, 15, 15, "black")
         checkbox_on_sprite.draw_line(0, 15, 15, 0, "black")
-        progressbar_sprite = sge.Sprite(width=1, height=18)
+        progressbar_sprite = sge.gfx.Sprite(width=1, height=18)
         progressbar_sprite.draw_rectangle(0, 0, 1, 18, fill="white")
-        progressbar_left_sprite = sge.Sprite(width=2, height=18)
+        progressbar_left_sprite = sge.gfx.Sprite(width=2, height=18)
         progressbar_left_sprite.draw_rectangle(0, 0, 2, 18, fill="white")
         progressbar_right_sprite = progressbar_left_sprite
-        progressbar_container_sprite = sge.Sprite(width=1, height=24)
+        progressbar_container_sprite = sge.gfx.Sprite(width=1, height=24)
         progressbar_container_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
-        progressbar_container_left_sprite = sge.Sprite(width=5, height=24)
+        progressbar_container_left_sprite = sge.gfx.Sprite(width=5, height=24)
         progressbar_container_left_sprite.draw_rectangle(0, 0, 5, 24,
                                                          fill="black")
         progressbar_container_right_sprite = progressbar_container_left_sprite
         radiobutton_off_sprite = checkbox_off_sprite
         radiobutton_on_sprite = checkbox_on_sprite
         textbox_sprite = button_sprite
-        textbox_left_sprite = sge.Sprite(width=4, height=24)
+        textbox_left_sprite = sge.gfx.Sprite(width=4, height=24)
         textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill="black")
         textbox_right_sprite = textbox_left_sprite
-        window_border_left_sprite = sge.Sprite(width=4, height=1)
+        window_border_left_sprite = sge.gfx.Sprite(width=4, height=1)
         window_border_left_sprite.draw_rectangle(0, 0, 4, 1, fill="black")
         window_border_right_sprite = window_border_left_sprite
-        window_border_bottom_sprite = sge.Sprite(width=1, height=4)
+        window_border_bottom_sprite = sge.gfx.Sprite(width=1, height=4)
         window_border_bottom_sprite.draw_rectangle(0, 0, 1, 4, fill="black")
-        window_border_bottomleft_sprite = sge.Sprite(width=4, height=4)
+        window_border_bottomleft_sprite = sge.gfx.Sprite(width=4, height=4)
         window_border_bottomleft_sprite.draw_rectangle(0, 0, 4, 4,
                                                        fill="black")
         window_border_bottomright_sprite = window_border_bottomleft_sprite
-        window_border_top_sprite = sge.Sprite(width=1, height=28)
+        window_border_top_sprite = sge.gfx.Sprite(width=1, height=28)
         window_border_top_sprite.draw_rectangle(0, 0, 1, 28, fill="black")
-        window_border_topleft_sprite = sge.Sprite(width=11, height=28)
+        window_border_topleft_sprite = sge.gfx.Sprite(width=11, height=28)
         window_border_topleft_sprite.draw_rectangle(0, 0, 11, 28, fill="black")
-        window_border_topright_sprite = sge.Sprite(width=23, height=28)
+        window_border_topright_sprite = sge.gfx.Sprite(width=23, height=28)
         window_border_topright_sprite.draw_rectangle(0, 0, 23, 28,
                                                      fill="black")
         window_border_topright_sprite.draw_line(0, 0, 23, 23, "red")
@@ -3262,8 +3268,9 @@ def get_text_entry(parent=None, message="", title="Text Entry", text="",
 
 def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
                        color_normal=None, font_selected=None,
-                       color_selected=None, background_color=sge.Color("#0000"),
-                       height=None, margin=0, halign="left", valign="top"):
+                       color_selected=None,
+                       background_color=sge.gfx.Color("#0000"), height=None,
+                       margin=0, halign="left", valign="top"):
     """
     Show a menu and return the index of the menu item selected.
 
