@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # GUI Example
-# Written in 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014, 2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -21,7 +21,7 @@ import sge
 import xsge_gui
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_game_start(self):
         sge.keyboard.set_repeat(interval=10, delay=500)
@@ -30,7 +30,7 @@ class Game(sge.Game):
         self.end()
 
 
-class Room(sge.Room):
+class Room(sge.dsp.Room):
 
     def event_room_start(self):
         self.handler = xsge_gui.Handler.create()

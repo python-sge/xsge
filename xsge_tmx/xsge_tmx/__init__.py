@@ -411,7 +411,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
         if not tilemap.backgroundcolor.startswith("#"):
             tilemap.backgroundcolor = "#" + tilemap.backgroundcolor
         color = sge.gfx.Color(tilemap.backgroundcolor)
-        background = sge.Background([], color)
+        background = sge.gfx.Background([], color)
     else:
         background = None
 

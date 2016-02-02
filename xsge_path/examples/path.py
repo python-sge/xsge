@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Physics example
-# Written in 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014, 2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -21,7 +21,7 @@ import sge
 import xsge_path
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -36,14 +36,14 @@ def main():
     Game(800, 600)
 
     # Load sprites
-    square_sprite = sge.Sprite(width=32, height=32)
-    square_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.Color("aqua"))
+    square_sprite = sge.gfx.Sprite(width=32, height=32)
+    square_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.gfx.Color("aqua"))
 
     # Load backgrounds
-    background = sge.Background([], sge.Color("black"))
+    background = sge.gfx.Background([], sge.gfx.Color("black"))
 
     # Create objects
-    obj = sge.Object(400, 300, sprite=square_sprite)
+    obj = sge.dsp.Object(400, 300, sprite=square_sprite)
     points = [(-100, -100), (0, -150), (100, -100), (100, 100), (-100, 100),
               (0, 0)]
     pth = xsge_path.Path(200, 150, points)
@@ -51,7 +51,7 @@ def main():
     objects = [obj, pth]
 
     # Create room
-    sge.game.start_room = sge.Room(objects, background=background)
+    sge.game.start_room = sge.dsp.Room(objects, background=background)
 
     sge.game.start()
 

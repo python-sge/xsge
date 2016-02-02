@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # TMX example
-# Written in 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014, 2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -26,7 +26,7 @@ import xsge_tmx
 DATA = os.path.join(os.path.dirname(__file__), "data")
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
         if key == "up":

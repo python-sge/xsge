@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Lighting Example
-# Written in 2012, 2013, 2014, 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2012-2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -29,14 +29,14 @@ DATA = os.path.join(os.path.dirname(__file__), "data")
 circles = []
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_step(self, time_passed, delta_mult):
         xsge_lighting.project_darkness()
         self.project_line(self.width / 2, 0, self.width / 2, self.height,
-                          sge.Color("#808080"), thickness=3)
+                          sge.gfx.Color("#808080"), thickness=3)
         self.project_line(0, self.height / 2, self.width, self.height / 2,
-                          sge.Color("#808080"), thickness=3)
+                          sge.gfx.Color("#808080"), thickness=3)
 
     def event_paused_step(self, time_passed, delta_mult):
         self.event_step(time_passed, delta_mult)
@@ -57,7 +57,7 @@ class Game(sge.Game):
         self.event_close()
 
 
-class Circle(sge.Object):
+class Circle(sge.dsp.Object):
     def __init__(self, x, y, player=0):
         super(Circle, self).__init__(x, y, tangible=False, bbox_x=-32,
                                      bbox_y=-32, bbox_width=64, bbox_height=64)
@@ -109,19 +109,20 @@ def main():
     Game(width=640, height=480, collision_events_enabled=False)
 
     # Load sprites
-    light_sprite = sge.Sprite("light", DATA, origin_x=32, origin_y=32)
-    light_red_sprite = sge.Sprite("light_red", DATA, origin_x=32, origin_y=32)
-    light_green_sprite = sge.Sprite("light_green", DATA, origin_x=32,
-                                    origin_y=32)
-    light_blue_sprite = sge.Sprite("light_blue", DATA, origin_x=32,
-                                   origin_y=32)
-    fence = sge.Sprite('fence', DATA)
+    light_sprite = sge.gfx.Sprite("light", DATA, origin_x=32, origin_y=32)
+    light_red_sprite = sge.gfx.Sprite("light_red", DATA, origin_x=32,
+                                      origin_y=32)
+    light_green_sprite = sge.gfx.Sprite("light_green", DATA, origin_x=32,
+                                        origin_y=32)
+    light_blue_sprite = sge.gfx.Sprite("light_blue", DATA, origin_x=32,
+                                       origin_y=32)
+    fence = sge.gfx.Sprite('fence', DATA)
 
     # Load backgrounds
-    layers = [sge.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,
-                                  repeat_right=True, repeat_up=True,
-                                  repeat_down=True)]
-    background = sge.Background(layers, sge.Color('white'))
+    layers = [sge.gfx.BackgroundLayer(fence, 0, 0, 0, repeat_left=True,
+                                      repeat_right=True, repeat_up=True,
+                                      repeat_down=True)]
+    background = sge.gfx.Background(layers, sge.gfx.Color('white'))
 
     # Create objects
     objects = []
@@ -133,10 +134,10 @@ def main():
     views = []
     for x in range(2):
         for y in range(2):
-            views.append(sge.View(0, 0, 320 * x, 240 * y, 320, 240))
+            views.append(sge.dsp.View(0, 0, 320 * x, 240 * y, 320, 240))
 
     # Create rooms
-    sge.game.start_room = sge.Room(objects, 1280, 1024, views, background)
+    sge.game.start_room = sge.dsp.Room(objects, 1280, 1024, views, background)
 
     sge.game.start()
 

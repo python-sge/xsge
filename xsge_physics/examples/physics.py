@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Physics example
-# Written in 2014 by Julian Marchant <onpon4@riseup.net>
+# Written in 2014, 2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -21,7 +21,7 @@ import sge
 import xsge_physics
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -92,39 +92,39 @@ def main():
     Game(800, 600)
 
     # Load sprites
-    square_sprite = sge.Sprite(width=32, height=32)
-    square_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.Color("aqua"))
-    solid_sprite = sge.Sprite(width=16, height=16)
-    solid_sprite.draw_rectangle(0, 0, 16, 16, fill=sge.Color("white"))
-    slope1_sprite = sge.Sprite(width=32, height=16)
+    square_sprite = sge.gfx.Sprite(width=32, height=32)
+    square_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.gfx.Color("aqua"))
+    solid_sprite = sge.gfx.Sprite(width=16, height=16)
+    solid_sprite.draw_rectangle(0, 0, 16, 16, fill=sge.gfx.Color("white"))
+    slope1_sprite = sge.gfx.Sprite(width=32, height=16)
     slope1_sprite.draw_polygon([(0, 16), (32, 0), (32, 16)],
-                               fill=sge.Color("white"))
-    slope2_sprite = sge.Sprite(width=16, height=32)
+                               fill=sge.gfx.Color("white"))
+    slope2_sprite = sge.gfx.Sprite(width=16, height=32)
     slope2_sprite.draw_polygon([(0, 0), (0, 32), (16, 32)],
-                               fill=sge.Color("white"))
-    slope3_sprite = sge.Sprite(width=16, height=16)
+                               fill=sge.gfx.Color("white"))
+    slope3_sprite = sge.gfx.Sprite(width=16, height=16)
     slope3_sprite.draw_polygon([(0, 16), (16, 0), (0, 0)],
-                               fill=sge.Color("white"))
-    slope4_sprite = sge.Sprite(width=16, height=16)
+                               fill=sge.gfx.Color("white"))
+    slope4_sprite = sge.gfx.Sprite(width=16, height=16)
     slope4_sprite.draw_polygon([(16, 16), (16, 0), (0, 0)],
-                               fill=sge.Color("white"))
-    sqwall_sprite = sge.Sprite(width=32, height=32)
-    sqwall_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.Color("red"))
-    diamond_tl_sprite = sge.Sprite(width=16, height=16)
+                               fill=sge.gfx.Color("white"))
+    sqwall_sprite = sge.gfx.Sprite(width=32, height=32)
+    sqwall_sprite.draw_rectangle(0, 0, 32, 32, fill=sge.gfx.Color("red"))
+    diamond_tl_sprite = sge.gfx.Sprite(width=16, height=16)
     diamond_tl_sprite.draw_polygon([(0, 16), (16, 16), (16, 0)],
-                                   fill=sge.Color("red"))
-    diamond_tr_sprite = sge.Sprite(width=16, height=16)
+                                   fill=sge.gfx.Color("red"))
+    diamond_tr_sprite = sge.gfx.Sprite(width=16, height=16)
     diamond_tr_sprite.draw_polygon([(0, 0), (0, 16), (16, 16)],
-                                   fill=sge.Color("red"))
-    diamond_bl_sprite = sge.Sprite(width=16, height=16)
+                                   fill=sge.gfx.Color("red"))
+    diamond_bl_sprite = sge.gfx.Sprite(width=16, height=16)
     diamond_bl_sprite.draw_polygon([(0, 0), (16, 0), (16, 16)],
-                                   fill=sge.Color("red"))
-    diamond_br_sprite = sge.Sprite(width=16, height=16)
+                                   fill=sge.gfx.Color("red"))
+    diamond_br_sprite = sge.gfx.Sprite(width=16, height=16)
     diamond_br_sprite.draw_polygon([(0, 0), (0, 16), (16, 0)],
-                                   fill=sge.Color("red"))
+                                   fill=sge.gfx.Color("red"))
 
     # Load backgrounds
-    background = sge.Background([], sge.Color("black"))
+    background = sge.gfx.Background([], sge.gfx.Color("black"))
 
     # Create objects
     player = Player(400, 300, 5, sprite=square_sprite)
@@ -164,8 +164,9 @@ def main():
                square, diamond_tl, diamond_tr, diamond_bl, diamond_br]
 
     # Create room
-    sge.game.start_room = sge.Room(objects, background=background,
-                                   object_area_width=64, object_area_height=64)
+    sge.game.start_room = sge.dsp.Room(objects, background=background,
+                                       object_area_width=64,
+                                       object_area_height=64)
 
     sge.game.start()
 

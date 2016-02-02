@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Menu example
-# Written in 2015 by Julian Marchant <onpon4@riseup.net>
+# Written in 2015, 2016 by onpon4 <onpon4@riseup.net>
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -22,7 +22,7 @@ import sge
 import xsge_gui
 
 
-class Game(sge.Game):
+class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
         if key == 'escape':
@@ -32,16 +32,16 @@ class Game(sge.Game):
         self.end()
 
 
-class Room(sge.Room):
+class Room(sge.dsp.Room):
 
     def event_room_start(self):
         c = True
         while c:
             i = xsge_gui.get_menu_selection(
                 320, 240, ["Item 1", "Item 2", "Item 3", "Exit"],
-                font_normal=font, color_normal=sge.Color("black"),
-                color_selected=sge.Color("red"),
-                background_color=sge.Color("aqua"), height=200, margin=16,
+                font_normal=font, color_normal=sge.gfx.Color("black"),
+                color_selected=sge.gfx.Color("red"),
+                background_color=sge.gfx.Color("aqua"), height=200, margin=16,
                 halign="center", valign="middle")
             if i is not None and 0 <= i <= 2:
                 print("Item {} chosen!".format(i + 1))
@@ -54,7 +54,7 @@ class Room(sge.Room):
 Game(640, 480)
 xsge_gui.init()
 
-font = sge.Font("Liberation Mono")
+font = sge.gfx.Font("Liberation Mono")
 
 sge.game.start_room = Room()
 
