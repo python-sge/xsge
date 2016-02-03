@@ -1432,8 +1432,9 @@ class Dialog(Window):
                             widget.event_joystick(
                                 event.js_name, event.js_id, event.input_type,
                                 event.input_id, event.value)
-                        self.event_global_joystick_button_release(
-                            event.js_name, event.js_id, event.button)
+                        self.event_global_joystick(
+                            event.js_name, event.js_id, event.input_type,
+                            event.input_id, event.value)
                         for widget in self.widgets:
                             widget.event_global_joystick(
                                 event.js_name, event.js_id, event.input_type,
