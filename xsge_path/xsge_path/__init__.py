@@ -156,14 +156,14 @@ class Path(sge.dsp.Object):
                 xdist = dx - obj.x
                 ydist = dy - obj.y
                 dist = math.hypot(xdist, ydist)
-                md = math.atan2(-ydist, xdist)
+                md = math.atan2(ydist, xdist)
                 deceling = False
 
                 if decel:
                     decel_dist = (obj.speed ** 2) / (2 * decel)
                     if dist <= decel_dist:
                         obj.xdeceleration = -(decel * math.cos(md))
-                        obj.ydeceleration = decel * math.sin(md)
+                        obj.ydeceleration = -(decel * math.sin(md))
                         deceling = True
                     else:
                         obj.xdeceleration = 0
@@ -175,7 +175,7 @@ class Path(sge.dsp.Object):
                 if not deceling:
                     if accel and obj.speed < speed:
                         obj.xacceleration = accel * math.cos(md)
-                        obj.yacceleration = -(accel * math.sin(md))
+                        obj.yacceleration = accel * math.sin(md)
                     else:
                         obj.speed = speed
                         obj.move_direction = math.degrees(md)
