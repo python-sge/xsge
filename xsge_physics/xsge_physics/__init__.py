@@ -73,7 +73,23 @@ class Collider(sge.dsp.Object):
        :meth:`event_update_position` uses these methods, so speed
        attributes will work properly, but changing :attr:`x` and
        :attr:`y` manually will not cause any physics to occur.
+
+    .. attribute:: nonstick_left
+    .. attribute:: nonstick_right
+    .. attribute:: nonstick_top
+    .. attribute:: nonstick_bottom
+
+       These attributes are used by certain wall classes to exclude the
+       object from "sticking" to the wall.  See the documentation for
+       the wall classes for more information.
+
+       Default value: :const:`False`
     """
+
+    nonstick_left = False
+    nonstick_right = False
+    nonstick_top = False
+    nonstick_bottom = False
 
     def move_x(self, move, absolute=False, do_events=True, exclude_events=()):
         """
@@ -137,21 +153,23 @@ class Collider(sge.dsp.Object):
                 return on_ceil
 
         if move > 0:
-            bbb = round(self.bbox_bottom, NDIG)
-            for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
-                if slope.xsticky_top:
-                    y = round(slope.get_slope_y(self.bbox_left), NDIG)
-                    if bbb == y:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_width / h
-                        break
-                    elif (self.bbox_left <= slope.bbox_left and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
+            if not self.nonstick_bottom:
+                bbb = round(self.bbox_bottom, NDIG)
+                for slope in self.collision(SlopeTopRight, y=(self.y + 1)):
+                    if slope.xsticky_top:
+                        y = round(slope.get_slope_y(self.bbox_left), NDIG)
+                        if bbb == y:
+                            sticky = 1
+                            if not absolute:
+                                h = math.hypot(slope.bbox_width,
+                                               slope.bbox_height)
+                                move_mult = slope.bbox_width / h
+                            break
+                        elif (self.bbox_left <= slope.bbox_left and
+                              not self.collision(slope)):
+                            sticky = 1
+                            break
+            if not sticky and not self.nonstick_top:
                 bbt = round(self.bbox_top, NDIG)
                 for slope in self.collision(SlopeBottomRight, y=(self.y - 1)):
                     if slope.xsticky_bottom:
@@ -247,21 +265,23 @@ class Collider(sge.dsp.Object):
                 stopper.event_physics_collision_left(self, 0)
                 
         elif move < 0:
-            bbb = round(self.bbox_bottom, NDIG)
-            for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
-                if slope.xsticky_top:
-                    y = round(slope.get_slope_y(self.bbox_right), NDIG)
-                    if bbb == y:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_width / h
-                        break
-                    elif (self.bbox_right >= slope.bbox_right and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
+            if not self.nonstick_bottom:
+                bbb = round(self.bbox_bottom, NDIG)
+                for slope in self.collision(SlopeTopLeft, y=(self.y + 1)):
+                    if slope.xsticky_top:
+                        y = round(slope.get_slope_y(self.bbox_right), NDIG)
+                        if bbb == y:
+                            sticky = 1
+                            if not absolute:
+                                h = math.hypot(slope.bbox_width,
+                                               slope.bbox_height)
+                                move_mult = slope.bbox_width / h
+                            break
+                        elif (self.bbox_right >= slope.bbox_right and
+                              not self.collision(slope)):
+                            sticky = 1
+                            break
+            if not sticky and not self.nonstick_top:
                 bbt = round(self.bbox_top, NDIG)
                 for slope in self.collision(SlopeBottomLeft, y=(self.y - 1)):
                     if slope.xsticky_bottom:
@@ -481,21 +501,23 @@ class Collider(sge.dsp.Object):
                 return on_left
 
         if move > 0:
-            bbr = round(self.bbox_right, NDIG)
-            for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
-                if slope.ysticky_left:
-                    x = round(slope.get_slope_x(self.bbox_top), NDIG)
-                    if bbr == x:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_height / h
-                        break
-                    elif (self.bbox_top <= slope.bbox_top and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
+            if not self.nonstick_right:
+                bbr = round(self.bbox_right, NDIG)
+                for slope in self.collision(SlopeBottomLeft, x=(self.x + 1)):
+                    if slope.ysticky_left:
+                        x = round(slope.get_slope_x(self.bbox_top), NDIG)
+                        if bbr == x:
+                            sticky = 1
+                            if not absolute:
+                                h = math.hypot(slope.bbox_width,
+                                               slope.bbox_height)
+                                move_mult = slope.bbox_height / h
+                            break
+                        elif (self.bbox_top <= slope.bbox_top and
+                              not self.collision(slope)):
+                            sticky = 1
+                            break
+            if not sticky and not self.nonstick_left:
                 bbl = round(self.bbox_left, NDIG)
                 for slope in self.collision(SlopeBottomRight, x=(self.x - 1)):
                     if slope.ysticky_right:
@@ -593,21 +615,23 @@ class Collider(sge.dsp.Object):
                 stopper.event_physics_collision_top(self, 0)
                 
         elif move < 0:
-            bbr = round(self.bbox_right, NDIG)
-            for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
-                if slope.ysticky_left:
-                    x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
-                    if bbr == x:
-                        sticky = 1
-                        if not absolute:
-                            h = math.hypot(slope.bbox_width, slope.bbox_height)
-                            move_mult = slope.bbox_height / h
-                        break
-                    elif (self.bbox_bottom >= slope.bbox_bottom and
-                          not self.collision(slope)):
-                        sticky = 1
-                        break
-            else:
+            if not self.nonstick_right:
+                bbr = round(self.bbox_right, NDIG)
+                for slope in self.collision(SlopeTopLeft, x=(self.x + 1)):
+                    if slope.ysticky_left:
+                        x = round(slope.get_slope_x(self.bbox_bottom), NDIG)
+                        if bbr == x:
+                            sticky = 1
+                            if not absolute:
+                                h = math.hypot(slope.bbox_width,
+                                               slope.bbox_height)
+                                move_mult = slope.bbox_height / h
+                            break
+                        elif (self.bbox_bottom >= slope.bbox_bottom and
+                              not self.collision(slope)):
+                            sticky = 1
+                            break
+            if not sticky and not self.nonstick_left:
                 bbl = round(self.bbox_left, NDIG)
                 for slope in self.collision(SlopeTopRight, x=(self.x - 1)):
                     if slope.ysticky_right:
@@ -1045,13 +1069,19 @@ class SlopeTopLeft(sge.dsp.Object):
 
        If set to :const:`True`, a collider that moves to the left while
        touching the top side of the slope will attempt to keep touching
-       the top side of the slope by moving downward.
+       the top side of the slope by moving downward, unless the
+       collider's :attr:`nonstick_bottom` value is :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: ysticky_left
 
        If set to :const:`True`, a collider that moves upward while
        touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
+       the left side of the slope by moving to the right, unless the
+       collider's :attr:`nonstick_right` value is :const:`True`.
+
+       Default value: :const:`False`
     """
 
     xsticky_top = False
@@ -1111,13 +1141,20 @@ class SlopeTopRight(sge.dsp.Object):
 
        If set to :const:`True`, a collider that moves to the right while
        touching the top side of the slope will attempt to keep touching
-       the top side of the slope by moving downward.
+       the top side of the slope by moving downward, unless the
+       collider's :attr:`nonstick_bottom` value is :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: ysticky_right
 
        If set to :const:`True`, a collider that moves upward while
        touching the right side of the slope will attempt to keep
-       touching the right side of the slope by moving to the left.
+       touching the right side of the slope by moving to the left,
+       unless the collider's :attr:`nonstick_left` value is
+       :const:`True`.
+
+       Default value: :const:`False`
     """
 
     xsticky_top = False
@@ -1177,13 +1214,19 @@ class SlopeBottomLeft(sge.dsp.Object):
 
        If set to :const:`True`, a collider that moves to the left while
        touching the bottom side of the slope will attempt to keep
-       touching the bottom side of the slope by moving upward.
+       touching the bottom side of the slope by moving upward, unless
+       the collider's :attr:`nonstick_top` value is :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: ysticky_left
 
        If set to :const:`True`, a collider that moves downward while
        touching the left side of the slope will attempt to keep touching
-       the left side of the slope by moving to the right.
+       the left side of the slope by moving to the right, unless the
+       collider's :attr:`nonstick_right` value is :const:`True`.
+
+       Default value: :const:`False`
     """
 
     xsticky_bottom = False
@@ -1243,13 +1286,20 @@ class SlopeBottomRight(sge.dsp.Object):
 
        If set to :const:`True`, a collider that moves to the right while
        touching the bottom side of the slope will attempt to keep
-       touching the bottom side of the slope by moving upward.
+       touching the bottom side of the slope by moving upward, unless
+       the collider's :attr:`nonstick_top` value is :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: ysticky_right
 
        If set to :const:`True`, a collider that moves downward while
        touching the right side of the slope will attempt to keep
-       touching the right side of the slope by moving to the right.
+       touching the right side of the slope by moving to the right,
+       unless the collider's :attr:`nonstick_left` value is
+       :const:`True`.
+
+       Default value: :const:`False`
     """
 
     xsticky_bottom = False
@@ -1324,11 +1374,15 @@ class MobileWall(sge.dsp.Object):
        collided with as a result of the wall's movement to the left.
        Otherwise, the wall will pass through such colliders.
 
+       Default value: :const:`True`
+
     .. attribute:: push_right
 
        If set to :const:`True`, the wall will push any colliders
        collided with as a result of the wall's movement to the right.
        Otherwise, the wall will pass through such colliders.
+
+       Default value: :const:`True`
 
     .. attribute:: push_up
 
@@ -1336,35 +1390,51 @@ class MobileWall(sge.dsp.Object):
        collided with as a result of the wall's movement upwards.
        Otherwise, the wall will pass through such colliders.
 
+       Default value: :const:`True`
+
     .. attribute:: push_down
 
        If set to :const:`True`, the wall will push any colliders
        collided with as a result of the wall's movement downwards.
        Otherwise, the wall will pass through such colliders.
 
+       Default value: :const:`True`
+
     .. attribute:: sticky_left
 
        If set to :const:`True`, any colliders touching the left side of
        the wall will move along with it, regardless of the direction of
-       movement.
+       movement, with the exception of colliders whose
+       :attr:`nonstick_right` values are :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: sticky_right
 
        If set to :const:`True`, any colliders touching the right side of
        the wall will move along with it, regardless of the direction of
-       movement.
+       movement, with the exception of colliders whose
+       :attr:`nonstick_left` values are :const:`True`.
+
+       Default value: :const:`False`
 
     .. attribute:: sticky_top
 
        If set to :const:`True`, any colliders touching the top side of
        the wall will move along with it, regardless of the direction of
-       movement.
+       movement, with the exception of colliders whose
+       :attr:`nonstick_bottom` values are :const:`True`.
 
-    .. attribute:: sticky_left
+       Default value: :const:`False`
+
+    .. attribute:: sticky_bottom
 
        If set to :const:`True`, any colliders touching the bottom side
        of the wall will move along with it, regardless of the direction
-       of movement.
+       of movement, with the exception of colliders whose
+       :attr:`nonstick_top` values are :const:`True`.
+
+       Default value: :const:`False`
     """
 
     push_left = True
@@ -1387,73 +1457,81 @@ class MobileWall(sge.dsp.Object):
         if self.sticky_left:
             if isinstance(self, SolidLeft):
                 for other in self.collision(Collider, x=(self.x - 1)):
-                    if not self.collision(other):
+                    if not other.nonstick_right and not self.collision(other):
                         stuck.append(other)
             if isinstance(self, SlopeTopLeft):
                 for other in self.collision(Collider, x=(self.x - 1)):
                     x = self.get_slope_x(other.bbox_bottom)
-                    if other.bbox_right >= x and (not self.collision(other) or
-                                                  other.bbox_right - 1 < x):
+                    if (not other.nonstick_right and other.bbox_right >= x and
+                            (not self.collision(other) or
+                             other.bbox_right - 1 < x)):
                         stuck.append(other)
             if isinstance(self, SlopeBottomLeft):
                 for other in self.collision(Collider, x=(self.x - 1)):
                     x = self.get_slope_x(other.bbox_top)
-                    if other.bbox_right >= x and (not self.collision(other) or
-                                                  other.bbox_right - 1 < x):
+                    if (not other.nonstick_right and other.bbox_right >= x and
+                            (not self.collision(other) or
+                             other.bbox_right - 1 < x)):
                         stuck.append(other)
 
         if self.sticky_right:
             if isinstance(self, SolidRight):
                 for other in self.collision(Collider, x=(self.x + 1)):
-                    if not self.collision(other):
+                    if not other.nonstick_left and not self.collision(other):
                         stuck.append(other)
             if isinstance(self, SlopeTopRight):
                 for other in self.collision(Collider, x=(self.x + 1)):
                     x = self.get_slope_x(other.bbox_bottom)
-                    if other.bbox_left <= x and (not self.collision(other) or
-                                                 other.bbox_left + 1 > x):
+                    if (not other.nonstick_left and other.bbox_left <= x and
+                            (not self.collision(other) or
+                             other.bbox_left + 1 > x)):
                         stuck.append(other)
             if isinstance(self, SlopeBottomRight):
                 for other in self.collision(Collider, x=(self.x + 1)):
                     x = self.get_slope_x(other.bbox_top)
-                    if other.bbox_left <= x and (not self.collision(other) or
-                                                 other.bbox_left + 1 > x):
+                    if (not other.nonstick_left and other.bbox_left <= x and
+                            (not self.collision(other) or
+                             other.bbox_left + 1 > x)):
                         stuck.append(other)
 
         if self.sticky_top:
             if isinstance(self, SolidTop):
                 for other in self.collision(Collider, y=(self.y - 1)):
-                    if not self.collision(other):
+                    if not other.nonstick_bottom and not self.collision(other):
                         stuck.append(other)
             if isinstance(self, SlopeTopLeft):
                 for other in self.collision(Collider, y=(self.y - 1)):
                     y = self.get_slope_y(other.bbox_right)
-                    if other.bbox_bottom >= y and (not self.collision(other) or
-                                                   other.bbox_bottom - 1 < y):
+                    if (not other.nonstick_bottom and other.bbox_bottom >= y and
+                            (not self.collision(other) or
+                             other.bbox_bottom - 1 < y)):
                         stuck.append(other)
             if isinstance(self, SlopeTopRight):
                 for other in self.collision(Collider, y=(self.y - 1)):
                     y = self.get_slope_y(other.bbox_left)
-                    if other.bbox_bottom >= y and (not self.collision(other) or
-                                                   other.bbox_bottom - 1 < y):
+                    if (not other.nonstick_bottom and other.bbox_bottom >= y and
+                            (not self.collision(other) or
+                             other.bbox_bottom - 1 < y)):
                         stuck.append(other)
 
         if self.sticky_bottom:
             if isinstance(self, SolidBottom):
                 for other in self.collision(Collider, y=(self.y + 1)):
-                    if not self.collision(other):
+                    if not other.nonstick_top and not self.collision(other):
                         stuck.append(other)
             if isinstance(self, SlopeBottomLeft):
                 for other in self.collision(Collider, y=(self.y + 1)):
                     y = self.get_slope_y(other.bbox_right)
-                    if other.bbox_top <= y and (not self.collision(other) or
-                                                other.bbox_top + 1 > y):
+                    if (not other.nonstick_top and other.bbox_top <= y and
+                            (not self.collision(other) or
+                             other.bbox_top + 1 > y)):
                         stuck.append(other)
             if isinstance(self, SlopeBottomRight):
                 for other in self.collision(Collider, y=(self.y + 1)):
                     y = self.get_slope_y(other.bbox_left)
-                    if other.bbox_top <= y and (not self.collision(other) or
-                                                other.bbox_top + 1 > y):
+                    if (not other.nonstick_top and other.bbox_top <= y and
+                            (not self.collision(other) or
+                             other.bbox_top + 1 > y)):
                         stuck.append(other)
 
         return stuck

@@ -7,13 +7,6 @@ without any warranty.
 
 ========================================================================
 
-0.11.1
-------------------------------------------------------------------------
-
-Misc changes:
-* Updated to SGE 0.23.
-
-
 0.11
 ------------------------------------------------------------------------
 
@@ -22,6 +15,13 @@ Additions:
 + xsge_physics.MobileWall.push_right
 + xsge_physics.MobileWall.push_up
 + xsge_physics.MobileWall.push_down
++ xsge_physics.Collider.nonstick_left
++ xsge_physics.Collider.nonstick_right
++ xsge_physics.Collider.nonstick_top
++ xsge_physics.Collider.nonstick_bottom
+
+Misc changes:
+* Updated to SGE 0.23.
 
 
 0.10
