@@ -1,4 +1,4 @@
-Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+Copyright (C) 2014-2016 onpon4 <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -23,7 +23,7 @@ INSTALLATION
 First, install the dependencies:
 
 - Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
-- SGE Game Engine 0.17 or later <http://stellarengine.nongnu.org>
+- SGE Game Engine 0.23 or later <http://stellarengine.nongnu.org>
 - Six 1.4.0 or later <https://pypi.python.org/pypi/six>
 
 Once you have all the dependencies, install this package with the
