@@ -354,7 +354,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                     if (cls == default_cls and kwargs["sprite"] and
                             kwargs["sprite"].width == tilemap.tilewidth and
                             kwargs["sprite"].height == tilemap.tileheight and
-                            not tile_kwargs):
+                            not tile_kwargs.setdefault(tile.gid, {})):
                         if special:
                             id_ = (tile.gid, tile.hflip, tile.vflip, tile.dflip)
                             spr = tile_sprites.get(id_)
@@ -372,6 +372,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
 
                         tile_grid_tiles.append(spr)
                     else:
+                        tile_grid_tiles.append(None)
                         for j in tile_kwargs.setdefault(tile.gid, {}):
                             kwargs[j] = tile_kwargs[tile.gid][j]
 
@@ -520,7 +521,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)
             objects.append(sobj)
 
-        if tile_grid_tiles:
+        if any(tile_grid_tiles):
             # FIXME: Support orientation differences!
             render_method = tilemap.renderorder
 
@@ -528,7 +529,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                 tile_grid_tiles, render_method=render_method,
                 section_length=tilemap.width, tile_width=tilemap.tilewidth,
                 tile_height=tilemap.tileheight)
-            objects.append(Decoration, 0, 0, z, sprite=tile_grid)
+            objects.append(Decoration(0, 0, z, sprite=tile_grid))
 
         z += 1
 
