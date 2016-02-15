@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.10"
+__version__ = "0.10.1a0"
 
 import os
 
@@ -82,105 +82,6 @@ class Decoration(sge.dsp.Object):
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
             image_alpha=image_alpha, image_blend=image_blend)
-
-
-class RenderedTiles(sge.dsp.Object):
-
-    """
-    An object of this class takes all :class:`xsge_tmx.Decoration`
-    objects which:
-
-    * Have the same Z-axis value as this object;
-    * Have a sprite with only one frame;
-    * Are inactive;
-    * Are not tangible;
-    * Have no speed;
-    * Have no acceleration;
-    * Do not in any way reside outside of the room.
-
-    It then draws all such objects' sprites onto a single room-sized
-    sprite, which becomes this object's sprite, and destroys the
-    objects.
-
-    If such objects do not exist, this object is destroyed.
-
-    Effectively, this eliminates slowdown caused by looping through
-    hundreds or thousands of objects representing tiles.
-    """
-
-    def event_create(self):
-        rw = sge.game.current_room.width
-        rh = sge.game.current_room.height
-        my_tiles = []
-        for obj in sge.game.current_room.objects:
-            if (isinstance(obj, Decoration) and
-                    obj.z == self.z and obj.sprite is not None and
-                    obj.sprite.frames == 1 and not obj.active and
-                    not obj.tangible and not obj.speed and
-                    not obj.xacceleration and not obj.yacceleration and
-                    obj.x - obj.image_origin_x >= 0 and
-                    obj.x - obj.image_origin_x + obj.sprite.width < rw and
-                    obj.y - obj.image_origin_y >= 0 and
-                    obj.y - obj.image_origin_y + obj.sprite.height < rh):
-                my_tiles.append(obj)
-
-        if len(my_tiles) > 1:
-            self.tangible = False
-            self.sprite = sge.gfx.Sprite(width=rw, height=rh)
-            self.sprite.draw_lock()
-            for obj in my_tiles:
-                if obj.visible and obj.image_alpha:
-                    spr = obj.sprite.copy()
-
-                    if obj.image_blend is not None:
-                        bspr = sge.gfx.Sprite(width=spr.width,
-                                              height=spr.height)
-                        bspr.draw_rectangle(0, 0, bspr.width, bspr.height,
-                                            fill=obj.image_blend)
-                        spr.draw_sprite(bspr, 0, 0, 0,
-                                        blend_mode=sge.BLEND_RGB_MULTIPLY)
-
-                    if obj.image_alpha < 255:
-                        bspr = sge.gfx.Sprite(width=spr.width,
-                                              height=spr.height)
-                        bspr.draw_rectangle(
-                            0, 0, bspr.width, bspr.height, fill=sge.gfx.Color(
-                                (255, 255, 255, obj.image_alpha)))
-                        spr.draw_sprite(bspr, 0, 0, 0,
-                                        blend_mode=sge.BLEND_RGB_MULTIPLY)
-
-                    if obj.image_xscale < 0:
-                        spr.mirror()
-
-                    if obj.image_yscale < 0:
-                        spr.flip()
-
-                    spr.width *= abs(obj.image_xscale)
-                    spr.height *= abs(obj.image_yscale)
-
-                    origin_x = spr.origin_x
-                    origin_y = spr.origin_y
-
-                    if obj.image_rotation % 360:
-                        spr.rotate(obj.image_rotation)
-
-                    if obj.image_origin_x is not None:
-                        spr.origin_x = obj.image_origin_x
-                    else:
-                        spr.origin_x = origin_x
-
-                    if obj.image_origin_y is not None:
-                        spr.origin_y = obj.image_origin_y
-                    else:
-                        spr.origin_y = origin_y
-
-                    self.sprite.draw_sprite(spr, 0, obj.x, obj.y)
-
-                obj.destroy()
-
-            self.sprite.draw_unlock()
-        else:
-            self.destroy()
 
 
 class Rectangle(sge.dsp.Object):
@@ -418,6 +319,8 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
     objects = []
     views = []
     for layer in tilemap.layers:
+        tile_grid_tiles = []
+
         if isinstance(layer, tmx.Layer):
             default_cls = types.get(layer.name, Decoration)
             default_kwargs = {"z": z}
@@ -436,35 +339,60 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                     cls = tile_cls.get(tile.gid, default_cls)
                     kwargs = default_kwargs.copy()
                     kwargs["sprite"] = tile_sprites.get(tile.gid)
+                    special = False
                     if tile.hflip:
                         kwargs["image_xscale"] = -1
+                        special = True
                     if tile.vflip:
                         kwargs["image_yscale"] = -1
+                        special = True
                     if tile.dflip:
                         kwargs["image_yscale"] = -kwargs.get("image_yscale", 1)
-                        kwargs["image_rotation"] = 90
+                        kwargs["image_rotation"] = 270
+                        special = True
 
-                    for j in tile_kwargs.setdefault(tile.gid, {}):
-                        kwargs[j] = tile_kwargs[tile.gid][j]
-
-                    x = (i % tilemap.width) * tilemap.tilewidth
-                    y = (i // tilemap.width) * tilemap.tileheight
-                    y += tilemap.tileheight - kwargs["sprite"].height
-
-                    obj = cls(x + offsetx, y + offsety, **kwargs)
-                    objects.append(obj)
-                    if i % tilemap.width:
-                        if tilemap.renderorder.startswith("left"):
-                            row.insert(obj)
+                    if (cls == default_cls and kwargs["sprite"] and
+                            kwargs["sprite"].width == tilemap.tilewidth and
+                            kwargs["sprite"].height == tilemap.tileheight and
+                            not tile_kwargs):
+                        if special:
+                            id_ = (tile.gid, tile.hflip, tile.vflip, tile.dflip)
+                            spr = tile_sprites.get(id_)
+                            if spr is None:
+                                spr = kwargs["sprite"].copy()
+                                if kwargs["image_xscale"] < 0:
+                                    spr.mirror()
+                                if kwargs["image_yscale"] < 0:
+                                    spr.flip()
+                                if kwargs["image_rotation"] % 360:
+                                    spr.rotate(kwargs["image_rotation"])
+                                tile_sprites[id_] = spr
                         else:
-                            row.append(obj)
+                            spr = kwargs["sprite"]
+
+                        tile_grid_tiles.append(spr)
                     else:
-                        if tilemap.renderorder.endswith("up"):
-                            objects = row + objects
-                        else:
-                            objects.extend(row)
+                        for j in tile_kwargs.setdefault(tile.gid, {}):
+                            kwargs[j] = tile_kwargs[tile.gid][j]
 
-                        row = [obj]
+                        x = (i % tilemap.width) * tilemap.tilewidth
+                        y = (i // tilemap.width) * tilemap.tileheight
+                        y += tilemap.tileheight - kwargs["sprite"].height
+
+                        obj = cls(x + offsetx, y + offsety, **kwargs)
+                        objects.append(obj)
+                        if i % tilemap.width:
+                            if tilemap.renderorder.startswith("left"):
+                                row.insert(obj)
+                            else:
+                                row.append(obj)
+                        else:
+                            if tilemap.renderorder.endswith("up"):
+                                objects = row + objects
+                            else:
+                                objects.extend(row)
+
+                            row = [obj]
 
             if tilemap.renderorder.endswith("up"):
                 objects = row + objects
@@ -503,7 +431,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                     kwargs = default_kwargs.copy()
 
                     if obj.rotation % 360:
-                        kwargs["image_rotation"] = -obj.rotation
+                        kwargs["image_rotation"] = obj.rotation
 
                     for prop in obj.properties:
                         kwargs[prop.name] = _nconvert(prop.value)
@@ -592,7 +520,15 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)
             objects.append(sobj)
 
-        objects.append(RenderedTiles(0, 0, z))
+        if tile_grid_tiles:
+            # FIXME: Support orientation differences!
+            render_method = tilemap.renderorder
+
+            tile_grid = sge.gfx.TileGrid(
+                tile_grid_tiles, render_method=render_method,
+                section_length=tilemap.width, tile_width=tilemap.tilewidth,
+                tile_height=tilemap.tileheight)
+            objects.append(Decoration, 0, 0, z, sprite=tile_grid)
 
         z += 1
 
