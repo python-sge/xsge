@@ -372,16 +372,12 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                             spr = kwargs["sprite"]
 
                         if i % tilemap.width:
-                            if tilemap.renderorder.startswith("left"):
-                                tile_row.insert(0, spr)
-                            else:
-                                tile_row.append(spr)
+                            tile_row.append(spr)
                         else:
+                            tile_grid_tiles.extend(tile_row)
                             if tilemap.renderorder.endswith("up"):
-                                tile_grid_tiles = tile_row + tile_grid_tiles
                                 objects = row + objects
                             else:
-                                tile_grid_tiles.extend(tile_row)
                                 objects.extend(row)
 
                             tile_row = [spr]
@@ -397,42 +393,32 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                         obj = cls(x + offsetx, y + offsety, **kwargs)
                         objects.append(obj)
                         if i % tilemap.width:
+                            tile_row.append(None)
                             if tilemap.renderorder.startswith("left"):
                                 row.insert(0, obj)
-                                tile_row.insert(0, None)
                             else:
                                 row.append(obj)
-                                tile_row.append(None)
-                        else:
-                            if tilemap.renderorder.endswith("up"):
-                                objects = row + objects
-                                tile_grid_tiles = tile_row + tile_grid_tiles
-                            else:
-                                objects.extend(row)
-                                tile_grid_tiles.extend(tile_row)
-
-                            row = [obj]
-                            tile_row = [None]
-                else:
-                    if i % tilemap.width:
-                        if tilemap.renderorder.startswith("left"):
-                            tile_row.insert(0, None)
-                        else:
-                            tile_row.append(None)
-                    else:
-                        if tilemap.renderorder.endswith("up"):
-                            tile_grid_tiles = tile_row + tile_grid_tiles
                         else:
                             tile_grid_tiles.extend(tile_row)
+                            if tilemap.renderorder.endswith("up"):
+                                objects = row + objects
+                            else:
+                                objects.extend(row)
 
+                            tile_row = [None]
+                            row = [obj]
+                else:
+                    if i % tilemap.width:
+                        tile_row.append(None)
+                    else:
+                        tile_grid_tiles.extend(tile_row)
                         tile_row = [None]
 
+            tile_grid_tiles.extend(tile_row)
             if tilemap.renderorder.endswith("up"):
                 objects = row + objects
-                tile_grid_tiles = tile_row + tile_grid_tiles
             else:
                 objects.extend(row)
-                tile_grid_tiles.extend(tile_row)
 
             if any(tile_grid_tiles):
                 if tilemap.orientation == "staggered":
