@@ -332,6 +332,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                 default_kwargs[prop.name] = _nconvert(prop.value)
 
             row = []
+            tile_row = []
 
             for i in six.moves.range(len(layer.tiles)):
                 tile = layer.tiles[i]
@@ -370,9 +371,22 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                         else:
                             spr = kwargs["sprite"]
 
-                        tile_grid_tiles.append(spr)
+                        if i % tilemap.width:
+                            if tilemap.renderorder.startswith("left"):
+                                tile_row.insert(0, spr)
+                            else:
+                                tile_row.append(spr)
+                        else:
+                            if tilemap.renderorder.endswith("up"):
+                                tile_grid_tiles = tile_row + tile_grid_tiles
+                                objects = row + objects
+                            else:
+                                tile_grid_tiles.extend(tile_row)
+                                objects.extend(row)
+
+                            tile_row = [spr]
+                            row = []
                     else:
-                        tile_grid_tiles.append(None)
                         for j in tile_kwargs.setdefault(tile.gid, {}):
                             kwargs[j] = tile_kwargs[tile.gid][j]
 
@@ -384,27 +398,47 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                         objects.append(obj)
                         if i % tilemap.width:
                             if tilemap.renderorder.startswith("left"):
-                                row.insert(obj)
+                                row.insert(0, obj)
+                                tile_row.insert(0, None)
                             else:
                                 row.append(obj)
+                                tile_row.append(None)
                         else:
                             if tilemap.renderorder.endswith("up"):
                                 objects = row + objects
+                                tile_grid_tiles = tile_row + tile_grid_tiles
                             else:
                                 objects.extend(row)
+                                tile_grid_tiles.extend(tile_row)
 
                             row = [obj]
+                            tile_row = [None]
                 else:
-                    tile_grid_tiles.append(None)
+                    if i % tilemap.width:
+                        if tilemap.renderorder.startswith("left"):
+                            tile_row.insert(0, None)
+                        else:
+                            tile_row.append(None)
+                    else:
+                        if tilemap.renderorder.endswith("up"):
+                            tile_grid_tiles = tile_row + tile_grid_tiles
+                        else:
+                            tile_grid_tiles.extend(tile_row)
+
+                        tile_row = [None]
 
             if tilemap.renderorder.endswith("up"):
                 objects = row + objects
+                tile_grid_tiles = tile_row + tile_grid_tiles
             else:
                 objects.extend(row)
+                tile_grid_tiles.extend(tile_row)
 
             if any(tile_grid_tiles):
-                # FIXME: Support orientation differences!
-                render_method = tilemap.renderorder
+                if tilemap.orientation == "staggered":
+                    render_method = "isometric"
+                else:
+                    render_method = "orthogonal"
 
                 tile_grid = sge.gfx.TileGrid(
                     tile_grid_tiles, render_method=render_method,
