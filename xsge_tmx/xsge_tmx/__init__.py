@@ -319,9 +319,9 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
     objects = []
     views = []
     for layer in tilemap.layers:
-        tile_grid_tiles = []
-
         if isinstance(layer, tmx.Layer):
+            tile_grid_tiles = []
+
             default_cls = types.get(layer.name, Decoration)
             default_kwargs = {"z": z}
 
@@ -394,11 +394,23 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                                 objects.extend(row)
 
                             row = [obj]
+                else:
+                    tile_grid_tiles.append(None)
 
             if tilemap.renderorder.endswith("up"):
                 objects = row + objects
             else:
                 objects.extend(row)
+
+            if any(tile_grid_tiles):
+                # FIXME: Support orientation differences!
+                render_method = tilemap.renderorder
+
+                tile_grid = sge.gfx.TileGrid(
+                    tile_grid_tiles, render_method=render_method,
+                    section_length=tilemap.width, tile_width=tilemap.tilewidth,
+                    tile_height=tilemap.tileheight)
+                objects.append(Decoration(0, 0, z, sprite=tile_grid))
                     
         elif isinstance(layer, tmx.ObjectGroup):
             default_kwargs = {"z": z}
@@ -520,16 +532,6 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                 sprite = None
             sobj = cls(layer.x, layer.y, z, sprite=sprite, **kwargs)
             objects.append(sobj)
-
-        if any(tile_grid_tiles):
-            # FIXME: Support orientation differences!
-            render_method = tilemap.renderorder
-
-            tile_grid = sge.gfx.TileGrid(
-                tile_grid_tiles, render_method=render_method,
-                section_length=tilemap.width, tile_width=tilemap.tilewidth,
-                tile_height=tilemap.tileheight)
-            objects.append(Decoration(0, 0, z, sprite=tile_grid))
 
         z += 1
 
