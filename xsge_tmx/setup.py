@@ -57,7 +57,7 @@ setup(name="xsge_tmx",
       packages=["xsge_tmx"],
       package_dir={"xsge_tmx": "xsge_tmx"},
       package_data={"xsge_tmx": ["COPYING"]},
-      requires=["sge (>=0.23)", "six (>=1.4.0)", "tmx (>=1.4.1)",
+      requires=["sge (>=0.24)", "six (>=1.4.0)", "tmx (>=1.4.1)",
                 "xsge_path"],
       provides=["xsge_tmx"],
      )
