@@ -7,6 +7,14 @@ without any warranty.
 
 ========================================================================
 
+0.10.1
+------------------------------------------------------------------------
+
+Misc changes:
+* Changed to use xsge.gfx.TileGrid objects.  This way is slightly faster
+  and uses substantially less RAM.
+
+
 0.10
 ------------------------------------------------------------------------
 
