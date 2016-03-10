@@ -38,13 +38,13 @@ than building a level editor yourself.
 """.strip()
 
 setup(name="xsge_tmx",
-      version="0.10.1a0",
+      version="0.10.1",
       description="xSGE TMX Library",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
