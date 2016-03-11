@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
+# Copyright (C) 2014-2016 onpon4 <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'xSGE GUI Toolkit'
-copyright = '2014, 2015 Julian Marchant'
+copyright = '2014-2016 onpon4'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -175,7 +175,7 @@ html_show_copyright = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'xSGEdoc'
+htmlhelp_basename = 'xsge_guidoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -194,8 +194,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'xSGE.tex', 'xSGE Documentation',
-   'Julian Marchant', 'manual'),
+  ('index', 'xsge_gui.tex', 'xSGE GUI Toolkit Documentation',
+   'onpon4', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -224,8 +224,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'xsge', 'xSGE Documentation',
-     ['Julian Marchant'], 1)
+    ('index', 'xsge_gui', 'xSGE GUI Toolkit Documentation',
+     ['onpon4'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -238,8 +238,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'xSGE', 'xSGE Documentation',
-   'Julian Marchant', 'xSGE', 'One line description of project.',
+  ('index', 'xsge_gui', 'xSGE GUI Toolkit Documentation',
+   'onpon4', 'xSGE', '',
    'Miscellaneous'),
 ]
 
