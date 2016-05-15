@@ -37,13 +37,13 @@ as well as support for modal dialog boxes.
 """.strip()
 
 setup(name="xsge_gui",
-      version="0.10",
+      version="1.0",
       description="xSGE GUI Toolkit",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -56,6 +56,6 @@ setup(name="xsge_gui",
       packages=["xsge_gui"],
       package_dir={"xsge_gui": "xsge_gui"},
       package_data={"xsge_gui": ["COPYING", "data/*"]},
-      requires=["sge (>=0.23)", "six (>=1.4.0)"],
+      requires=["sge (>=1.0, <2.0)", "six (>=1.4.0)"],
       provides=["xsge_gui"],
      )

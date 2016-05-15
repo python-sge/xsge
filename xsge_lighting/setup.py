@@ -36,13 +36,13 @@ This extension provides a simple interface for lighting.
 """.strip()
 
 setup(name="xsge_lighting",
-      version="0.9.1",
+      version="1.0",
       description="xSGE Lighting Library",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -55,6 +55,6 @@ setup(name="xsge_lighting",
       packages=["xsge_lighting"],
       package_dir={"xsge_lighting": "xsge_lighting"},
       package_data={"xsge_lighting": ["COPYING"]},
-      requires=["sge (>=0.23)", "six (>=1.4.0)"],
+      requires=["sge (>=1.0, <2.0)", "six (>=1.4.0)"],
       provides=["xsge_lighting"],
      )

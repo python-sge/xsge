@@ -38,13 +38,13 @@ for other types of games.
 """.strip()
 
 setup(name="xsge_physics",
-      version="0.11",
+      version="0.11.1",
       description="xSGE Physics Framework",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -57,6 +57,6 @@ setup(name="xsge_physics",
       packages=["xsge_physics"],
       package_dir={"xsge_physics": "xsge_physics"},
       package_data={"xsge_physics": ["COPYING"]},
-      requires=["sge (>=0.23)"],
+      requires=["sge (>=1.0, <2.0)"],
       provides=["xsge_physics"],
      )

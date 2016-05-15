@@ -37,13 +37,13 @@ objects move in a certain way.
 """.strip()
 
 setup(name="xsge_path",
-      version="0.9.2",
+      version="1.0",
       description="xSGE Path",
       long_description=long_description,
       author="onpon4",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -56,6 +56,6 @@ setup(name="xsge_path",
       packages=["xsge_path"],
       package_dir={"xsge_path": "xsge_path"},
       package_data={"xsge_path": ["COPYING"]},
-      requires=["sge (>=0.23)"],
+      requires=["sge (>=1.0, <2.0)"],
       provides=["xsge_path"],
      )
