@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 import os
 import weakref
@@ -922,21 +922,32 @@ class Window(object):
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
         """
-        if key in next_widget_keys:
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        next_widget_keys_ = next_widget_keys
+        previous_widget_keys_ = previous_widget_keys
+        left_keys_ = left_keys
+        right_keys_ = right_keys
+        up_keys_ = up_keys
+        down_keys_ = down_keys
+        enter_keys_ = enter_keys
+        escape_keys_ = escape_keys
+
+        if key in next_widget_keys_:
             self._kb_focus_move(1)
-        if key in previous_widget_keys:
+        if key in previous_widget_keys_:
             self._kb_focus_move(-1)
-        if key in left_keys:
+        if key in left_keys_:
             self.event_press_left()
-        if key in right_keys:
+        if key in right_keys_:
             self.event_press_right()
-        if key in up_keys:
+        if key in up_keys_:
             self.event_press_up()
-        if key in down_keys:
+        if key in down_keys_:
             self.event_press_down()
-        if key in enter_keys:
+        if key in enter_keys_:
             self.event_press_enter()
-        if key in escape_keys:
+        if key in escape_keys_:
             self.event_press_escape()
 
     def event_key_release(self, key):
@@ -945,17 +956,26 @@ class Window(object):
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
         """
-        if key in left_keys:
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        left_keys_ = left_keys
+        right_keys_ = right_keys
+        up_keys_ = up_keys
+        down_keys_ = down_keys
+        enter_keys_ = enter_keys
+        escape_keys_ = escape_keys
+
+        if key in left_keys_:
             self.event_release_left()
-        if key in right_keys:
+        if key in right_keys_:
             self.event_release_right()
-        if key in up_keys:
+        if key in up_keys_:
             self.event_release_up()
-        if key in down_keys:
+        if key in down_keys_:
             self.event_release_down()
-        if key in enter_keys:
+        if key in enter_keys_:
             self.event_release_enter()
-        if key in escape_keys:
+        if key in escape_keys_:
             self.event_release_escape()
 
     def event_mouse_button_press(self, button):
@@ -1020,38 +1040,49 @@ class Window(object):
         keyboard focus.  See the documentation for
         :class:`sge.inputJoystickEvent` for more information.
         """
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        next_widget_joystick_events_ = next_widget_joystick_events
+        previous_widget_joystick_events_ = previous_widget_joystick_events
+        left_joystick_events_ = left_joystick_events
+        right_joystick_events_ = right_joystick_events
+        up_joystick_events_ = up_joystick_events
+        down_joystick_events_ = down_joystick_events
+        enter_joystick_events_ = enter_joystick_events
+        escape_joystick_events_ = escape_joystick_events
+
         js = (js_id, input_type, input_id)
         prev = self._joystick_prev.get(js, 0)
         self._joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
-            if js in next_widget_joystick_events:
+            if js in next_widget_joystick_events_:
                 self._kb_focus_move(1)
-            if js in previous_widget_joystick_events:
+            if js in previous_widget_joystick_events_:
                 self._kb_focus_move(-1)
-            if js in left_joystick_events:
+            if js in left_joystick_events_:
                 self.event_press_left()
-            if js in right_joystick_events:
+            if js in right_joystick_events_:
                 self.event_press_right()
-            if js in up_joystick_events:
+            if js in up_joystick_events_:
                 self.event_press_up()
-            if js in down_joystick_events:
+            if js in down_joystick_events_:
                 self.event_press_down()
-            if js in enter_joystick_events:
+            if js in enter_joystick_events_:
                 self.event_press_enter()
-            if js in escape_joystick_events:
+            if js in escape_joystick_events_:
                 self.event_press_escape()
         elif value < joystick_threshold and prev >= joystick_threshold:
-            if js in left_joystick_events:
+            if js in left_joystick_events_:
                 self.event_release_left()
-            if js in right_joystick_events:
+            if js in right_joystick_events_:
                 self.event_release_right()
-            if js in up_joystick_events:
+            if js in up_joystick_events_:
                 self.event_release_up()
-            if js in down_joystick_events:
+            if js in down_joystick_events_:
                 self.event_release_down()
-            if js in enter_joystick_events:
+            if js in enter_joystick_events_:
                 self.event_release_enter()
-            if js in escape_joystick_events:
+            if js in escape_joystick_events_:
                 self.event_release_escape()
 
     def event_press_left(self):
@@ -1893,17 +1924,26 @@ class Widget(object):
         focus.  See the documentation for :class:`sge.input.KeyPress`
         for more information.
         """
-        if key in left_keys:
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        left_keys_ = left_keys
+        right_keys_ = right_keys
+        up_keys_ = up_keys
+        down_keys_ = down_keys
+        enter_keys_ = enter_keys
+        escape_keys_ = escape_keys
+
+        if key in left_keys_:
             self.event_press_left()
-        if key in right_keys:
+        if key in right_keys_:
             self.event_press_right()
-        if key in up_keys:
+        if key in up_keys_:
             self.event_press_up()
-        if key in down_keys:
+        if key in down_keys_:
             self.event_press_down()
-        if key in enter_keys:
+        if key in enter_keys_:
             self.event_press_enter()
-        if key in escape_keys:
+        if key in escape_keys_:
             self.event_press_escape()
 
     def event_key_release(self, key):
@@ -1912,17 +1952,26 @@ class Widget(object):
         focus.  See the documentation for :class:`sge.input.KeyRelease`
         for more information.
         """
-        if key in left_keys:
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        left_keys_ = left_keys
+        right_keys_ = right_keys
+        up_keys_ = up_keys
+        down_keys_ = down_keys
+        enter_keys_ = enter_keys
+        escape_keys_ = escape_keys
+
+        if key in left_keys_:
             self.event_release_left()
-        if key in right_keys:
+        if key in right_keys_:
             self.event_release_right()
-        if key in up_keys:
+        if key in up_keys_:
             self.event_release_up()
-        if key in down_keys:
+        if key in down_keys_:
             self.event_release_down()
-        if key in enter_keys:
+        if key in enter_keys_:
             self.event_release_enter()
-        if key in escape_keys:
+        if key in escape_keys_:
             self.event_release_escape()
 
     def event_mouse_button_press(self, button):
@@ -1987,34 +2036,43 @@ class Widget(object):
         keyboard focus.  See the documentation for
         :class:`sge.input.JoystickEvent` for more information.
         """
+        # Localize these variables so that changes made during this
+        # event don't screw everything up.
+        left_joystick_events_ = left_joystick_events
+        right_joystick_events_ = right_joystick_events
+        up_joystick_events_ = up_joystick_events
+        down_joystick_events_ = down_joystick_events
+        enter_joystick_events_ = enter_joystick_events
+        escape_joystick_events_ = escape_joystick_events
+
         js = (js_id, input_type, input_id)
         prev = self._joystick_prev.get(js, 0)
         self._joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
-            if js in left_joystick_events:
+            if js in left_joystick_events_:
                 self.event_press_left()
-            if js in right_joystick_events:
+            if js in right_joystick_events_:
                 self.event_press_right()
-            if js in up_joystick_events:
+            if js in up_joystick_events_:
                 self.event_press_up()
-            if js in down_joystick_events:
+            if js in down_joystick_events_:
                 self.event_press_down()
-            if js in enter_joystick_events:
+            if js in enter_joystick_events_:
                 self.event_press_enter()
-            if js in escape_joystick_events:
+            if js in escape_joystick_events_:
                 self.event_press_escape()
         elif value < joystick_threshold and prev >= joystick_threshold:
-            if js in left_joystick_events:
+            if js in left_joystick_events_:
                 self.event_release_left()
-            if js in right_joystick_events:
+            if js in right_joystick_events_:
                 self.event_release_right()
-            if js in up_joystick_events:
+            if js in up_joystick_events_:
                 self.event_release_up()
-            if js in down_joystick_events:
+            if js in down_joystick_events_:
                 self.event_release_down()
-            if js in enter_joystick_events:
+            if js in enter_joystick_events_:
                 self.event_release_enter()
-            if js in escape_joystick_events:
+            if js in escape_joystick_events_:
                 self.event_release_escape()
 
     def event_press_left(self):
