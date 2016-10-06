@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0.1"
+__version__ = "1.0.2a0"
 
 import os
 import weakref
@@ -1618,8 +1618,6 @@ class MenuWindow(Window):
                    background_color=background_color)
 
         ih = height - 2 * margin
-        ih += ((height - margin - item_h) - ih *
-               ((len(item_sprites) - 1) / len(item_sprites)))
         for i in six.moves.range(len(item_sprites)):
             n_spr, s_spr = item_sprites[i]
             iy = n_spr.origin_y + margin + ih * i / len(item_sprites)
