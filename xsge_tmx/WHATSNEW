@@ -12,6 +12,9 @@ without any warranty.
 
 Misc changes:
 * Updated to support the latest TMX features.
+* The conventions for assigning class based on tileset are now given a
+  higher priority than the ones for assigning class based on layer
+  names.
 
 
 0.10.1

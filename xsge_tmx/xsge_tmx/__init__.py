@@ -67,7 +67,7 @@ class Decoration(sge.dsp.Object):
                  ydeceleration=0, image_index=0, image_origin_x=None,
                  image_origin_y=None, image_fps=None, image_xscale=1,
                  image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+                 image_blend=None, image_blend_mode=None):
         super(Decoration, self).__init__(
             x, y, z=z, sprite=sprite, visible=visible, active=active,
             checks_collisions=checks_collisions, tangible=tangible,
@@ -81,7 +81,8 @@ class Decoration(sge.dsp.Object):
             image_origin_x=image_origin_x, image_origin_y=image_origin_y,
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend)
+            image_alpha=image_alpha, image_blend=image_blend,
+            image_blend_mode=image_blend_mode)
 
 
 class Rectangle(sge.dsp.Object):
@@ -100,7 +101,7 @@ class Rectangle(sge.dsp.Object):
                  ydeceleration=0, image_index=0, image_origin_x=None,
                  image_origin_y=None, image_fps=None, image_xscale=1,
                  image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+                 image_blend=None, image_blend_mode=None):
         super(Rectangle, self).__init__(
             x, y, z=z, sprite=sprite, visible=visible, active=active,
             checks_collisions=checks_collisions, tangible=tangible,
@@ -114,7 +115,8 @@ class Rectangle(sge.dsp.Object):
             image_origin_x=image_origin_x, image_origin_y=image_origin_y,
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend)
+            image_alpha=image_alpha, image_blend=image_blend,
+            image_blend_mode=image_blend_mode)
 
 
 class Ellipse(sge.dsp.Object):
@@ -134,7 +136,7 @@ class Ellipse(sge.dsp.Object):
                  ydeceleration=0, image_index=0, image_origin_x=None,
                  image_origin_y=None, image_fps=None, image_xscale=1,
                  image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+                 image_blend=None, image_blend_mode=None):
         super(Ellipse, self).__init__(
             x, y, z=z, sprite=sprite, visible=visible, active=active,
             checks_collisions=checks_collisions, tangible=tangible,
@@ -148,7 +150,8 @@ class Ellipse(sge.dsp.Object):
             image_origin_x=image_origin_x, image_origin_y=image_origin_y,
             image_fps=image_fps, image_xscale=image_xscale,
             image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend)
+            image_alpha=image_alpha, image_blend=image_blend,
+            image_blend_mode=image_blend_mode)
 
 
 class Polygon(xsge_path.Path):
@@ -195,16 +198,17 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
       :class:`xsge_tmx.Decoration` is used.
 
     - Objects are converted to the class connected to, in order of
-      preference, the name of the object, the type of the object, or the
-      name of the object group.  If none of these strings are valid keys
-      in ``types``, the class used depends on what kind of object it is:
+      preference, the name of the object, the type of the object, the
+      appropriate class for the respective tile if applicable (see
+      above), or the name of the object group.  If none of these strings
+      are valid keys in ``types``, the class used depends on what kind
+      of object it is:
 
       - Rectangle objects default to :class:`xsge_tmx.Rectangle`.
       - Ellipse objects default to :class:`xsge_tmx.Ellipse`.
       - Polygon objects default to :class:`xsge_tmx.Polygon`.
       - Polyline objects default to :class:`xsge_tmx.Polyline`.
-      - Tile objects default to the appropriate class for the given
-        tile (see above).
+      - Tile objects default to :class:`xsge_tmx.Decoration`.
 
     - Image layers are converted to the class connected to the image
       layer's name.  If the image layer's name is not a valid key in
@@ -479,7 +483,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                     color = None
 
                 for obj in layer.objects:
-                    cls = types.get(obj.name, types.get(obj.type, default_cls))
+                    cls = types.get(obj.name, types.get(obj.type))
                     kwargs = default_kwargs.copy()
 
                     if obj.rotation % 360:
@@ -490,7 +494,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
 
                     if obj.gid is not None:
                         if cls is None:
-                            cls = tile_cls.get(obj.gid, Decoration)
+                            cls = tile_cls.get(obj.gid)
                         kwargs["sprite"] = tile_sprites.get(obj.gid)
                         w = obj.width
                         h = obj.height
@@ -507,10 +511,6 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                             elif h != sh:
                                 kwargs["image_yscale"] = h / sh
 
-                        x = (obj.x if tilemap.orientation == "orthogonal" else
-                             obj.x - (w / 2))
-                        y = obj.y - h
-
                         for i in tile_kwargs.setdefault(obj.gid, {}):
                             kwargs[i] = tile_kwargs[obj.gid][i]
 
@@ -518,6 +518,17 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                         # object properties priority, and harmless.
                         for prop in obj.properties:
                             kwargs[prop.name] = _nconvert(prop.value)
+
+                    if cls is None:
+                        cls = default_cls
+
+                    if obj.gid is not None:
+                        if cls is None:
+                            cls = Decoration
+
+                        x = (obj.x if tilemap.orientation == "orthogonal" else
+                             obj.x - (w / 2))
+                        y = obj.y - h
 
                         objects.append(cls(x + offsetx, y + offsety, **kwargs))
                     elif obj.ellipse:
