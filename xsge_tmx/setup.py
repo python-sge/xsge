@@ -1,5 +1,5 @@
 # setup.py
-# Copyright (C) 2012-2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2012-2016 Julie Marchant <onpon4@riseup.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -38,10 +38,10 @@ than building a level editor yourself.
 """.strip()
 
 setup(name="xsge_tmx",
-      version="1.0",
+      version="1.0.1a0",
       description="xSGE TMX Library",
       long_description=long_description,
-      author="onpon4",
+      author="Julie Marchant",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
       classifiers=["Development Status :: 5 - Production/Stable",
@@ -57,7 +57,7 @@ setup(name="xsge_tmx",
       packages=["xsge_tmx"],
       package_dir={"xsge_tmx": "xsge_tmx"},
       package_data={"xsge_tmx": ["COPYING"]},
-      requires=["sge (>=1.0, <2.0)", "six (>=1.4.0)", "tmx (>=1.4.1)",
+      requires=["sge (>=1.0, <2.0)", "six (>=1.4.0)", "tmx (>=1.9)",
                 "xsge_path"],
       provides=["xsge_tmx"],
      )

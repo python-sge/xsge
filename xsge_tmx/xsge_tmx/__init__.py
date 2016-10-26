@@ -1,5 +1,5 @@
 # xSGE TMX Library
-# Copyright (c) 2014-2016 onpon4 <onpon4@riseup.net>
+# Copyright (c) 2014-2016 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0"
+__version__ = "1.0.1a0"
 
 import os
 
@@ -308,10 +308,9 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
     room_width = tilemap.width * tilemap.tilewidth
     room_height = tilemap.height * tilemap.tileheight
 
-    if tilemap.backgroundcolor is not None:
-        if not tilemap.backgroundcolor.startswith("#"):
-            tilemap.backgroundcolor = "#" + tilemap.backgroundcolor
-        color = sge.gfx.Color(tilemap.backgroundcolor)
+    c = tilemap.backgroundcolor
+    if c is not None:
+        color = sge.gfx.Color((c.red, c.green, c.blue))
         background = sge.gfx.Background([], color)
     else:
         background = None
@@ -452,10 +451,9 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
             else:
                 default_cls = types.get(layer.name)
 
-                if layer.color is not None:
-                    if not layer.color.startswith("#"):
-                        layer.color = "#" + layer.color
-                    color = sge.gfx.Color(layer.color)
+                c = layer.color
+                if c is not None:
+                    color = sge.gfx.Color((c.red, c.green, c.blue))
                 else:
                     color = None
 

@@ -1,7 +1,6 @@
 @ECHO OFF
 
 REM Command file for Sphinx documentation
-REM Copyright (C) 2014, 2015 Julian Marchant <onpon4@riseup.net>
 REM
 REM Permission is hereby granted, free of charge, to any person obtaining
 REM a copy of this software and associated documentation files (the
