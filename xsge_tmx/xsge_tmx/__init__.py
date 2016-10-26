@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0.1a0"
+__version__ = "1.1a0"
 
 import os
 
@@ -285,7 +285,28 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
         for tile in tileset.tiles:
             i = tileset.firstgid + tile.id
 
-            if tile.image is not None:
+            if tile.animation:
+                # Use average frame rate (since the SGE can't animate
+                # different frames at different rates in an easy way)
+                fps = (1000 * len(tile.animation) /
+                       sum([j.duration for j in tile.animation]))
+                spr = sge.gfx.Sprite(width=1, height=1, fps=fps)
+
+                while spr.frames < len(tile.animation):
+                    spr.append_frame()
+
+                for j in six.moves.range(len(tile.animation)):
+                    frame = tile.animation[j]
+                    frame_spr = tile_sprites[tileset.firstgid + frame.tileid]
+                    w = max(spr.width, frame_spr.width)
+                    h = max(spr.height, frame_spr.height)
+                    if w > spr.width or h > spr.height:
+                        spr.resize_canvas(w, h)
+                    spr.draw_sprite(frame_spr, 0, 0, 0, frame=j)
+
+                tile_sprites[i] = spr
+                    
+            elif tile.image is not None:
                 if tile.image.source is not None:
                     source = tile.image.source
                 else:
