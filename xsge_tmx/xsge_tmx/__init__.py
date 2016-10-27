@@ -376,7 +376,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                         kwargs["image_rotation"] = 270
                         special = True
 
-                    if (cls == default_cls and kwargs["sprite"] and
+                    if (cls == Decoration and kwargs["sprite"] and
                             kwargs["sprite"].width == tilemap.tilewidth and
                             kwargs["sprite"].height == tilemap.tileheight and
                             not tile_kwargs.setdefault(tile.gid, {})):

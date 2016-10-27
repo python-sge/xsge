@@ -16,6 +16,9 @@ Misc changes:
   higher priority than the ones for assigning class based on layer
   names.
 
+Bugfixes:
+- Bad check for whether to use tile layers as tiles
+
 
 0.10.1
 ------------------------------------------------------------------------
