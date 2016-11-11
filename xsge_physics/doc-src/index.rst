@@ -53,6 +53,11 @@ xsge_physics.Collider Event Methods
 
 .. automethod:: xsge_physics.Collider.event_physics_collision_bottom
 
+xsge_physics.Wall
+-----------------
+
+.. autoclass:: xsge_physics.Wall
+
 xsge_physics.SolidLeft
 ----------------------
 
@@ -108,6 +113,11 @@ xsge_physics.Solid Event Methods
 .. automethod:: xsge_physics.Solid.event_physics_collision_top
 
 .. automethod:: xsge_physics.Solid.event_physics_collision_bottom
+
+xsge_physics.Slope
+------------------
+
+.. autoclass:: xsge_physics.Slope
 
 xsge_physics.SlopeTopLeft
 -------------------------

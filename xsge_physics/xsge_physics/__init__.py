@@ -46,7 +46,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.11.1"
+__version__ = "0.12a0"
 
 import math
 
@@ -979,7 +979,16 @@ class Collider(sge.dsp.Object):
         pass
 
 
-class SolidLeft(sge.dsp.Object):
+class Wall(sge.dsp.Object):
+
+    """
+    Base class for all wall objects that :class:`Collider` objects
+    interact with in some way.  It is functionally identical to its
+    parent class, :class:`sge.dsp.Object`.
+    """
+
+
+class SolidLeft(Wall):
 
     """
     Class for walls which stop movement of :class:`Collider` objects
@@ -996,7 +1005,7 @@ class SolidLeft(sge.dsp.Object):
         pass
 
 
-class SolidRight(sge.dsp.Object):
+class SolidRight(Wall):
 
     """
     Class for walls which stop movement of :class:`Collider` objects
@@ -1013,7 +1022,7 @@ class SolidRight(sge.dsp.Object):
         pass
 
 
-class SolidTop(sge.dsp.Object):
+class SolidTop(Wall):
 
     """
     Class for walls which stop movement of :class:`Collider` objects
@@ -1030,7 +1039,7 @@ class SolidTop(sge.dsp.Object):
         pass
 
 
-class SolidBottom(sge.dsp.Object):
+class SolidBottom(Wall):
 
     """
     Class for walls which stop movement of :class:`Collider` objects
@@ -1056,7 +1065,15 @@ class Solid(SolidLeft, SolidRight, SolidTop, SolidBottom):
     """
 
 
-class SlopeTopLeft(sge.dsp.Object):
+class Slope(Wall):
+
+    """
+    Base class for all slopes.  It is functionally identical to its
+    parent class, :class:`Wall`.
+    """
+
+
+class SlopeTopLeft(Slope):
 
     """
     A parent class for slopes which point in some direction upwards and
@@ -1128,7 +1145,7 @@ class SlopeTopLeft(sge.dsp.Object):
         pass
 
 
-class SlopeTopRight(sge.dsp.Object):
+class SlopeTopRight(Slope):
 
     """
     A parent class for slopes which point in some direction upwards and
@@ -1201,7 +1218,7 @@ class SlopeTopRight(sge.dsp.Object):
         pass
 
 
-class SlopeBottomLeft(sge.dsp.Object):
+class SlopeBottomLeft(Slope):
 
     """
     A parent class for slopes which point in some direction upwards and
@@ -1273,7 +1290,7 @@ class SlopeBottomLeft(sge.dsp.Object):
         pass
 
 
-class SlopeBottomRight(sge.dsp.Object):
+class SlopeBottomRight(Slope):
 
     """
     A parent class for slopes which point in some direction upwards and
@@ -1346,7 +1363,7 @@ class SlopeBottomRight(sge.dsp.Object):
         pass
 
 
-class MobileWall(sge.dsp.Object):
+class MobileWall(Wall):
 
     """
     A parent class for walls and slopes that can move.  When an object

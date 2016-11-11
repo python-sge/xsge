@@ -24,7 +24,7 @@ First, install the dependencies:
 - Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
 - SGE Game Engine 0.24 or later <http://stellarengine.nongnu.org>
 - Six 1.4.0 or later <https://pypi.python.org/pypi/six>
-- tmx 1.4.1 or later <https://savannah.nongnu.org/projects/python-tmx>
+- tmx 1.9 or later <http://python-tmx.nongnu.org>
 
 Once you have all the dependencies, install this package with the
 included setup.py script, e.g. with "python setup.py install".
