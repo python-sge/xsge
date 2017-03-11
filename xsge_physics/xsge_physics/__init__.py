@@ -1,5 +1,5 @@
 # xSGE Physics Framework
-# Copyright (C) 2014-2016 onpon4 <onpon4@riseup.net>
+# Copyright (C) 2014-2017 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.12"
+__version__ = "0.13a0"
 
 import math
 
@@ -84,12 +84,21 @@ class Collider(sge.dsp.Object):
        the wall classes for more information.
 
        Default value: :const:`False`
+
+    .. attribute:: slope_accelerate
+
+       If set to :const:`True`, the collider will accelerate according
+       to the :attr:`slope_xacceleration` and
+       :attr:`slope_yacceleration` values of any slope it is touching.
+
+       Default value: :const:`False`
     """
 
     nonstick_left = False
     nonstick_right = False
     nonstick_top = False
     nonstick_bottom = False
+    slope_accelerate = False
 
     def move_x(self, move, absolute=False, do_events=True, exclude_events=()):
         """
@@ -978,6 +987,38 @@ class Collider(sge.dsp.Object):
         """
         pass
 
+    def event_update_position(self, delta_mult):
+        if delta_mult:
+            xaccel = self.xacceleration
+            yaccel = self.yacceleration
+            if self.slope_accelerate:
+                for slope in set(self.get_left_touching_slope() +
+                                 self.get_right_touching_slope() +
+                                 self.get_top_touching_slope() +
+                                 self.get_bottom_touching_slope()):
+                    xaccel += slope.slope_xacceleration
+                    yaccel += slope.slope_yacceleration
+
+            vi = self.xvelocity
+            vf = vi + xaccel * delta_mult
+            dc = abs(self.xdeceleration) * delta_mult
+            if abs(vf) > dc:
+                vf -= math.copysign(dc, vf)
+            else:
+                vf = 0
+            self.xvelocity = vf
+            self.move_x(((vi + vf) / 2) * delta_mult)
+
+            vi = self.yvelocity
+            vf = vi + yaccel * delta_mult
+            dc = abs(self.ydeceleration) * delta_mult
+            if abs(vf) > dc:
+                vf -= math.copysign(dc, vf)
+            else:
+                vf = 0
+            self.yvelocity = vf
+            self.move_y(((vi + vf) / 2) * delta_mult)
+
 
 class Wall(sge.dsp.Object):
 
@@ -1068,9 +1109,29 @@ class Solid(SolidLeft, SolidRight, SolidTop, SolidBottom):
 class Slope(Wall):
 
     """
-    Base class for all slopes.  It is functionally identical to its
-    parent class, :class:`Wall`.
+    Base class for all slopes.
+
+    .. attribute:: slope_xacceleration
+
+       Indicates the amount of horizontal acceleration to apply to any
+       collider which is touching the slope.  It is added to the
+       affected colliders' :attr:`xacceleration` in
+       :meth:`event_update_position`.
+
+       Default value: ``0``
+
+    .. attribute:: slope_yacceleration
+
+       Indicates the amount of horizontal acceleration to apply to any
+       collider which is touching the slope.  It is added to the
+       affected colliders' :attr:`xacceleration` in
+       :meth:`event_update_position`.
+
+       Default value: ``0``
     """
+
+    slope_xacceleration = 0
+    slope_yacceleration = 0
 
 
 class SlopeTopLeft(Slope):
@@ -1099,6 +1160,14 @@ class SlopeTopLeft(Slope):
        collider's :attr:`nonstick_right` value is :const:`True`.
 
        Default value: :const:`False`
+
+    .. attribute:: slope_xacceleration
+
+       See the documentation for :attr:`Slope.slope_xacceleration`.
+
+    .. attribute:: slope_yacceleration
+
+       See the documentation for :attr:`Slope.slope_yacceleration`.
     """
 
     xsticky_top = False
@@ -1172,6 +1241,14 @@ class SlopeTopRight(Slope):
        :const:`True`.
 
        Default value: :const:`False`
+
+    .. attribute:: slope_xacceleration
+
+       See the documentation for :attr:`Slope.slope_xacceleration`.
+
+    .. attribute:: slope_yacceleration
+
+       See the documentation for :attr:`Slope.slope_yacceleration`.
     """
 
     xsticky_top = False
@@ -1244,6 +1321,14 @@ class SlopeBottomLeft(Slope):
        collider's :attr:`nonstick_right` value is :const:`True`.
 
        Default value: :const:`False`
+
+    .. attribute:: slope_xacceleration
+
+       See the documentation for :attr:`Slope.slope_xacceleration`.
+
+    .. attribute:: slope_yacceleration
+
+       See the documentation for :attr:`Slope.slope_yacceleration`.
     """
 
     xsticky_bottom = False
@@ -1317,6 +1402,14 @@ class SlopeBottomRight(Slope):
        :const:`True`.
 
        Default value: :const:`False`
+
+    .. attribute:: slope_xacceleration
+
+       See the documentation for :attr:`Slope.slope_xacceleration`.
+
+    .. attribute:: slope_yacceleration
+
+       See the documentation for :attr:`Slope.slope_yacceleration`.
     """
 
     xsticky_bottom = False
