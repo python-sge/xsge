@@ -9,7 +9,7 @@ information. This file is offered as-is, without any warranty.
 ------------------------------------------------------------------------
 
 Additions:
-+ xsge_physics.Collider.slope_accelerate
++ xsge_physics.Collider.slope_acceleration
 + xsge_physics.Slope.slope_xacceleration
 + xsge_physics.Slope.slope_yacceleration
 

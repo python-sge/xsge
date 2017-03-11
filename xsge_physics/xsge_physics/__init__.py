@@ -85,20 +85,22 @@ class Collider(sge.dsp.Object):
 
        Default value: :const:`False`
 
-    .. attribute:: slope_accelerate
+    .. attribute:: slope_acceleration
 
-       If set to :const:`True`, the collider will accelerate according
-       to the :attr:`slope_xacceleration` and
-       :attr:`slope_yacceleration` values of any slope it is touching.
+       The factor by which the collider accelerates on slopes.  This is
+       multiplied by the :attr:`slope_xacceleration` and
+       :attr:`slope_yacceleration` values of any slopes the collider is
+       touching and added to the use of :attr:`xacceleration` and
+       :attr:`yacceleration` by :meth:`event_update_position`.
 
-       Default value: :const:`False`
+       Default value: ``0``
     """
 
     nonstick_left = False
     nonstick_right = False
     nonstick_top = False
     nonstick_bottom = False
-    slope_accelerate = False
+    slope_acceleration = 0
 
     def move_x(self, move, absolute=False, do_events=True, exclude_events=()):
         """
@@ -991,13 +993,13 @@ class Collider(sge.dsp.Object):
         if delta_mult:
             xaccel = self.xacceleration
             yaccel = self.yacceleration
-            if self.slope_accelerate:
+            if self.slope_acceleration:
                 for slope in set(self.get_left_touching_slope() +
                                  self.get_right_touching_slope() +
                                  self.get_top_touching_slope() +
                                  self.get_bottom_touching_slope()):
-                    xaccel += slope.slope_xacceleration
-                    yaccel += slope.slope_yacceleration
+                    xaccel += slope.slope_xacceleration * self.slope_acceleration
+                    yaccel += slope.slope_yacceleration * self.slope_acceleration
 
             vi = self.xvelocity
             vf = vi + xaccel * delta_mult
@@ -1114,17 +1116,19 @@ class Slope(Wall):
     .. attribute:: slope_xacceleration
 
        Indicates the amount of horizontal acceleration to apply to any
-       collider which is touching the slope.  It is added to the
-       affected colliders' :attr:`xacceleration` in
+       collider which is touching the slope.  It is multiplied by the
+       affected colliders' :attr:`slope_acceleration` values and added
+       to their use of :attr:`xacceleration` in
        :meth:`event_update_position`.
 
        Default value: ``0``
 
     .. attribute:: slope_yacceleration
 
-       Indicates the amount of horizontal acceleration to apply to any
-       collider which is touching the slope.  It is added to the
-       affected colliders' :attr:`xacceleration` in
+       Indicates the amount of vertical acceleration to apply to any
+       collider which is touching the slope.  It is multiplied by the
+       affected colliders' :attr:`slope_acceleration` values and added
+       to their use of :attr:`yacceleration` in
        :meth:`event_update_position`.
 
        Default value: ``0``
