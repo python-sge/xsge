@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0.2"
+__version__ = "1.0.3a0"
 
 import os
 import weakref
@@ -3173,62 +3173,65 @@ def init():
         window_border_topright_sprite = sge.gfx.Sprite(
             "window_border_topright", DATA)
     except IOError:
+        black = sge.gfx.Color("black")
+        white = sge.gfx.Color("white")
         button_sprite = sge.gfx.Sprite(width=1, height=24)
-        button_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
-        button_sprite.draw_rectangle(0, 1, 1, 22, fill="white")
+        button_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
+        button_sprite.draw_rectangle(0, 1, 1, 22, fill=white)
         button_left_sprite = sge.gfx.Sprite(width=10, height=24)
-        button_left_sprite.draw_rectangle(0, 0, 10, 24, fill="black")
+        button_left_sprite.draw_rectangle(0, 0, 10, 24, fill=black)
         button_right_sprite = button_left_sprite
         button_selected_sprite = sge.gfx.Sprite(width=1, height=24)
-        button_selected_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
-        button_selected_sprite.draw_rectangle(0, 1, 1, 22, fill="aqua")
+        button_selected_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
+        button_selected_sprite.draw_rectangle(0, 1, 1, 22,
+                                              fill=sge.gfx.Color("aqua"))
         button_selected_left_sprite = button_left_sprite
         button_selected_right_sprite = button_right_sprite
         button_pressed_sprite = button_selected_sprite
         button_pressed_left_sprite = button_selected_left_sprite
         button_pressed_right_sprite = button_selected_right_sprite
         checkbox_off_sprite = sge.gfx.Sprite(width=16, height=16)
-        checkbox_off_sprite.draw_rectangle(0, 0, 16, 16, fill="white",
-                                           outline="black")
+        checkbox_off_sprite.draw_rectangle(0, 0, 16, 16, fill=white,
+                                           outline=black)
         checkbox_on_sprite = sge.gfx.Sprite(width=16, height=16)
         checkbox_on_sprite.draw_sprite(checkbox_off_sprite, 0, 0, 0)
-        checkbox_on_sprite.draw_line(0, 0, 15, 15, "black")
-        checkbox_on_sprite.draw_line(0, 15, 15, 0, "black")
+        checkbox_on_sprite.draw_line(0, 0, 15, 15, black)
+        checkbox_on_sprite.draw_line(0, 15, 15, 0, black)
         progressbar_sprite = sge.gfx.Sprite(width=1, height=18)
-        progressbar_sprite.draw_rectangle(0, 0, 1, 18, fill="white")
+        progressbar_sprite.draw_rectangle(0, 0, 1, 18, fill=white)
         progressbar_left_sprite = sge.gfx.Sprite(width=2, height=18)
-        progressbar_left_sprite.draw_rectangle(0, 0, 2, 18, fill="white")
+        progressbar_left_sprite.draw_rectangle(0, 0, 2, 18, fill=white)
         progressbar_right_sprite = progressbar_left_sprite
         progressbar_container_sprite = sge.gfx.Sprite(width=1, height=24)
-        progressbar_container_sprite.draw_rectangle(0, 0, 1, 24, fill="black")
+        progressbar_container_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
         progressbar_container_left_sprite = sge.gfx.Sprite(width=5, height=24)
         progressbar_container_left_sprite.draw_rectangle(0, 0, 5, 24,
-                                                         fill="black")
+                                                         fill=black)
         progressbar_container_right_sprite = progressbar_container_left_sprite
         radiobutton_off_sprite = checkbox_off_sprite
         radiobutton_on_sprite = checkbox_on_sprite
         textbox_sprite = button_sprite
         textbox_left_sprite = sge.gfx.Sprite(width=4, height=24)
-        textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill="black")
+        textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill=black)
         textbox_right_sprite = textbox_left_sprite
         window_border_left_sprite = sge.gfx.Sprite(width=4, height=1)
-        window_border_left_sprite.draw_rectangle(0, 0, 4, 1, fill="black")
+        window_border_left_sprite.draw_rectangle(0, 0, 4, 1, fill=black)
         window_border_right_sprite = window_border_left_sprite
         window_border_bottom_sprite = sge.gfx.Sprite(width=1, height=4)
-        window_border_bottom_sprite.draw_rectangle(0, 0, 1, 4, fill="black")
+        window_border_bottom_sprite.draw_rectangle(0, 0, 1, 4, fill=black)
         window_border_bottomleft_sprite = sge.gfx.Sprite(width=4, height=4)
-        window_border_bottomleft_sprite.draw_rectangle(0, 0, 4, 4,
-                                                       fill="black")
+        window_border_bottomleft_sprite.draw_rectangle(0, 0, 4, 4, fill=black)
         window_border_bottomright_sprite = window_border_bottomleft_sprite
         window_border_top_sprite = sge.gfx.Sprite(width=1, height=28)
-        window_border_top_sprite.draw_rectangle(0, 0, 1, 28, fill="black")
+        window_border_top_sprite.draw_rectangle(0, 0, 1, 28, fill=black)
         window_border_topleft_sprite = sge.gfx.Sprite(width=11, height=28)
-        window_border_topleft_sprite.draw_rectangle(0, 0, 11, 28, fill="black")
+        window_border_topleft_sprite.draw_rectangle(0, 0, 11, 28, fill=black)
         window_border_topright_sprite = sge.gfx.Sprite(width=23, height=28)
-        window_border_topright_sprite.draw_rectangle(0, 0, 23, 28,
-                                                     fill="black")
-        window_border_topright_sprite.draw_line(0, 0, 23, 23, "red")
-        window_border_topright_sprite.draw_line(0, 23, 23, 0, "red")
+        window_border_topright_sprite.draw_rectangle(0, 0, 23, 28, fill=black)
+        window_border_topright_sprite.draw_line(0, 0, 23, 23,
+                                                sge.gfx.Color("red"))
+        window_border_topright_sprite.draw_line(0, 23, 23, 0,
+                                                sge.gfx.Color("red"))
 
 
 def show_message(parent=None, message="", title="Message", buttons=("Ok",),
