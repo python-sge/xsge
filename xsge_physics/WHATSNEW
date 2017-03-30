@@ -13,6 +13,9 @@ Additions:
 + xsge_physics.Slope.slope_xacceleration
 + xsge_physics.Slope.slope_yacceleration
 
+Bugfixes:
+- Lack of documentation for get_slope_x and get_slope_y
+
 
 0.12
 ------------------------------------------------------------------------

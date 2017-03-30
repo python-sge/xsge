@@ -53,9 +53,9 @@ import math
 import sge
 
 
-__all__ = ["Collider", "SolidLeft", "SolidRight", "SolidTop", "SolidBottom",
-           "Solid", "SlopeTopLeft", "SlopeTopRight", "SlopeBottomLeft",
-           "SlopeBottomRight", "MobileWall"]
+__all__ = ["Collider", "Wall", "SolidLeft", "SolidRight", "SolidTop",
+           "SolidBottom", "Solid", "SlopeTopLeft", "SlopeTopRight",
+           "SlopeBottomLeft", "SlopeBottomRight", "MobileWall"]
 
 
 NDIG = 6

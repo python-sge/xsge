@@ -124,6 +124,12 @@ xsge_physics.SlopeTopLeft
 
 .. autoclass:: xsge_physics.SlopeTopLeft
 
+xsge_physics.SlopeTopLeft Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_physics.SlopeTopLeft.get_slope_x
+.. automethod:: xsge_physics.SlopeTopLeft.get_slope_y
+
 xsge_physics.SlopeTopLeft Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -135,6 +141,12 @@ xsge_physics.SlopeTopRight
 --------------------------
 
 .. autoclass:: xsge_physics.SlopeTopRight
+
+xsge_physics.SlopeTopRight Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_physics.SlopeTopRight.get_slope_x
+.. automethod:: xsge_physics.SlopeTopRight.get_slope_y
 
 xsge_physics.SlopeTopRight Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -148,6 +160,12 @@ xsge_physics.SlopeBottomLeft
 
 .. autoclass:: xsge_physics.SlopeBottomLeft
 
+xsge_physics.SlopeBottomLeft Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_physics.SlopeBottomLeft.get_slope_x
+.. automethod:: xsge_physics.SlopeBottomLeft.get_slope_y
+
 xsge_physics.SlopeBottomLeft Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -159,6 +177,12 @@ xsge_physics.SlopeBottomRight
 -----------------------------
 
 .. autoclass:: xsge_physics.SlopeBottomRight
+
+xsge_physics.SlopeBottomRight Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_physics.SlopeBottomRight.get_slope_x
+.. automethod:: xsge_physics.SlopeBottomRight.get_slope_y
 
 xsge_physics.SlopeBottomRight Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
