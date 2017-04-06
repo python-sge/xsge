@@ -15,19 +15,18 @@ have.
 xSGE extensions are not dependent on any particular SGE implementation.
 They should work with any implementation that follows the specification.
 
-This extension provides an easy-to-use framework for collision physics.
-This is especially useful for platformers, though it can also be useful
-for other types of games.
+This extension provides paths for the SGE.  Paths are used to make
+objects move in a certain way.
 """.strip()
 
-setup(name="xsge_physics",
-      version="0.13",
-      description="xSGE Physics Framework",
+setup(name="xsge_particle",
+      version="0.1a0",
+      description="xSGE Particles",
       long_description=long_description,
-      author="onpon4",
+      author="Julie Marchant",
       author_email="onpon4@riseup.net",
       url="http://xsge.nongnu.org",
-      classifiers=["Development Status :: 4 - Beta",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -37,9 +36,9 @@ setup(name="xsge_physics",
                    "Topic :: Games/Entertainment",
                    "Topic :: Software Development"],
       license="GNU General Public License",
-      packages=["xsge_physics"],
-      package_dir={"xsge_physics": "xsge_physics"},
-      package_data={"xsge_physics": ["COPYING"]},
+      packages=["xsge_particle"],
+      package_dir={"xsge_particle": "xsge_particle"},
+      package_data={"xsge_particle": ["COPYING"]},
       requires=["sge (>=1.0, <2.0)"],
-      provides=["xsge_physics"],
+      provides=["xsge_particle"],
      )
