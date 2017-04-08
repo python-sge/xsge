@@ -14,4 +14,22 @@ xSGE Particles
 xsge_particle Classes
 =====================
 
+xsge_particle.Emitter
+---------------------
 
+.. autoclass:: xsge_particle.Emitter
+
+xsge_particle.Emitter Event Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_particle.Emitter.event_create_particle
+
+xsge_particle.AnimationParticle
+-------------------------------
+
+.. autoclass:: xsge_particle.AnimationParticle
+
+xsge_particle.TimedParticle
+---------------------------
+
+.. autoclass:: xsge_particle.TimedParticle

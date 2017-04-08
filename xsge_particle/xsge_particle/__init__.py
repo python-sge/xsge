@@ -37,7 +37,7 @@ import six
 import sge
 
 
-__all__ = []
+__all__ = ["Emitter", "AnimationParticle", "TimedParticle"]
 
 
 class Emitter(sge.dsp.Object):
@@ -47,8 +47,8 @@ class Emitter(sge.dsp.Object):
     objects which create other :class:`sge.dsp.Object` objects of a
     specified class at a specified interval.
 
-    To randomize the way particles are created, use
-    :meth:`event_create_particle`.
+    To randomize the way particles are created, extend
+    :meth:`event_create_particle` in a derived class.
 
     .. note::
 
