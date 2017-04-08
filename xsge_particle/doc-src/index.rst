@@ -19,6 +19,11 @@ xsge_particle.Emitter
 
 .. autoclass:: xsge_particle.Emitter
 
+xsge_particle.Emitter Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_particle.Emitter.__init__
+
 xsge_particle.Emitter Event Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -31,5 +36,10 @@ xsge_particle.AnimationParticle
 
 xsge_particle.TimedParticle
 ---------------------------
+
+xsge_particle.TimedParticle Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_particle.TimedParticle.__init__
 
 .. autoclass:: xsge_particle.TimedParticle

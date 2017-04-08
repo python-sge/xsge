@@ -52,8 +52,8 @@ class Emitter(sge.dsp.Object):
 
     .. note::
 
-       An alarm with the name ``"__emitter__"`` is used to control the
-       timing, and it is initially set by :meth:`event_create`.
+       An alarm with the name ``"__emitter"`` is used to control the
+       timing.
 
     .. attribute:: interval
 
@@ -76,6 +76,15 @@ class Emitter(sge.dsp.Object):
        methods.  If set to :const:`None`, an empty dictionary is used.
     """
 
+    @property
+    def interval(self):
+        return self.__interval
+
+    @interval.setter
+    def interval(self, value):
+        self.__interval = value
+        self.alarms["__emitter"] = min(value, self.alarms["__emitter"])
+
     def __init__(self, x, y, z=0, interval=1, particle_cls=sge.dsp.Object,
                  particle_args=None, particle_kwargs=None, tangible=False,
                  **kwargs):
@@ -85,25 +94,22 @@ class Emitter(sge.dsp.Object):
 
         ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
         ``kwargs`` are passed as the corresponding arguments to the
-        constructor method of the parent class.
+        constructor method of :class:`sge.dsp.Object`.
         """
-        self.interval = interval
+        self.__interval = interval
         self.particle_cls = particle_cls
         self.particle_args = particle_args
         self.particle_kwargs = particle_kwargs
         super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
-        self.alarms["__emittter__"]
-
-    def event_create(self):
-        self.alarms["__emittter__"] = self.interval
+        self.alarms["__emitter"] = interval
 
     def event_alarm(self, alarm_id):
-        if alarm_id == "__emittter__":
+        if alarm_id == "__emitter":
             args = self.particle_args or []
             kwargs = self.particle_kwargs or {}
             particle = self.particle_cls.create(*args, **kwargs)
             self.event_create_particle(particle)
-            self.alarms["__emittter__"] = self.interval
+            self.alarms["__emitter"] = self.interval
 
     def event_create_particle(self, particle):
         """
@@ -130,12 +136,48 @@ class AnimationParticle(sge.dsp.Object):
 class TimedParticle(sge.dsp.Object):
 
     """
-    Class for particle objects which are destroyed when the
-    ``"particle_timer"`` alarm goes off.  It is otherwise identical to
+    Class for particle objects which are destroyed after a designated
+    amount of time.  It is otherwise identical to
     :class:`sge.dsp.Object`.
+
+    .. note::
+
+       An alarm with the name ``"__life"`` is used to control the
+       timing.
+
+    .. attribute:: life
+
+       The number of frames (adjusted for delta timing) after which the
+       particle is destroyed.  Setting this attribute resets the
+       ``"__life"`` alarm to the given value.
     """
 
+    @property
+    def life(self):
+        return self.__life
+
+    @life.setter
+    def life(self, value):
+        self.__life = value
+        self.alarms["__life"] = value
+
+    def __init__(self, x, y, z=0, life=0, tangible=False, **kwargs):
+        """
+        Arguments set the respective initial attributes of the object.
+        See the documentation for :class:`TimedParticle` for more
+        information.
+
+        ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
+        ``kwargs`` are passed as the corresponding arguments to the
+        constructor method of :class:`sge.dsp.Object`.
+        """
+        self.__life = life
+        super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
+                                            **kwargs)
+        self.alarms["__life"] = life
+        
+
     def event_alarm(self, alarm_id):
-        if alarm_id == "particle_timer":
+        if alarm_id == "__life":
             self.destroy()
 
