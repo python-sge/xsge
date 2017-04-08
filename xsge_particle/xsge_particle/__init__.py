@@ -149,7 +149,8 @@ class TimedParticle(sge.dsp.Object):
 
        The number of frames (adjusted for delta timing) after which the
        particle is destroyed.  Setting this attribute resets the
-       ``"__life"`` alarm to the given value.
+       ``"__life"`` alarm to the given value.  Set to :const:`None` to
+       disable timed destruction.
     """
 
     @property
@@ -161,7 +162,7 @@ class TimedParticle(sge.dsp.Object):
         self.__life = value
         self.alarms["__life"] = value
 
-    def __init__(self, x, y, z=0, life=0, tangible=False, **kwargs):
+    def __init__(self, x, y, z=0, life=None, tangible=False, **kwargs):
         """
         Arguments set the respective initial attributes of the object.
         See the documentation for :class:`TimedParticle` for more
