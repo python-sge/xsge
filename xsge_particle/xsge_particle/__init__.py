@@ -32,12 +32,14 @@ from __future__ import unicode_literals
 
 __version__ = "0.1a0"
 
+import random
+
 import six
 
 import sge
 
 
-__all__ = ["Emitter", "AnimationParticle", "TimedParticle"]
+__all__ = ["Emitter", "AnimationParticle", "TimedParticle", "BubbleParticle"]
 
 
 class Emitter(sge.dsp.Object):
@@ -122,28 +124,47 @@ class Emitter(sge.dsp.Object):
         pass
 
 
-class AnimationParticle(sge.dsp.Object):
+class Particle(sge.dsp.Object):
+
+    """
+    Base class for particles.  It is identical to
+    :class:`sge.dsp.Object`, except that it is intangible by default.
+    """
+
+    def __init__(self, x, y, z=0, tangible=False, **kwargs):
+        """
+        ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
+        ``kwargs`` are passed as the corresponding arguments to the
+        constructor method of the parent class.
+        """
+        super(Particle, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
+
+
+class AnimationParticle(Particle):
 
     """
     Class for particle objects which animate once and are then
-    destroyed.  It is otherwise identical to :class:`sge.dsp.Object`.
+    destroyed.  It is otherwise identical to :class:`Particle`.
+
+    .. note::
+
+       :meth:`event_animation_end` is used to control the destruction.
     """
 
     def event_animation_end(self):
         self.destroy()
 
 
-class TimedParticle(sge.dsp.Object):
+class TimedParticle(Particle):
 
     """
     Class for particle objects which are destroyed after a designated
-    amount of time.  It is otherwise identical to
-    :class:`sge.dsp.Object`.
+    amount of time.  It is otherwise identical to :class:`Particle`.
 
     .. note::
 
-       An alarm with the name ``"__life"`` is used to control the
-       timing.
+       An alarm with the name ``"__life"`` in :meth:`event_alarm` is
+       used to control the timing.
 
     .. attribute:: life
 
@@ -170,7 +191,7 @@ class TimedParticle(sge.dsp.Object):
 
         ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
         ``kwargs`` are passed as the corresponding arguments to the
-        constructor method of :class:`sge.dsp.Object`.
+        constructor method of the parent class.
         """
         self.__life = life
         super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
@@ -181,4 +202,64 @@ class TimedParticle(sge.dsp.Object):
     def event_alarm(self, alarm_id):
         if alarm_id == "__life":
             self.destroy()
+
+
+class BubbleParticle(Particle):
+
+    """
+    Class for particle objects which randomly change their move
+    directions.
+
+    .. note::
+
+       :meth:`event_step` is used to control this behavior.
+       :attr:`move_direction` is manipulated.
+
+    .. attribute:: turn_factor
+
+       The largest amount of rotation possible.
+
+    .. attribute:: min_angle
+
+       The lowest possible angle permitted.
+
+    .. attribute:: max_angle
+
+       The highest possible angle permitted.
+    """
+
+    def __init__(self, x, y, z=0, turn_factor=1, min_angle=180, max_angle=0,
+                 tangible=False, **kwargs):
+        """
+        Arguments set the respective initial attributes of the object.
+        See the documentation for :class:`TimedParticle` for more
+        information.
+
+        ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
+        ``kwargs`` are passed as the corresponding arguments to the
+        constructor method of the parent class.
+        """
+        self.turn_factor = turn_factor
+        self.min_angle = min_angle
+        self.max_angle = max_angle
+        super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
+                                            **kwargs)
+
+    def event_step(time_passed, delta_mult):
+        self.move_direction += self.turn_factor * delta_mult
+
+        min_angle = self.min_angle % 360
+        max_angle = self.max_angle % 360
+        while max_angle < min_angle:
+            max_angle += 360
+
+        md = self.move_direction % 360
+        while md < min_angle:
+            md += 360
+
+        if md > max_angle:
+            if md - max_angle > (360 - (max_angle - min_angle)) / 2:
+                self.move_direction = min_angle
+            else:
+                self.move_direction = max_angle
 

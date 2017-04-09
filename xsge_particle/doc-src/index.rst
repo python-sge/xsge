@@ -29,6 +29,16 @@ xsge_particle.Emitter Event Methods
 
 .. automethod:: xsge_particle.Emitter.event_create_particle
 
+xsge_particle.Particle
+----------------------
+
+.. autoclass:: xsge_particle.Particle
+
+xsge_particle.Particle Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_particle.Particle.__init__
+
 xsge_particle.AnimationParticle
 -------------------------------
 
@@ -37,9 +47,19 @@ xsge_particle.AnimationParticle
 xsge_particle.TimedParticle
 ---------------------------
 
+.. autoclass:: xsge_particle.TimedParticle
+
 xsge_particle.TimedParticle Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automethod:: xsge_particle.TimedParticle.__init__
 
-.. autoclass:: xsge_particle.TimedParticle
+xsge_particle.BubbleParticle
+----------------------------
+
+.. autoclass:: xsge_particle.BubbleParticle
+
+xsge_particle.BubbleParticle Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_particle.BubbleParticle.__init__
