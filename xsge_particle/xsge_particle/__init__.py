@@ -39,94 +39,8 @@ import six
 import sge
 
 
-__all__ = ["Emitter", "AnimationParticle", "TimedParticle", "BubbleParticle",
-           "AnimationBubbleParticle", "TimedBubbleParticle"]
-
-
-class Emitter(sge.dsp.Object):
-
-    """
-    Class for object emitters.  These are :class:`sge.dsp.Object`
-    objects which create other :class:`sge.dsp.Object` objects of a
-    specified class at a specified interval.
-
-    To randomize the way particles are created, extend
-    :meth:`event_create_particle` in a derived class.
-
-    .. note::
-
-       An alarm with the name ``"__emitter"`` in :meth:`event_alarm` is
-       used to control the timing.  It is initially set by
-       :meth:`event_create`.
-
-    .. attribute:: interval
-
-       The number of frames to wait in between the creation of each
-       particle (adjusted for delta timing).
-
-    .. attribute:: particle_cls
-
-       The class to use for the particles created.  Any class derived
-       from :class:`sge.dsp.Object` will work.
-
-    .. attribute:: particle_args
-
-       The ordered arguments to pass to created particles' constructor
-       methods.  If set to :const:`None`, an empty list is used.
-
-    .. attribute:: particle_kwargs
-
-       The keyword arguments to pass to created particles' constructor
-       methods.  If set to :const:`None`, an empty dictionary is used.
-    """
-
-    @property
-    def interval(self):
-        return self.__interval
-
-    @interval.setter
-    def interval(self, value):
-        self.__interval = value
-        self.alarms["__emitter"] = min(value, self.alarms["__emitter"])
-
-    def __init__(self, x, y, z=0, interval=1, particle_cls=sge.dsp.Object,
-                 particle_args=None, particle_kwargs=None, tangible=False,
-                 **kwargs):
-        """
-        Arguments set the respective initial attributes of the object.
-        See the documentation for :class:`Emitter` for more information.
-
-        ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
-        ``kwargs`` are passed as the corresponding arguments to the
-        constructor method of :class:`sge.dsp.Object`.
-        """
-        self.__interval = interval
-        self.particle_cls = particle_cls
-        self.particle_args = particle_args
-        self.particle_kwargs = particle_kwargs
-        super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
-
-    def event_create(self):
-        super(Emitter, self).event_create()
-        self.alarms["__emitter"] = self.interval
-
-    def event_alarm(self, alarm_id):
-        if alarm_id == "__emitter":
-            args = self.particle_args or []
-            kwargs = self.particle_kwargs or {}
-            particle = self.particle_cls.create(*args, **kwargs)
-            self.event_create_particle(particle)
-            self.alarms["__emitter"] = self.interval
-
-    def event_create_particle(self, particle):
-        """
-        Called immediately after the emitter creates a particle.
-
-        Arguments:
-
-        - ``particle`` -- The particle object just created.
-        """
-        pass
+__all__ = ["Particle", "AnimationParticle", "TimedParticle", "BubbleParticle",
+           "AnimationBubbleParticle", "TimedBubbleParticle", "Emitter"]
 
 
 class Particle(sge.dsp.Object):
@@ -292,4 +206,99 @@ class TimedBubbleParticle(TimedParticle, BubbleParticle):
     Inherits the features of both :class:`TimedParticle` and
     :class:`BubbleParticle`.
     """
+
+
+class Emitter(sge.dsp.Object):
+
+    """
+    Class for object emitters.  These are :class:`sge.dsp.Object`
+    objects which create other :class:`sge.dsp.Object` objects of a
+    specified class at a specified interval.
+
+    To randomize the way particles are created, extend
+    :meth:`event_create_particle` in a derived class.
+
+    .. note::
+
+       An alarm with the name ``"__emitter"`` in :meth:`event_alarm` is
+       used to control the timing.  It is initially set by
+       :meth:`event_create`.
+
+    .. attribute:: interval
+
+       The number of frames to wait in between the creation of each
+       particle (adjusted for delta timing).
+
+    .. attribute:: chance
+
+       The chance (out of 1) of a particle actually being created at
+       each iteration.  This can be used to make particle generation
+       uneven.
+
+    .. attribute:: particle_cls
+
+       The class to use for the particles created.  Any class derived
+       from :class:`sge.dsp.Object` will work.
+
+    .. attribute:: particle_args
+
+       The ordered arguments to pass to created particles' constructor
+       methods.  If set to :const:`None`, an empty list is used.
+
+    .. attribute:: particle_kwargs
+
+       The keyword arguments to pass to created particles' constructor
+       methods.  If set to :const:`None`, an empty dictionary is used.
+    """
+
+    @property
+    def interval(self):
+        return self.__interval
+
+    @interval.setter
+    def interval(self, value):
+        self.__interval = value
+        self.alarms["__emitter"] = min(value, self.alarms["__emitter"])
+
+    def __init__(self, x, y, z=0, interval=1, chance=1, particle_cls=Particle,
+                 particle_args=None, particle_kwargs=None, tangible=False,
+                 **kwargs):
+        """
+        Arguments set the respective initial attributes of the object.
+        See the documentation for :class:`Emitter` for more information.
+
+        ``x``, ``y``, ``z``, ``tangible``, and all arguments passed to
+        ``kwargs`` are passed as the corresponding arguments to the
+        constructor method of :class:`sge.dsp.Object`.
+        """
+        self.__interval = interval
+        self.chance = chance
+        self.particle_cls = particle_cls
+        self.particle_args = particle_args
+        self.particle_kwargs = particle_kwargs
+        super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
+
+    def event_create(self):
+        super(Emitter, self).event_create()
+        self.alarms["__emitter"] = self.interval
+
+    def event_alarm(self, alarm_id):
+        if alarm_id == "__emitter":
+            if random.random() < self.chance:
+                args = self.particle_args or []
+                kwargs = self.particle_kwargs or {}
+                particle = self.particle_cls.create(*args, **kwargs)
+                self.event_create_particle(particle)
+
+            self.alarms["__emitter"] = self.interval
+
+    def event_create_particle(self, particle):
+        """
+        Called immediately after the emitter creates a particle.
+
+        Arguments:
+
+        - ``particle`` -- The particle object just created.
+        """
+        pass
 
