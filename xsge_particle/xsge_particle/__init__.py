@@ -39,7 +39,8 @@ import six
 import sge
 
 
-__all__ = ["Emitter", "AnimationParticle", "TimedParticle", "BubbleParticle"]
+__all__ = ["Emitter", "AnimationParticle", "TimedParticle", "BubbleParticle",
+           "AnimationBubbleParticle", "TimedBubbleParticle"]
 
 
 class Emitter(sge.dsp.Object):
@@ -54,8 +55,9 @@ class Emitter(sge.dsp.Object):
 
     .. note::
 
-       An alarm with the name ``"__emitter"`` is used to control the
-       timing.
+       An alarm with the name ``"__emitter"`` in :meth:`event_alarm` is
+       used to control the timing.  It is initially set by
+       :meth:`event_create`.
 
     .. attribute:: interval
 
@@ -103,7 +105,10 @@ class Emitter(sge.dsp.Object):
         self.particle_args = particle_args
         self.particle_kwargs = particle_kwargs
         super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
-        self.alarms["__emitter"] = interval
+
+    def event_create(self):
+        super(Emitter, self).event_create()
+        self.alarms["__emitter"] = self.interval
 
     def event_alarm(self, alarm_id):
         if alarm_id == "__emitter":
@@ -152,6 +157,7 @@ class AnimationParticle(Particle):
     """
 
     def event_animation_end(self):
+        super(AnimationParticle, self).event_animation_end()
         self.destroy()
 
 
@@ -164,7 +170,8 @@ class TimedParticle(Particle):
     .. note::
 
        An alarm with the name ``"__life"`` in :meth:`event_alarm` is
-       used to control the timing.
+       used to control the timing.  It is initially set by
+       :meth:`event_create`.
 
     .. attribute:: life
 
@@ -196,10 +203,14 @@ class TimedParticle(Particle):
         self.__life = life
         super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
                                             **kwargs)
-        self.alarms["__life"] = life
+
+    def event_create(self):
+        super(TimedParticle, self).event_create()
+        self.alarms["__life"] = self.life
         
 
     def event_alarm(self, alarm_id):
+        super(TimedParticle, self).event_alarm(alarm_id)
         if alarm_id == "__life":
             self.destroy()
 
@@ -242,10 +253,12 @@ class BubbleParticle(Particle):
         self.turn_factor = turn_factor
         self.min_angle = min_angle
         self.max_angle = max_angle
-        super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
-                                            **kwargs)
+        super(BubbleParticle, self).__init__(x, y, z=z, tangible=tangible,
+                                             **kwargs)
 
-    def event_step(time_passed, delta_mult):
+    def event_step(self, time_passed, delta_mult):
+        super(BubbleParticle, self).event_step(time_passed, delta_mult)
+
         f = self.turn_factor * delta_mult
         self.move_direction += f * random.uniform(-1, 1)
 
@@ -263,4 +276,20 @@ class BubbleParticle(Particle):
                 self.move_direction = min_angle
             else:
                 self.move_direction = max_angle
+
+
+class AnimationBubbleParticle(AnimationParticle, BubbleParticle):
+
+    """
+    Inherits the features of both :class:`AnimationParticle` and
+    :class:`BubbleParticle`.
+    """
+
+
+class TimedBubbleParticle(TimedParticle, BubbleParticle):
+
+    """
+    Inherits the features of both :class:`TimedParticle` and
+    :class:`BubbleParticle`.
+    """
 

@@ -63,3 +63,13 @@ xsge_particle.BubbleParticle Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automethod:: xsge_particle.BubbleParticle.__init__
+
+xsge_particle.AnimationBubbleParticle
+-------------------------------------
+
+.. autoclass:: xsge_particle.AnimationBubbleParticle
+
+xsge_particle.TimedBubbleParticle
+---------------------------------
+
+.. autoclass:: xsge_particle.TimedBubbleParticle
