@@ -246,7 +246,8 @@ class BubbleParticle(Particle):
                                             **kwargs)
 
     def event_step(time_passed, delta_mult):
-        self.move_direction += self.turn_factor * delta_mult
+        f = self.turn_factor * delta_mult
+        self.move_direction += f * random.uniform(-1, 1)
 
         min_angle = self.min_angle % 360
         max_angle = self.max_angle % 360
