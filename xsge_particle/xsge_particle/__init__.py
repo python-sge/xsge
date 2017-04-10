@@ -249,6 +249,30 @@ class Emitter(sge.dsp.Object):
 
        The keyword arguments to pass to created particles' constructor
        methods.  If set to :const:`None`, an empty dictionary is used.
+
+    .. attribute:: particle_lambda_args
+
+       A list of functions which, when a particle is about to be
+       created, are called and have the returned values passed to the
+       particle's constructor method instead of the corresponding index
+       of :attr:`particle_args`.  This emitter is passed to each of
+       these functions as the first argument.
+
+       Values in the list set to :const:`None` are ignored.  If this
+       list is longer than :attr:`particle_args`, any arguments not set
+       by either of these lists are set to :const:`None`.
+
+       If set to :const:`None`, an empty list is used.
+
+    .. attribute:: particle_lambda_kwargs
+
+       A dictionary of functions which, when a particle is about to be
+       created, are called and have the returned values passed to the
+       particle's constructor method instead of the corresponding key of
+       :attr:`particle_kwargs`.  This emitter is passed to each of these
+       functions as the first argument.
+
+       If set to :const:`None`, an empty dictionary is used.
     """
 
     @property
@@ -261,8 +285,9 @@ class Emitter(sge.dsp.Object):
         self.alarms["__emitter"] = min(value, self.alarms["__emitter"])
 
     def __init__(self, x, y, z=0, interval=1, chance=1, particle_cls=Particle,
-                 particle_args=None, particle_kwargs=None, tangible=False,
-                 **kwargs):
+                 particle_args=None, particle_kwargs=None,
+                 particle_lambda_args=None, particle_lambda_kwargs=None,
+                 tangible=False, **kwargs):
         """
         Arguments set the respective initial attributes of the object.
         See the documentation for :class:`Emitter` for more information.
@@ -276,6 +301,8 @@ class Emitter(sge.dsp.Object):
         self.particle_cls = particle_cls
         self.particle_args = particle_args
         self.particle_kwargs = particle_kwargs
+        self.particle_lambda_args = particle_lambda_args
+        self.particle_lambda_kwargs = particle_lambda_kwargs
         super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
 
     def event_create(self):
@@ -285,8 +312,23 @@ class Emitter(sge.dsp.Object):
     def event_alarm(self, alarm_id):
         if alarm_id == "__emitter":
             if random.random() < self.chance:
-                args = self.particle_args or []
-                kwargs = self.particle_kwargs or {}
+                args = (self.particle_args or [])[:]
+                kwargs = (self.particle_kwargs or {}).copy()
+
+                if self.particle_lambda_args:
+                    while len(self.particle_lambda_args) > len(args):
+                        args.append(None)
+
+                    for i in six.moves.range(len(self.particle_lambda_args)):
+                        f = self.particle_lambda_args[i]
+                        if f is not None:
+                            args[i] = f(self)
+
+                if self.particle_lambda_kwargs:
+                    for i in self.particle_lambda_kwargs:
+                        f = self.particle_lambda_kwargs[i]
+                        kwargs[i] = f(self)
+
                 particle = self.particle_cls.create(*args, **kwargs)
                 self.event_create_particle(particle)
 
