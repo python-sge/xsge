@@ -78,8 +78,7 @@ class Path(sge.dsp.Object):
         arguments to the constructor method of the parent class.
         """
         super(Path, self).__init__(
-            x, y, z=z, sprite=sprite, visible=visible, tangible=tangible,
-            **kwargs)
+            x, y, z=z, visible=visible, tangible=tangible, **kwargs)
         self.points = list(points)
         self.__objects = {}
 
