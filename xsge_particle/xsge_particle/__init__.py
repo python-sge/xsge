@@ -114,9 +114,9 @@ class TimedParticle(Particle):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of the parent class.
         """
-        self.__life = life
         super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
                                             **kwargs)
+        self.__life = life
 
     def event_create(self):
         super(TimedParticle, self).event_create()
@@ -164,11 +164,11 @@ class BubbleParticle(Particle):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of the parent class.
         """
+        super(BubbleParticle, self).__init__(x, y, z=z, tangible=tangible,
+                                             **kwargs)
         self.turn_factor = turn_factor
         self.min_angle = min_angle
         self.max_angle = max_angle
-        super(BubbleParticle, self).__init__(x, y, z=z, tangible=tangible,
-                                             **kwargs)
 
     def event_step(self, time_passed, delta_mult):
         super(BubbleParticle, self).event_step(time_passed, delta_mult)
@@ -296,6 +296,7 @@ class Emitter(sge.dsp.Object):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of :class:`sge.dsp.Object`.
         """
+        super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
         self.__interval = interval
         self.chance = chance
         self.particle_cls = particle_cls
@@ -303,7 +304,6 @@ class Emitter(sge.dsp.Object):
         self.particle_kwargs = particle_kwargs
         self.particle_lambda_args = particle_lambda_args
         self.particle_lambda_kwargs = particle_lambda_kwargs
-        super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
 
     def event_create(self):
         super(Emitter, self).event_create()

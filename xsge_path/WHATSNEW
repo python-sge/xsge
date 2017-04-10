@@ -5,6 +5,20 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.0.1
+------------------------------------------------------------------------
+
+Misc changes:
+* Updated and simplified the readme.
+* Replaced the static listing of unchanged parent arguments with **kwargs.
+
+
+1.0
+------------------------------------------------------------------------
+
+Unchanged compared to version 0.9.2.
+
+
 0.9.2
 ------------------------------------------------------------------------
 

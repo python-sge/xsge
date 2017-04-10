@@ -19,15 +19,16 @@ INSTALLATION
 
 First, install the dependencies:
 
-- Python 2 (2.7 or later) or 3 (3.1 or later) <http://www.python.org>
+- Python <http://www.python.org>
 - SGE Game Engine <http://stellarengine.nongnu.org>
+- Six <https://pypi.python.org/pypi/six>
 
 Once you have all the dependencies, install this package with the
 included setup.py script, e.g. with "python setup.py install".
 
-Alternatively, you can just place the "xsge_path" folder into the same
-directory as the Python program that uses it. This can be a good idea
-for the distribution of a game, since it reduces the number of
+Alternatively, you can just place the "xsge_particle" folder into the
+same directory as the Python program that uses it. This can be a good
+idea for the distribution of a game, since it reduces the number of
 dependencies the user needs to install.
 
 USAGE

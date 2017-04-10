@@ -22,6 +22,8 @@ xsge_path.Path
 xsge_path.Path Methods
 ~~~~~~~~~~~~~~~~~~~~~~
 
+.. automethod:: xsge_path.Path.__init__
+
 .. automethod:: xsge_path.Path.follow_start
 
 .. automethod:: xsge_path.Path.follow_stop
@@ -35,3 +37,8 @@ xsge_path.PathLink
 ------------------
 
 .. autoclass:: xsge_path.PathLink
+
+xsge_path.PathLink Methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automethod:: xsge_path.PathLink.__init__

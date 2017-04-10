@@ -32,7 +32,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 import math
 
@@ -67,30 +67,19 @@ class Path(sge.dsp.Object):
        in this list.
     """
 
-    def __init__(self, x, y, points=(), z=0, sprite=None, visible=False,
-                 active=True, checks_collisions=False, tangible=False,
-                 bbox_x=None, bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+    def __init__(self, x, y, points=(), z=0, visible=False, tangible=False,
+                 **kwargs):
+        """
+        Arguments set the respective initial attributes of the object.
+        See the documentation for :class:`Path` for more information.
+
+        ``x``, ``y``, ``z``, ``visible``, ``tangible``, and all
+        arguments passed to ``kwargs`` are passed as the corresponding
+        arguments to the constructor method of the parent class.
+        """
         super(Path, self).__init__(
-            x, y, z=z, sprite=sprite, visible=visible, active=active,
-            checks_collisions=checks_collisions, tangible=tangible,
-            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
-            bbox_height=bbox_height, regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend)
+            x, y, z=z, sprite=sprite, visible=visible, tangible=tangible,
+            **kwargs)
         self.points = list(points)
         self.__objects = {}
 
@@ -244,31 +233,19 @@ class PathLink(Path):
 
     def __init__(self, x, y, points=(), next_path=None, next_speed=None,
                  next_accel=None, next_decel=None, next_loop=0, z=0,
-                 sprite=None, visible=False, active=True,
-                 checks_collisions=False, tangible=False, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None):
+                 visible=False, tangible=False, **kwargs):
+        """
+        Arguments set the respective initial attributes of the object.
+        See the documentation for :class:`Path` for more information.
+
+        ``x``, ``y``, ``points``, ``z``, ``visible``, ``tangible``, and
+        all arguments passed to ``kwargs`` are passed as the
+        corresponding arguments to the constructor method of the parent
+        class.
+        """
         super(PathLink, self).__init__(
-            x, y, points=points, z=z, sprite=sprite, visible=visible,
-            active=active, checks_collisions=checks_collisions,
-            tangible=tangible, bbox_x=bbox_x, bbox_y=bbox_y,
-            bbox_width=bbox_width, bbox_height=bbox_height,
-            regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend)
+            x, y, points=points, z=z, visible=visible, tangible=tangible,
+            **kwargs)
         self.next_path = next_path
         self.next_speed = next_speed
         self.next_accel = next_accel

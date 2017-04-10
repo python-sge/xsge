@@ -15,12 +15,11 @@ have.
 xSGE extensions are not dependent on any particular SGE implementation.
 They should work with any implementation that follows the specification.
 
-This extension provides paths for the SGE.  Paths are used to make
-objects move in a certain way.
+This extension provides particle effects for the SGE.
 """.strip()
 
 setup(name="xsge_particle",
-      version="0.1a0",
+      version="0.1",
       description="xSGE Particles",
       long_description=long_description,
       author="Julie Marchant",

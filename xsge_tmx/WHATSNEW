@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.1.1
+------------------------------------------------------------------------
+
+Misc changes:
+* Updated and simplified the readme.
+
+
 1.1
 ------------------------------------------------------------------------
 
@@ -16,6 +23,12 @@ Misc changes:
 
 Bugfixes:
 - Bad check for whether to use tile layers as tiles
+
+
+1.0
+------------------------------------------------------------------------
+
+Unchanged compared to version 0.10.1.
 
 
 0.10.1
