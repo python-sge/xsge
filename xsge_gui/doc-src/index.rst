@@ -167,14 +167,6 @@ xsge_gui.MenuDialog
 
 .. autoclass:: xsge_gui.MenuDialog
 
-xsge_gui.MenuDialog Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In addition to the methods inherited from :class:`xsge_gui.Dialog`, the
-following methods are also available:
-
-.. automethod:: xsge_gui.MenuDialog.from_text
-
 xsge_gui.MessageDialog
 ----------------------
 
@@ -265,6 +257,11 @@ xsge_gui.Widget Event Methods
 .. automethod:: xsge_gui.Widget.event_global_joystick_button_press
 
 .. automethod:: xsge_gui.Widget.event_global_joystick_button_release
+
+xsge_gui.DecorativeWidget
+-------------------------
+
+.. autoclass:: xsge_gui.DecorativeWidget
 
 xsge_gui.Label
 --------------

@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.0.4"
+__version__ = "1.1a0"
 
 import os
 import weakref
@@ -282,10 +282,11 @@ except ImportError:
 import sge
 
 
-__all__ = ["Handler", "Window", "Dialog", "Widget", "Label", "Button",
-           "CheckBox", "RadioButton", "ProgressBar", "TextBox", "MenuItem",
-           "MenuWindow", "MenuDialog", "MessageDialog", "TextEntryDialog",
-           "init", "show_message", "get_text_entry"]
+__all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
+           "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
+           "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
+           "TextEntryDialog", "init", "show_message", "get_text_entry",
+           "get_menu_selection"]
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
 TEXTBOX_MIN_EDGE = 4
@@ -1630,21 +1631,7 @@ class MenuWindow(Window):
 class MenuDialog(MenuWindow, Dialog):
 
     """
-    This dialog allows the user to cycle through its tab-focusable
-    widgets with the arrow keys.  If the Enter key or a joystick button
-    is pressed, :attr:`choice` is set to the index of the currently
-    selected widget, the window is closed, and :meth:`event_choose` is
-    called.  If the Escape key is pressed, the window is closed and
-    :meth:`event_choose` is called.
-
-    Has no border by default.  Meant to  be used with
-    :class:`xsge_gui.MenuItem` widgets to create keyboard-navigated
-    menus.
-
-    .. attribute:: choice
-
-       The menu item chosen.  If no menu item has been chosen, it is set
-       to :const:`None`.
+    Inherits both :class:`MenuWindow` and :class:`Dialog`.
 
     See the documentation for :class:`xsge_gui.Dialog` for more
     information.
@@ -1841,6 +1828,8 @@ class Widget(object):
 
        Class attribute indicating whether or not the widget should be
        considered for focusing when the Tab key is pressed.
+
+       Default value: :const:`True`
     """
 
     tab_focus = True
@@ -2251,7 +2240,17 @@ class Widget(object):
         pass
 
 
-class Label(Widget):
+class DecorativeWidget(Widget):
+
+    """
+    Identical to :class:`Widget`, except that :attr:`tab_focus` is
+    :const:`False` by default.
+    """
+
+    tab_focus = False
+
+
+class Label(DecorativeWidget):
 
     """
     This widget simply displays some text.
@@ -2291,8 +2290,6 @@ class Label(Widget):
     See the documentation for :class:`xsge_gui.Widget` for more
     information.
     """
-
-    tab_focus = False
 
     @property
     def font(self):
@@ -2601,7 +2598,7 @@ class RadioButton(CheckBox):
         pass
 
 
-class ProgressBar(Widget):
+class ProgressBar(DecorativeWidget):
 
     """
     This widget displays a bar which can be used to show progress (e.g.
@@ -2617,8 +2614,6 @@ class ProgressBar(Widget):
        ``0`` is no completion, ``1`` is full completion, and ``0.5`` is
        half completion).
     """
-
-    tab_focus = False
 
     def __init__(self, parent, x, y, z, width=128, progress=0):
         super(ProgressBar, self).__init__(parent, x, y, z,

@@ -5,6 +5,16 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.1
+------------------------------------------------------------------------
+
+Additions:
++ xsge_gui.DecorativeWidget
+
+Bugfixes:
+- Some unclear and inaccurate documentation
+
+
 1.0.4
 ------------------------------------------------------------------------
 
