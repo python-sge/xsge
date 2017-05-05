@@ -383,7 +383,7 @@ class Handler(sge.dsp.Object):
         super(Handler, self).__init__(0, 0, visible=False, tangible=False)
         self.windows = []
         self.keyboard_focused_window = None
-        self._joystick_prev = {}
+        self.__joystick_prev = {}
 
     def _kb_focus_move(self, n):
         if self.windows:
@@ -565,8 +565,8 @@ class Handler(sge.dsp.Object):
 
     def event_joystick(self, js_name, js_id, input_type, input_id, value):
         js = (js_id, input_type, input_id)
-        prev = self._joystick_prev.get(js, 0)
-        self._joystick_prev[js] = value
+        prev = self.__joystick_prev.get(js, 0)
+        self.__joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in next_window_joystick_events:
                 self._kb_focus_move(1)
@@ -653,25 +653,25 @@ class Window(object):
 
     @property
     def parent(self):
-        return self._parent
+        return self.__parent
 
     @parent.setter
     def parent(self, value):
         if isinstance(value, weakref.ref):
-            self._parent = value
+            self.__parent = value
         else:
-            self._parent = weakref.ref(value)
+            self.__parent = weakref.ref(value)
 
     @property
     def background_color(self):
-        return self._background_color
+        return self.__background_color
 
     @background_color.setter
     def background_color(self, value):
         if value is not None:
-            self._background_color = value
+            self.__background_color = value
         else:
-            self._background_color = window_background_color
+            self.__background_color = window_background_color
 
     def __init__(self, parent, x, y, width, height, title="",
                  background_color=None, border=True):
@@ -687,7 +687,7 @@ class Window(object):
         self.keyboard_focused_widget = None
         self._border_grab = None
         self._close_button_pressed = False
-        self._joystick_prev = {}
+        self.__joystick_prev = {}
 
         self.sprite = sge.gfx.Sprite(width=1, height=1)
         self.redraw()
@@ -1053,8 +1053,8 @@ class Window(object):
         escape_joystick_events_ = escape_joystick_events
 
         js = (js_id, input_type, input_id)
-        prev = self._joystick_prev.get(js, 0)
-        self._joystick_prev[js] = value
+        prev = self.__joystick_prev.get(js, 0)
+        self.__joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in next_widget_joystick_events_:
                 self._kb_focus_move(1)
@@ -1824,6 +1824,12 @@ class Widget(object):
 
        The sprite this widget displays as itself.
 
+    .. attribute:: index
+
+       Indicates the "position" this widget is in for the purposes of
+       tab-focusing.  Smaller indexes are first on the window's list of
+       widgets.  Set to :const:`None` to use :attr:`z` for this purpose.
+
     .. attribute:: tab_focus
 
        Class attribute indicating whether or not the widget should be
@@ -1835,25 +1841,54 @@ class Widget(object):
     tab_focus = True
 
     @property
-    def z(self):
-        return self._z
+    def parent(self):
+        return self.__parent
+
+    @parent.setter
+    def parent(self, value):
+        parent = self.parent()
+        if parent is not None:
+            if self in parent.widgets:
+                parent.widgets.remove(self)
+
+        if isinstance(value, weakref.ref):
+            self.__parent = value
+        else:
+            self.__parent = weakref.ref(value)
+
+        parent = self.__parent()
+        if parent is not None:
+            i = 0
+            while (i < len(parent.widgets) and
+                   parent.widgets[i].index <= self.index):
+                i += 1
+
+            parent.widgets.insert(i, self)
+
+    @property
+    def index(self):
+        return self.__index
 
     @z.setter
-    def z(self, value):
-        self._z = value
+    def index(self, value):
+        self.__index = value
+
         parent = self.parent()
         if parent is not None:
             if self in parent.widgets:
                 parent.widgets.remove(self)
 
             i = 0
-            while i < len(parent.widgets) and parent.widgets[i].z <= value:
+            while i < len(parent.widgets) and parent.widgets[i].index <= value:
                 i += 1
 
             parent.widgets.insert(i, self)
 
-    def __init__(self, parent, x, y, z, sprite=None):
-        self.parent = weakref.ref(parent)
+    def __init__(self, parent, x, y, z, sprite=None, index=None):
+        if isinstance(parent, weakref.ref):
+            self.__parent = parent
+        else:
+            self.__parent = weakref.ref(parent)
         self.x = x
         self.y = y
         self.z = z
@@ -1861,7 +1896,7 @@ class Widget(object):
             self.sprite = sprite
         else:
             self.sprite = sge.gfx.Sprite(width=1, height=1)
-        self._joystick_prev = {}
+        self.__joystick_prev = {}
 
     def destroy(self):
         """Destroy this widget."""
@@ -2033,8 +2068,8 @@ class Widget(object):
         escape_joystick_events_ = escape_joystick_events
 
         js = (js_id, input_type, input_id)
-        prev = self._joystick_prev.get(js, 0)
-        self._joystick_prev[js] = value
+        prev = self.__joystick_prev.get(js, 0)
+        self.__joystick_prev[js] = value
         if value >= joystick_threshold and prev < joystick_threshold:
             if js in left_joystick_events_:
                 self.event_press_left()
