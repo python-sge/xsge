@@ -1541,12 +1541,14 @@ class MenuWindow(Window):
         except ValueError:
             pass
 
-        self.event_choose()
         self.destroy()
+        sge.game.refresh()
+        self.event_choose()
 
     def event_press_escape(self):
-        self.event_choose()
         self.destroy()
+        sge.game.refresh()
+        self.event_choose()
 
     def event_choose(self):
         """Called when a menu item is chosen."""
@@ -1869,9 +1871,12 @@ class Widget(object):
     def index(self):
         return self.__index
 
-    @z.setter
+    @index.setter
     def index(self, value):
         self.__index = value
+
+        if value is None:
+            value = self.z
 
         parent = self.parent()
         if parent is not None:
@@ -1892,6 +1897,7 @@ class Widget(object):
         self.x = x
         self.y = y
         self.z = z
+        self.index = index
         if sprite is not None:
             self.sprite = sprite
         else:
@@ -2328,19 +2334,19 @@ class Label(DecorativeWidget):
 
     @property
     def font(self):
-        return self._font
+        return self.__font
 
     @font.setter
     def font(self, value):
-        self._font = value if value is not None else default_font
+        self.__font = value if value is not None else default_font
 
     @property
     def color(self):
-        return self._color
+        return self.__color
 
     @color.setter
     def color(self, value):
-        self._color = value if value is not None else text_color
+        self.__color = value if value is not None else text_color
 
     def __init__(self, parent, x, y, z, text, font=None, width=None,
                  height=None, color=None, halign="left", valign="top"):
@@ -2434,7 +2440,7 @@ class Button(Widget):
         self.text = text
         self.width = width
         self.halign = halign
-        self._pressed = False
+        self.__pressed = False
         self.sprite_normal = None
         self.sprite_selected = None
         self.sprite_pressed = None
@@ -2514,7 +2520,7 @@ class Button(Widget):
                   parent.keyboard_focused_widget is self) or
                  (handler.get_mouse_focused_window() is parent and
                   parent.get_mouse_focused_widget() is self))):
-                if self._pressed:
+                if self.__pressed:
                     self.sprite = self.sprite_pressed
                 else:
                     self.sprite = self.sprite_selected
@@ -2523,11 +2529,11 @@ class Button(Widget):
 
     def event_mouse_button_press(self, button):
         if button == "left":
-            self._pressed = True
+            self.__pressed = True
 
     def event_mouse_button_release(self, button):
         if button == "left":
-            if self._pressed:
+            if self.__pressed:
                 self.event_press()
 
     def event_press_enter(self):
@@ -2535,7 +2541,7 @@ class Button(Widget):
 
     def event_global_mouse_button_release(self, button):
         if button == "left":
-            self._pressed = False
+            self.__pressed = False
 
     def event_press(self):
         """
@@ -2561,7 +2567,7 @@ class CheckBox(Widget):
     def __init__(self, parent, x, y, z, enabled=False):
         super(CheckBox, self).__init__(parent, x, y, z)
         self.enabled = enabled
-        self._pressed = False
+        self.__pressed = False
 
     def event_step(self, time_passed, delta_mult):
         if self.enabled:
@@ -2571,11 +2577,11 @@ class CheckBox(Widget):
 
     def event_mouse_button_press(self, button):
         if button == "left":
-            self._pressed = True
+            self.__pressed = True
 
     def event_mouse_button_release(self, button):
         if button == "left":
-            if self._pressed:
+            if self.__pressed:
                 self.event_press_enter()
 
     def event_press_enter(self):
@@ -2584,7 +2590,7 @@ class CheckBox(Widget):
 
     def event_global_mouse_button_release(self, button):
         if button == "left":
-            self._pressed = False
+            self.__pressed = False
 
     def event_toggle(self):
         """
