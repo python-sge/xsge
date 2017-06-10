@@ -1510,11 +1510,11 @@ class MenuWindow(Window):
     keyboard-navigated menus.  Has no border by default.  If one of the
     keys in :data:`enter_keys` or one of the joystick events in
     :data:`enter_joystick_events` is pressed, :attr:`choice` is set to
-    the index of the widget which currently has keyboard focus, the
-    window is closed, and :meth:`event_choose` is called.  If one of the
-    keys in :data:`escape_keys` or one of the joystick events in
-    :data:`escape_joystick_events` is pressed, the window is closed and
-    :meth:`event_choose` is called.
+    the index within :attr:`widgets` of the widget which currently has
+    keyboard focus, the window is closed, and :meth:`event_choose` is
+    called.  If one of the keys in :data:`escape_keys` or one of the
+    joystick events in :data:`escape_joystick_events` is pressed, the
+    window is closed and :meth:`event_choose` is called.
 
     .. attribute:: choice
 
@@ -1831,6 +1831,16 @@ class Widget(object):
        Indicates the "position" this widget is in for the purposes of
        tab-focusing.  Smaller indexes are first on the window's list of
        widgets.  Set to :const:`None` to use :attr:`z` for this purpose.
+       Widgets with smaller indexes are inserted earlier in the parent
+       window's :attr:`widgets` list, and this positioning is what
+       actually determines the ordering of tab-focusing.
+
+       .. note::
+
+          This attribute does not *precisely* control the index of the
+          widget within the parent widget's :attr:`widgets` list. It
+          only controls where the widget is in the list relative to
+          other widgets.
 
     .. attribute:: tab_focus
 
