@@ -37,7 +37,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.1.1"
+__version__ = "1.1.2a0"
 
 import os
 
@@ -385,11 +385,11 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                             spr = tile_sprites.get(id_)
                             if spr is None:
                                 spr = kwargs["sprite"].copy()
-                                if kwargs["image_xscale"] < 0:
+                                if kwargs.get("image_xscale", 1) < 0:
                                     spr.mirror()
-                                if kwargs["image_yscale"] < 0:
+                                if kwargs.get("image_yscale", 1) < 0:
                                     spr.flip()
-                                if kwargs["image_rotation"] % 360:
+                                if kwargs.setdefault("image_rotation", 0) % 360:
                                     spr.rotate(kwargs["image_rotation"])
                                 tile_sprites[id_] = spr
                         else:

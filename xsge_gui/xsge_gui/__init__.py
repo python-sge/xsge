@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.1a0"
+__version__ = "1.1"
 
 import os
 import weakref
@@ -1883,10 +1883,10 @@ class Widget(object):
 
     @index.setter
     def index(self, value):
-        self.__index = value
-
         if value is None:
             value = self.z
+
+        self.__index = value
 
         parent = self.parent()
         if parent is not None:
