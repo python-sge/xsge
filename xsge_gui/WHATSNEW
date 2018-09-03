@@ -5,6 +5,13 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.1.1
+------------------------------------------------------------------------
+
+Bugfixes:
+- Chance of crash from a user going through too many recursive dialogs
+
+
 1.1
 ------------------------------------------------------------------------
 
