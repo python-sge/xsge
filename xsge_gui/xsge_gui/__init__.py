@@ -1,5 +1,5 @@
 # xSGE GUI Toolkit
-# Copyright (C) 2014-2017 Julie Marchant <onpon4@riseup.net>
+# Copyright (C) 2014-2018 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -262,7 +262,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "1.1"
+__version__ = "1.1.1a0"
 
 import os
 import weakref
@@ -1339,168 +1339,178 @@ class Dialog(Window):
         :meth:`xsge_gui.Dialog.hide` on this dialog to end the loop.
 
         """
-        parent = self.parent()
-        if parent is not None:
-            screenshot = sge.gfx.Sprite.from_screenshot()
-            super(Dialog, self).show()
-            parent.keyboard_focused_window = self
-            while self in parent.windows:
-                self.move_to_front()
+        try:
+            parent = self.parent()
+            if parent is not None:
+                screenshot = sge.gfx.Sprite.from_screenshot()
+                super(Dialog, self).show()
+                parent.keyboard_focused_window = self
+                while self in parent.windows:
+                    self.move_to_front()
 
-                # Input events
+                    # Input events
+                    sge.game.pump_input()
+                    while sge.game.input_events:
+                        event = sge.game.input_events.pop(0)
+
+                        if isinstance(event, sge.input.KeyPress):
+                            self.event_key_press(event.key, event.char)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_key_press(event.key, event.char)
+                            self.event_global_key_press(event.key, event.char)
+                            for widget in self.widgets:
+                                widget.event_global_key_press(event.key,
+                                                              event.char)
+                        elif isinstance(event, sge.input.KeyRelease):
+                            self.event_key_release(event.key)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_key_release(event.key)
+                            self.event_global_key_release(event.key)
+                            for widget in self.widgets:
+                                widget.event_global_key_release(event.key)
+                        elif isinstance(event, sge.input.MouseButtonPress):
+                            if parent.get_mouse_focused_window() is self:
+                                if self.get_mouse_on_titlebar():
+                                    self.event_titlebar_mouse_button_press(
+                                        event.button)
+                                else:
+                                    self.event_mouse_button_press(event.button)
+                                    widget = self.get_mouse_focused_widget()
+                                    if widget is not None:
+                                        widget.event_mouse_button_press(
+                                            event.button)
+
+                            self.event_global_mouse_button_press(event.button)
+                            for widget in self.widgets:
+                                widget.event_global_mouse_button_press(
+                                    event.button)
+                        elif isinstance(event, sge.input.MouseButtonRelease):
+                            if parent.get_mouse_focused_window() is self:
+                                if self.get_mouse_on_titlebar():
+                                    self.event_titlebar_mouse_button_release(
+                                        event.button)
+                                else:
+                                    self.event_mouse_button_release(event.button)
+                                    widget = self.get_mouse_focused_widget()
+                                    if widget is not None:
+                                        widget.event_mouse_button_release(
+                                            event.button)
+
+                            self.event_global_mouse_button_release(event.button)
+                            for widget in self.widgets:
+                                widget.event_global_mouse_button_release(
+                                    event.button)
+                        elif isinstance(event, sge.input.JoystickAxisMove):
+                            self.event_joystick_axis_move(
+                                event.js_name, event.js_id, event.axis,
+                                event.value)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_joystick_axis_move(
+                                    event.js_name, event.js_id, event.axis,
+                                    event.value)
+                            self.event_global_joystick_axis_move(
+                                event.js_name, event.js_id, event.axis,
+                                event.value)
+                            for widget in self.widgets:
+                                widget.event_global_joystick_axis_move(
+                                    event.js_name, event.js_id, event.axis,
+                                    event.value)
+                        elif isinstance(event, sge.input.JoystickHatMove):
+                            self.event_joystick_hat_move(
+                                event.js_name, event.js_id, event.hat, event.x,
+                                event.y)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_joystick_hat_move(
+                                    event.js_name, event.js_id, event.hat,
+                                    event.x, event.y)
+                            self.event_global_joystick_hat_move(
+                                event.js_name, event.js_id, event.hat, event.x,
+                                event.y)
+                            for widget in self.widgets:
+                                widget.event_global_joystick_hat_move(
+                                    event.js_name, event.js_id, event.hat,
+                                    event.x, event.y)
+                        elif isinstance(event, sge.input.JoystickButtonPress):
+                            self.event_joystick_button_press(
+                                event.js_name, event.js_id, event.button)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_joystick_button_press(
+                                    event.js_name, event.js_id, event.button)
+                            self.event_global_joystick_button_press(
+                                event.js_name, event.js_id, event.button)
+                            for widget in self.widgets:
+                                widget.event_global_joystick_button_press(
+                                    event.js_name, event.js_id, event.button)
+                        elif isinstance(event, sge.input.JoystickButtonRelease):
+                            self.event_joystick_button_release(
+                                event.js_name, event.js_id, event.button)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_joystick_button_release(
+                                    event.js_name, event.js_id, event.button)
+                            self.event_global_joystick_button_release(
+                                event.js_name, event.js_id, event.button)
+                            for widget in self.widgets:
+                                widget.event_global_joystick_button_release(
+                                    event.js_name, event.js_id, event.button)
+                        elif isinstance(event, sge.input.JoystickEvent):
+                            self.event_joystick(event.js_name, event.js_id,
+                                                event.input_type,
+                                                event.input_id, event.value)
+                            widget = self.keyboard_focused_widget
+                            if widget is not None:
+                                widget.event_joystick(
+                                    event.js_name, event.js_id,
+                                    event.input_type, event.input_id,
+                                    event.value)
+                            self.event_global_joystick(
+                                event.js_name, event.js_id, event.input_type,
+                                event.input_id, event.value)
+                            for widget in self.widgets:
+                                widget.event_global_joystick(
+                                    event.js_name, event.js_id,
+                                    event.input_type, event.input_id,
+                                    event.value)
+                        elif isinstance(event, sge.input.QuitRequest):
+                            sge.game.input_events.insert(0, event)
+                            self.hide()
+                            return
+
+                    # Regulate speed
+                    time_passed = sge.game.regulate_speed()
+
+                    if sge.game.delta:
+                        t = min(time_passed, 1000 / sge.game.delta_min)
+                        delta_mult = t / (1000 / sge.game.fps)
+                    else:
+                        delta_mult = 1
+
+                    # Project screenshot
+                    sge.game.project_sprite(screenshot, 0, 0, 0)
+
+                    # Project windows
+                    self.event_step(time_passed, delta_mult)
+                    for widget in self.widgets:
+                        widget.event_step(time_passed, delta_mult)
+
+                    for window in parent.windows[:]:
+                        window.refresh()
+
+                    # Refresh
+                    sge.game.refresh()
+
                 sge.game.pump_input()
-                while sge.game.input_events:
-                    event = sge.game.input_events.pop(0)
-
-                    if isinstance(event, sge.input.KeyPress):
-                        self.event_key_press(event.key, event.char)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_key_press(event.key, event.char)
-                        self.event_global_key_press(event.key, event.char)
-                        for widget in self.widgets:
-                            widget.event_global_key_press(event.key,
-                                                          event.char)
-                    elif isinstance(event, sge.input.KeyRelease):
-                        self.event_key_release(event.key)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_key_release(event.key)
-                        self.event_global_key_release(event.key)
-                        for widget in self.widgets:
-                            widget.event_global_key_release(event.key)
-                    elif isinstance(event, sge.input.MouseButtonPress):
-                        if parent.get_mouse_focused_window() is self:
-                            if self.get_mouse_on_titlebar():
-                                self.event_titlebar_mouse_button_press(
-                                    event.button)
-                            else:
-                                self.event_mouse_button_press(event.button)
-                                widget = self.get_mouse_focused_widget()
-                                if widget is not None:
-                                    widget.event_mouse_button_press(
-                                        event.button)
-
-                        self.event_global_mouse_button_press(event.button)
-                        for widget in self.widgets:
-                            widget.event_global_mouse_button_press(
-                                event.button)
-                    elif isinstance(event, sge.input.MouseButtonRelease):
-                        if parent.get_mouse_focused_window() is self:
-                            if self.get_mouse_on_titlebar():
-                                self.event_titlebar_mouse_button_release(
-                                    event.button)
-                            else:
-                                self.event_mouse_button_release(event.button)
-                                widget = self.get_mouse_focused_widget()
-                                if widget is not None:
-                                    widget.event_mouse_button_release(
-                                        event.button)
-
-                        self.event_global_mouse_button_release(event.button)
-                        for widget in self.widgets:
-                            widget.event_global_mouse_button_release(
-                                event.button)
-                    elif isinstance(event, sge.input.JoystickAxisMove):
-                        self.event_joystick_axis_move(
-                            event.js_name, event.js_id, event.axis, event.value)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_joystick_axis_move(
-                                event.js_name, event.js_id, event.axis,
-                                event.value)
-                        self.event_global_joystick_axis_move(
-                            event.js_name, event.js_id, event.axis, event.value)
-                        for widget in self.widgets:
-                            widget.event_global_joystick_axis_move(
-                                event.js_name, event.js_id, event.axis,
-                                event.value)
-                    elif isinstance(event, sge.input.JoystickHatMove):
-                        self.event_joystick_hat_move(
-                            event.js_name, event.js_id, event.hat, event.x,
-                            event.y)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_joystick_hat_move(
-                                event.js_name, event.js_id, event.hat, event.x,
-                                event.y)
-                        self.event_global_joystick_hat_move(
-                            event.js_name, event.js_id, event.hat, event.x,
-                            event.y)
-                        for widget in self.widgets:
-                            widget.event_global_joystick_hat_move(
-                                event.js_name, event.js_id, event.hat, event.x,
-                                event.y)
-                    elif isinstance(event, sge.input.JoystickButtonPress):
-                        self.event_joystick_button_press(
-                            event.js_name, event.js_id, event.button)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_joystick_button_press(
-                                event.js_name, event.js_id, event.button)
-                        self.event_global_joystick_button_press(
-                            event.js_name, event.js_id, event.button)
-                        for widget in self.widgets:
-                            widget.event_global_joystick_button_press(
-                                event.js_name, event.js_id, event.button)
-                    elif isinstance(event, sge.input.JoystickButtonRelease):
-                        self.event_joystick_button_release(
-                            event.js_name, event.js_id, event.button)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_joystick_button_release(
-                                event.js_name, event.js_id, event.button)
-                        self.event_global_joystick_button_release(
-                            event.js_name, event.js_id, event.button)
-                        for widget in self.widgets:
-                            widget.event_global_joystick_button_release(
-                                event.js_name, event.js_id, event.button)
-                    elif isinstance(event, sge.input.JoystickEvent):
-                        self.event_joystick(event.js_name, event.js_id,
-                                            event.input_type, event.input_id,
-                                            event.value)
-                        widget = self.keyboard_focused_widget
-                        if widget is not None:
-                            widget.event_joystick(
-                                event.js_name, event.js_id, event.input_type,
-                                event.input_id, event.value)
-                        self.event_global_joystick(
-                            event.js_name, event.js_id, event.input_type,
-                            event.input_id, event.value)
-                        for widget in self.widgets:
-                            widget.event_global_joystick(
-                                event.js_name, event.js_id, event.input_type,
-                                event.input_id, event.value)
-                    elif isinstance(event, sge.input.QuitRequest):
-                        sge.game.input_events.insert(0, event)
-                        self.hide()
-                        return
-
-                # Regulate speed
-                time_passed = sge.game.regulate_speed()
-
-                if sge.game.delta:
-                    t = min(time_passed, 1000 / sge.game.delta_min)
-                    delta_mult = t / (1000 / sge.game.fps)
-                else:
-                    delta_mult = 1
-
-                # Project screenshot
-                sge.game.project_sprite(screenshot, 0, 0, 0)
-
-                # Project windows
-                self.event_step(time_passed, delta_mult)
-                for widget in self.widgets:
-                    widget.event_step(time_passed, delta_mult)
-
-                for window in parent.windows[:]:
-                    window.refresh()
-
-                # Refresh
-                sge.game.refresh()
-
-            sge.game.pump_input()
-            sge.game.input_events = []
+                sge.game.input_events = []
+        except RuntimeError:
+            # Recursion is possible in some cases due to the way this
+            # works. This will prevent exceeding recursion depth from
+            # crashing the entire game.
+            print("Recursion depth exceeded! Dialog canceled.")
 
 
 class MenuWindow(Window):
