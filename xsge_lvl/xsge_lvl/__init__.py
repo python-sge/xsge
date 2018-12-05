@@ -37,8 +37,10 @@ from __future__ import unicode_literals
 __version__ = "0.1"
 
 import json
+import math
 
 import sge
+import six
 
 
 __all__ = ["Level", "LevelObject"]
@@ -76,10 +78,10 @@ class Level(object):
 
         A SGE JSON file contains a top-level object with two keys:
 
-        - ``"meta"``: any value indicating the level's meta variables.
+        - ``"meta"``: Any value indicating the level's meta variables.
           These correspond to :attr:`Level.meta`.
-        - ``"objects"``: an object with the level's objects as keys.
-          Each value is an object indicating the following keys:
+        - ``"objects"``: A list of the level's objects.  Each value is
+          an object indicating the following keys:
 
           - ``type``: Corresponds with :attr:`LevelObject.type`.
           - ``args``: Corresponds with :attr:`LevelObject.args`.
@@ -87,12 +89,12 @@ class Level(object):
         """
         self = cls()
         data = json.load(fp)
-        self.meta = data["meta"]
-        for obj in data["objects"]:
+        self.meta = data.get("meta")
+        for obj in data.get("objects", []):
             new_object = LevelObject()
-            new_object.type = obj["type"]
-            new_object.args = obj["args"]
-            new_object.kwargs = obj["kwargs"]
+            new_object.type = obj.get("type")
+            new_object.args = obj.get("args", [])
+            new_object.kwargs = obj.get("kwargs", {})
             self.objects.append(new_object)
 
     @classmethod
@@ -124,15 +126,6 @@ class Level(object):
         character (where ``0`` is the leftmost column), and the row
         (vertical position) of the character  (where ``0`` is the
         topmost row).
-
-        .. note::
-
-           When saving SGE ASCII level files, keyword arguments are lost
-           and ``args[0]`` and ``args[1]`` **must** be integers.
-           Additionally, :attr:`meta` **must** be a list or other
-           iterable value, and each value in the list **must** be a
-           string.  Failure to follow these requirements may result in
-           loss of data or otherwise cause saving to fail.
         """
         self = cls()
         self.meta = []
@@ -180,21 +173,62 @@ class Level(object):
 
         See the documentation for :meth:`Level.ascii_json` for more
         information.
+
+        .. note::
+
+           This format has several limitations:
+
+           - A level object's type must be a string containing a single
+             character, which cannot be ``" "``.  If the string form of
+             any object's type does not contain exactly one character,
+             or if the character is ``" "``, :exc:`ValueError` is
+             raised.
+
+           - The first two values of ``args`` for each object are used
+             to determine their position. These values must be defined
+             as integers, and only one object can exist in any given
+             location.  If the values do not exist or cannot be
+             converted into integers, :exc:`TypeError` is raised.  If
+             two objects share the same location, :exc:`ValueError` is
+             raised. Any arguments beyond the first two for an object
+             will be discarded
+
+           - Level objects cannot have keyword arguments.  Any keyword
+             arguments defined for an object will be discarded.
+
+           - :attr:`meta` must be a list or other iterable object. All
+             values within will be converted into strings automatically.
         """
         objects = []
         for obj in self.objects:
             T = str(obj.type)
-            if len(T) == 1:
-                x = int(round(obj.args[0]))
-                y = int(round(obj.args[1]))
-                while y >= len(objects):
-                    objects.append([])
-                while x >= len(objects[y]):
-                    objects[y].append(" ")
+            if len(T) == 1 and T != " ":
+                try:
+                    sx = obj.args[0]
+                    sy = obj.args[1]
+                except (TypeError, IndexError):
+                    e = 'Required position args undefined in "{}" object.'.format(T)
+                    raise TypeError(e)
+                else:
+                    try:
+                        x = int(sx)
+                        y = int(sy)
+                    except (TypeError, ValueError):
+                        e = 'Failed to convert position objects "{}" and "{}" to integers for "{}" object.'.format(sx, sy, T)
+                        raise TypeError(e)
+                    else:
+                        while y >= len(objects):
+                            objects.append([])
+                        while x >= len(objects[y]):
+                            objects[y].append(" ")
 
-                objects[y][x] = T
+                        if objects[y][x] == " ":
+                            objects[y][x] = T
+                        else:
+                            e = 'Position ({},{}) occupied by both "{}" object and "{}" object.'.format(objects[y][x], T)
+                            raise ValueError(e)
             else:
-                raise ValueError("Object type must be a single character.")
+                raise ValueError('Invalid object type "{}".'.format(T))
 
         meta_data = [str(i) for i in self.meta]
         obj_data = [''.join(i) for i in objects]
@@ -205,7 +239,7 @@ class Level(object):
 
         fp.write(text)
 
-    def spawn(self, types, room=None):
+    def spawn(self, types, room=None, default_type=None):
         """
         Spawn all level objects indicated by :attr:`objects` in the room
         indicated by ``room``.
@@ -216,12 +250,18 @@ class Level(object):
 
         If ``room`` is set to :const:`None`, the objects will be spawned
         in the current room (:attr:`sge.game.current_room`).
+
+        ``default_type`` indicates the type to use for objects with a
+        type not found in ``types``.  If set to :const:`None`,
+        :class:`sge.dsp.Object` is used.
         """
         if room is None:
             room = sge.game.current_room
+        if default_type is None:
+            default_type = sge.dsp.Object
 
         for obj in self.objects:
-            new_object = types[obj.type](*obj.args, **obj.kwargs)
+            new_object = types.get(obj.type, default_type)(*obj.args, **obj.kwargs)
             room.add(new_object)
 
 
@@ -232,7 +272,7 @@ class LevelObject(object):
 
     .. attribute:: type
 
-       A string indicating the type (class) of the object.
+       The type (class) of the object.  Can be any arbitrary value.
 
     .. attribute:: args
 
@@ -257,50 +297,87 @@ class LevelEditor(sge.dsp.Room):
     Base class for constructing a level editor, with features useful for
     the purpose.
 
+    .. note::
+
+       Some of this class's functionality is implemented by
+       :meth:`event_step`.
+
+
+    .. attribute:: level
+
+       The :class:`Level` file which represents the level currently
+       being edited.
+
     .. attribute:: grid_x
 
        The horizontal offset of the grid to the right in pixels.
+
+       Default value: ``0``
 
     .. attribute:: grid_y
 
        The vertical offset of the grid downward in pixels.
 
+       Default value: ``0``
+
     .. attribute:: grid_width
 
        The width of each column of the grid in pixels.
 
+       Default value: ``1``
+
     .. attribute:: grid_height
 
        The height of each row of the grid in pixels.
+
+       Default value: ``1``
 
     .. attribute:: grid_color
 
        A :class:`sge.gfx.Color` object indicating the color to display
        the grid as.  Set to :const:`None` for no display of the grid.
 
+       Default value: :const:`None`
+
     .. attribute:: painting
 
        Whether or not painting is enabled.  While painting is enabled,
        objects of the type indicated by :attr:`paint_type` are added
-       anywhere the mouse cursor goes.
+       anywhere the mouse cursor goes, using :meth:`place_object`.
+
+       Default value: :const:`False`
 
     .. attribute:: paint_type
 
-       A string indicating the type of object to paint while painting is
-       enabled.
+       The value assigned to the ``type_`` argument of
+       :meth:`place_object` when painting.
+
+       Default value: :const:`None`
 
     .. attribute:: paint_args
 
-       A list of the     
+       A list assigned to the ``args`` argument of :meth:`place_object`
+       when painting.
+
+       Default value: ``[]``
+
+    .. attribute:: paint_kwargs
+
+       A dictionary assigned to the ``kwargs`` argument of
+       :meth:`place_object` when painting.
+
+       Default value: ``{}``
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, level, *args, **kwargs):
         super(LevelEditor, self).__init__(*args, **kwargs)
+        self.level = level
         self.grid_x = 0
         self.grid_y = 0
         self.grid_width = 1
         self.grid_height = 1
         self.grid_color = None
+        self.grid_snap = True
         self.painting = False
         self.paint_type = None
         self.paint_args = []
@@ -308,7 +385,7 @@ class LevelEditor(sge.dsp.Room):
         self.__paint_x = None
         self.__paint_y = None
 
-    def place_object(type_, x, y, *args, **kwargs):
+    def place_object(self, type_, x, y, *args, **kwargs):
         """
         Create an object of the type ``type_`` at position
         (``x``, ``y``), passing ``args`` for the object's arguments and
@@ -318,6 +395,30 @@ class LevelEditor(sge.dsp.Room):
         inserting ``x`` and ``y`` into the beginning of ``args``.
         """
         LevelEditorObject.create(type_, x, y, *args, **kwargs)
+
+    def event_step(self, time_passed, delta_mult):
+        if self.grid_color:
+            for view in self.views:
+                view_xfactor = view.wport / view.width
+                view_yfactor = view.hport / view.height
+
+                if self.grid_width >= 2 * view.width / view.wport:
+                    x = math.ceil(view.x / self.grid_width) * self.grid_width
+                    while x < view.x + view.width:
+                        dsp_x = view.xport + view_xfactor * (x - view.x)
+                        sge.game.project_line(
+                            dsp_x, view.yport, dsp_x, view.yport + view.hport,
+                            self.grid_color)
+                        x += self.grid_width
+
+                if self.grid_height >= 2 * view.height / view.hport:
+                    y = math.ceil(view.y / self.grid_height) * self.grid_height
+                    while y < view.y + view.height:
+                        dsp_y = view.yport + view_yfactor * (y - view.y)
+                        sge.game.project_line(
+                            view.xport, dsp_y, view.xport + view.wport, dsp_y,
+                            self.grid_color)
+                        y += self.grid_height
 
 
 class LevelEditorObject(sge.dsp.Object):
