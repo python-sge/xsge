@@ -435,21 +435,24 @@ class LevelEditorObject(sge.dsp.Object):
         """
         Create a LevelEditorObject object.  All arguments are assigned
         to the corresponding attributes of the :class:`LevelObject`
-        object assigned to :attr:`lv_obj`.
+        object assigned to :attr:`lv_obj`, after which
+        :meth:`revert_obj` is called.
         """
         super(LevelEditorObject, self).__init__(0, 0)
         self.lv_obj = LevelObject()
         self.lv_obj.type = type_
         self.lv_obj.args = args
         self.lv_obj.kwargs = kwargs
-        self.update_obj()
+        self.revert_obj()
 
-    def update_obj(self):
+    def revert_obj(self):
         """
-        Update this object based on changes to :attr:`lv_obj`.  Default
-        behavior simply sets ``x`` and ``y`` as the first two values in
-        ``lv_obj.args``, then assigns every value in ``lv_obj.kwargs``
-        to the attribute with the same name as the corresponding key.
+        Revert the condition of this object to that of :attr:`lv_obj`.
+        Default behavior simply sets :attr:`x` and :attr:`y` to the
+        first two values in ``lv_obj.args``, then assigns every value in
+        ``lv_obj.kwargs`` to the attribute with the same name as the
+        corresponding key.  Override or extend this method if you need
+        :attr:`lv_obj` to be used in some different way.
         """
         if len(self.lv_obj.args) >= 1:
             self.x = self.lv_obj.args[0]
@@ -458,4 +461,72 @@ class LevelEditorObject(sge.dsp.Object):
 
         for i in self.lv_obj.kwargs:
             setattr(self, i, self.lv_obj.kwargs[i])
+
+    def update_obj(self):
+        """
+        Update :attr:`lv_obj` to match the current state of this object.
+        Default behavior simply sets ``lv_obj.args`` to
+        ``[self.x, self.y]``, and sets ``lv_obj.kwargs`` to the values
+        of all non-default attributes that can be set by
+        :meth:`sge.dsp.Object.__init__`.  Override or extend this method
+        if you need :attr:`lv_obj` to be set in some different way.
+        """
+        self.lv_obj.args = [self.x, self.y]
+        self.lv_obj.kwargs = {}
+
+        # Default values of ``0``
+        for i in {"z", "xvelocity", "yvelocity", "xacceleration",
+                  "yacceleration", "image_index", "image_rotation"}:
+            v = getattr(self, i, 0)
+            if v != 0:
+                self.lv_obj.kwargs[i] = v
+
+        # Default values of ``True``
+        for i in {"visible", "active", "checks_collisions", "tangible"}:
+            v = getattr(self, i, True)
+            if not v:
+                self.lv_obj.kwargs[i] = False
+
+        # Default values of ``False``
+        for i in {"regulate_origin", "collision_ellipse", "collision_precise"}:
+            v = getattr(self, i, False)
+            if v:
+                self.lv_obj.kwargs[i] = True
+
+        # Image-related properties (case-by-case)
+        if self.sprite is not None:
+            self.lv_obj.kwargs["sprite"] = self.sprite
+            if self.bbox_x != self.sprite.bbox_x:
+                self.lv_obj.kwargs["bbox_x"] = self.bbox_x
+            if self.bbox_y != self.sprite.bbox_y:
+                self.lv_obj.kwargs["bbox_y"] = self.bbox_y
+            if self.image_index != 0:
+                self.lv_obj.kwargs["image_index"] = self.image_index
+            if self.image_origin_x != self.sprite.origin_x:
+                self.lv_obj.kwargs["image_origin_x"] = self.image_origin_x
+            if self.image_origin_y != self.sprite.origin_y:
+                self.lv_obj.kwargs["image_origin_y"] = self.image_origin_y
+            if self.image_fps != self.sprite.fps:
+                self.lv_obj.kwargs["image_fps"] = self.image_fps
+            for i in {"image_xscale", "image_yscale"}:
+                v = getattr(self, i, 1)
+                if v != 1:
+                    self.lv_obj.kwargs[i] = v
+            if self.image_rotation != 0:
+                self.lv_obj.kwargs["image_rotation"] = self.image_rotation
+            if self.image_alpha != 255:
+                self.lv_obj.kwargs["image_alpha"] = self.image_alpha
+            for i in {"image_blend", "image_blend_mode"}:
+                v = getattr(self, i, None)
+                if v is not None:
+                    self.lv_obj.kwargs[i] = v
+        else:
+            for i in {"bbox_x", "bbox_y"}:
+                v = getattr(self, i, 0)
+                if v != 0:
+                    self.lv_obj.kwargs[i] = v
+            for i in {"bbox_width", "bbox_height"}:
+                v = getattr(self, i, 1)
+                if v != 1:
+                    self.lv_obj.kwargs[i] = v
 
