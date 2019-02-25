@@ -343,7 +343,9 @@ class LevelEditor(sge.dsp.Room):
 
        Whether or not painting is enabled.  While painting is enabled,
        objects of the type indicated by :attr:`paint_type` are added
-       anywhere the mouse cursor goes, using :meth:`place_object`.
+       into any grid cell the mouse cursor goes, using
+       :meth:`place_object`.  Only a maximum of one object is placed in
+       any given position.
 
        Default value: :const:`False`
 
@@ -502,4 +504,31 @@ class LevelEditorObject(sge.dsp.Object):
         ``[self.x, self.y]``.
         """
         self.lv_obj.args = [self.x, self.y]
+
+    def tile_paint(self, sprite, x, y):
+        """
+        If this object uses a :class:`sge.gfx.TileGrid` object as its
+        sprite, paint ``sprite`` onto said tile grid in the space where
+        the position (``x``, ``y``) relative to this object would be.
+        If this object does not use a :class:`sge.gfx.TileGrid` object,
+        or if the given position is not a valid tile position, this
+        method does nothing.
+
+        .. note::
+
+           To erase a tile, set ``sprite`` to :const:`None`.
+        """
+        if isinstance(self.sprite, sge.gfx.TileGrid):
+            spr = self.sprite
+            if spr.render_method == "isometric":
+                # TODO
+                pass
+            else: # spr.render_method == "orthogonal":
+                row = math.floor(y / spr.tile_height)
+                column = math.floor(x / spr.tile_width)
+                if (0 <= column < spr.section_length and
+                        0 <= row < len(spr.tiles) / spr.section_length):
+                    i = row * spr.section_length + column
+                    if 0 <= i < len(spr.tiles):
+                        spr.tiles[i] = sprite
 
