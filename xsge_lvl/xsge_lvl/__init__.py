@@ -521,8 +521,47 @@ class LevelEditorObject(sge.dsp.Object):
         if isinstance(self.sprite, sge.gfx.TileGrid):
             spr = self.sprite
             if spr.render_method == "isometric":
-                # TODO
-                pass
+                even_row = math.floor(y / spr.tile_height) * 2
+                if (y % spr.tile_height) / spr.tile_height < 0.5:
+                    odd_row = even_row - 1
+                else:
+                    odd_row = even_row + 1
+                even_column = math.floor(x / spr.tile_width)
+                odd_column = math.floor(x / spr.tile_width + 0.5)
+                ec_x = even_column * spr.tile_width
+                ec_y = odd_column * spr.tile_height
+
+                # y=mx+b
+                m = (spr.tile_height / 2) / (spr.tile_width / 2)
+                if even_row > odd_row:
+                    if even_column > odd_column:
+                        b = ec_y + spr.tile_height / 2
+                        m *= -1
+                    else:
+                        b = ec_y
+                    if y >= m * x + b:
+                        row = even_row
+                        column = even_column
+                    else:
+                        row = odd_row
+                        column = odd_column
+                else:
+                    if even_column > odd_column:
+                        b = ec_y + spr.tile_height / 2
+                    else:
+                        b = ec_y + spr.tile_height
+                        m *= -1
+                    if y < m * x + b:
+                        row = even_row
+                        column = even_column
+                    else:
+                        row = odd_row
+                        column = odd_column
+                if (0 <= column < spr.section_length and
+                        0 <= row < len(spr.tiles) / spr.section_length):
+                    i = row * spr.section_length + column
+                    if 0 <= i < len(spr.tiles):
+                        spr.tiles[i] = sprite
             else: # spr.render_method == "orthogonal":
                 row = math.floor(y / spr.tile_height)
                 column = math.floor(x / spr.tile_width)
