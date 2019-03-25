@@ -191,7 +191,7 @@ class Level(object):
              converted into integers, :exc:`TypeError` is raised.  If
              two objects share the same location, :exc:`ValueError` is
              raised. Any arguments beyond the first two for an object
-             will be discarded
+             will be discarded.
 
            - Level objects cannot have keyword arguments.  Any keyword
              arguments defined for an object will be discarded.
@@ -339,35 +339,6 @@ class LevelEditor(sge.dsp.Room):
 
        Default value: :const:`None`
 
-    .. attribute:: painting
-
-       Whether or not painting is enabled.  While painting is enabled,
-       objects of the type indicated by :attr:`paint_type` are added
-       into any grid cell the mouse cursor goes, using
-       :meth:`place_object`.  Only a maximum of one object is placed in
-       any given position.
-
-       Default value: :const:`False`
-
-    .. attribute:: paint_type
-
-       The value assigned to the ``type_`` argument of
-       :meth:`place_object` when painting.
-
-       Default value: :const:`None`
-
-    .. attribute:: paint_args
-
-       A list assigned to the ``args`` argument of :meth:`place_object`
-       when painting.
-
-       Default value: ``[]``
-
-    .. attribute:: paint_kwargs
-
-       A dictionary assigned to the ``kwargs`` argument of
-       :meth:`place_object` when painting.
-
        Default value: ``{}``
     """
 
@@ -379,13 +350,18 @@ class LevelEditor(sge.dsp.Room):
         self.grid_width = 1
         self.grid_height = 1
         self.grid_color = None
-        self.grid_snap = True
-        self.painting = False
-        self.paint_type = None
-        self.paint_args = []
-        self.paint_kwargs = {}
-        self.__paint_x = None
-        self.__paint_y = None
+
+    def get_snap_x(self, x):
+        """
+        Return ``x`` "snapped" to the nearest horizontal grid cell.
+        """
+        return math.floor(x / self.grid_width) * self.grid_width
+
+    def get_snap_y(self, y):
+        """
+        Return ``y`` "snapped" to the nearest vertical grid cell.
+        """
+        return math.floor(y / self.grid_height) * self.grid_height
 
     def place_object(self, type_, x, y, *args, **kwargs):
         """
@@ -397,6 +373,22 @@ class LevelEditor(sge.dsp.Room):
         inserting ``x`` and ``y`` into the beginning of ``args``.
         """
         LevelEditorObject.create(type_, x, y, *args, **kwargs)
+
+    def load(self):
+        """
+        Load the level indicated by :attr:`self.level`.
+
+        Default behavior destroys all objects (if any), then uses
+        :meth:`place_object` to place every object found in
+        ``self.level.objects`` in the room as a level editor object.
+        The first two values of the respective objects' :attr:`args`
+        lists are used for ``x`` and ``y`` of :meth:`place_object`.
+        """
+        for obj in self.objects[:]:
+            self.remove(obj)
+
+        for obj in self.level.objects:
+            self.place_object(obj.type, *obj.args, **obj.kwargs)
 
     def event_step(self, time_passed, delta_mult):
         if self.grid_color:
