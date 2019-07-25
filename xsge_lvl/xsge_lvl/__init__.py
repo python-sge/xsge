@@ -338,8 +338,6 @@ class LevelEditor(sge.dsp.Room):
        the grid as.  Set to :const:`None` for no display of the grid.
 
        Default value: :const:`None`
-
-       Default value: ``{}``
     """
 
     def __init__(self, level, *args, **kwargs):
@@ -350,6 +348,26 @@ class LevelEditor(sge.dsp.Room):
         self.grid_width = 1
         self.grid_height = 1
         self.grid_color = None
+
+    def load_meta(self):
+        """
+        Adjust the room to match the meta settings of :attr:`level`,
+        such as size and background.
+
+        Default behavior does nothing.  Override this method according
+        to your needs.
+        """
+        pass
+
+    def set_meta(self):
+        """
+        Adjust the meta settings of :attr:`level`, such as size and
+        background, to match the room.
+
+        Default behavior does nothing.  Override this method according
+        to your needs.
+        """
+        pass
 
     def get_snap_x(self, x):
         """
@@ -384,6 +402,8 @@ class LevelEditor(sge.dsp.Room):
         The first two values of the respective objects' :attr:`args`
         lists are used for ``x`` and ``y`` of :meth:`place_object`.
         """
+        self.load_meta()
+
         for obj in self.objects[:]:
             self.remove(obj)
 
@@ -437,13 +457,14 @@ class LevelEditorObject(sge.dsp.Object):
         self.lv_obj.type = type_
         self.lv_obj.args = args
         self.lv_obj.kwargs = kwargs
-        self.update_obj()
+        self.load_position()
+        self.load_appearance()
 
-    def update_position(self):
+    def load_position(self):
         """
-        Update the position of this object to match the settings of
-        :attr:`lv_obj`.  This method can be extended or overridden if
-        necessary.
+        Adjust the position of this object to match the position
+        settings of :attr:`lv_obj`.  This method can be extended or
+        overridden if necessary.
 
         Default behavior sets :attr:`x` and :attr:`y` to the first two
         values of :attr:`lv_obj.args` if possible, or ``0`` otherwise.
@@ -458,15 +479,16 @@ class LevelEditorObject(sge.dsp.Object):
             self.x = 0
             self.y = 0
 
-    def update_appearance(self):
+    def load_appearance(self):
         """
-        Update the appearance of this object to match the settings of
-        :attr:`lv_obj`.  This method can be extended or overridden if
-        necessary.
+        Adjust the appearance of this object to match the appearance
+        settings of :attr:`lv_obj`.  This method can be extended or
+        overridden if necessary.
 
         Default behavior sets the following attributes to the value with
         a key of the same name in :attr:`lv_obj.kwargs`:
 
+          * :attr:`z`
           * :attr:`sprite`
           * :attr:`image_index`
           * :attr:`image_origin_x`
@@ -478,24 +500,51 @@ class LevelEditorObject(sge.dsp.Object):
           * :attr:`image_blend`
           * :attr:`image_blend_mode`
         """
-        self.lv_obj.args = [self.x, self.y]
-
-        attrs = {"sprite", "image_index", "image_origin_x", "image_origin_y",
-                 "image_xscale", "image_yscale", "image_rotation",
-                 "image_alpha", "image_blend", "image_blend_mode"}
+        attrs = {
+            "z", "sprite", "image_index", "image_origin_x", "image_origin_y",
+            "image_xscale", "image_yscale", "image_rotation", "image_alpha",
+            "image_blend", "image_blend_mode"}
         for i in attrs:
             setattr(self, i, self.lv_obj.kwargs[i])
 
     def set_position(self):
         """
         Adjust the position settings of :attr:`lv_obj` to match the
-        position of this object. This method can be extended or
+        position of this object.  This method can be extended or
         overridden if necessary.
 
         Default behavior sets :attr:`lv_obj.args` to
         ``[self.x, self.y]``.
         """
         self.lv_obj.args = [self.x, self.y]
+
+    def set_appearance(self):
+        """
+        Adjust the appearance settings of :attr:`lv_obj` to match the
+        appearance of this object.  This method can be extended or
+        overridden if necessary.
+
+        Default behavior assigns the following attributes to the keys of
+        the same name in :attr:`lv_obj.kwargs`:
+
+          * :attr:`z`
+          * :attr:`sprite`
+          * :attr:`image_index`
+          * :attr:`image_origin_x`
+          * :attr:`image_origin_y`
+          * :attr:`image_xscale`
+          * :attr:`image_yscale`
+          * :attr:`image_rotation`
+          * :attr:`image_alpha`
+          * :attr:`image_blend`
+          * :attr:`image_blend_mode`
+        """
+        attrs = {
+            "z", "sprite", "image_index", "image_origin_x", "image_origin_y",
+            "image_xscale", "image_yscale", "image_rotation", "image_alpha",
+            "image_blend", "image_blend_mode"}
+        for i in attrs:
+            setattr(self, self.lv_obj.kwargs[i], i)
 
     def tile_paint(self, sprite, x, y):
         """
