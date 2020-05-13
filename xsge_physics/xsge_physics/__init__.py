@@ -1,5 +1,4 @@
 # xSGE Physics Framework
-# Copyright (C) 2014-2017 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,21 +40,16 @@ for other types of games.
    object.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "0.13.1"
+__all__ = ["Collider", "Wall", "SolidLeft", "SolidRight", "SolidTop",
+           "SolidBottom", "Solid", "SlopeTopLeft", "SlopeTopRight",
+           "SlopeBottomLeft", "SlopeBottomRight", "MobileWall"]
+
 
 import math
 
 import sge
-
-
-__all__ = ["Collider", "Wall", "SolidLeft", "SolidRight", "SolidTop",
-           "SolidBottom", "Solid", "SlopeTopLeft", "SlopeTopRight",
-           "SlopeBottomLeft", "SlopeBottomRight", "MobileWall"]
 
 
 NDIG = 6

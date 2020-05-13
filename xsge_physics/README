@@ -21,8 +21,8 @@ INSTALLATION
 
 First, install the dependencies:
 
-- Python <http://www.python.org>
-- SGE Game Engine <http://stellarengine.nongnu.org>
+- Python 3.6 or later <http://www.python.org>
+- SGE Game Engine 1.0 or later <https://python-sge.github.io>
 
 Once you have all the dependencies, install this package with the
 included setup.py script, e.g. with "python setup.py install".

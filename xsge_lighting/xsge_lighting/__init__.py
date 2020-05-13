@@ -1,5 +1,4 @@
 # xSGE Lighting Library
-# Copyright (c) 2015, 2016 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,18 +25,12 @@ They should work with any implementation that follows the specification.
 This extension provides a simple interface for lighting.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 __version__ = "1.0.1"
+__all__ = ["project_light", "clear_lights", "project_darkness"]
 
-import six
+
 import sge
 
-
-__all__ = ["project_light", "clear_lights", "project_darkness"]
 
 _lights = []
 
@@ -98,7 +91,7 @@ def project_darkness(z=100000, ambient_light=None, buffer=0):
     groups = []
     for view in sge.game.current_room.views:
         my_groups = []
-        for i in six.moves.range(len(groups)):
+        for i in range(len(groups)):
             for member in groups[i]:
                 if (view.x + view.width > member.x and
                         view.x < member.x + member.width and

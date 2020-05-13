@@ -1,5 +1,4 @@
 # xSGE Path
-# Copyright (c) 2014-2017 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,19 +26,14 @@ This extension provides paths for the SGE.  Paths are used to make
 objects move in a certain way.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "1.0.1"
+__all__ = ["Path"]
+
 
 import math
 
 import sge
-
-
-__all__ = ["Path"]
 
 
 class Path(sge.dsp.Object):

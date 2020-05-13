@@ -1,5 +1,3 @@
-# Copyright (C) 2017 Julie Marchant <onpon4@riseup.net>
-#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -25,22 +23,15 @@ They should work with any implementation that follows the specification.
 This extension provides particle effects for the SGE.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "0.1a0"
+__all__ = ["Particle", "AnimationParticle", "TimedParticle", "BubbleParticle",
+           "AnimationBubbleParticle", "TimedBubbleParticle", "Emitter"]
+
 
 import random
 
-import six
-
 import sge
-
-
-__all__ = ["Particle", "AnimationParticle", "TimedParticle", "BubbleParticle",
-           "AnimationBubbleParticle", "TimedBubbleParticle", "Emitter"]
 
 
 class Particle(sge.dsp.Object):
@@ -319,7 +310,7 @@ class Emitter(sge.dsp.Object):
                     while len(self.particle_lambda_args) > len(args):
                         args.append(None)
 
-                    for i in six.moves.range(len(self.particle_lambda_args)):
+                    for i in range(len(self.particle_lambda_args)):
                         f = self.particle_lambda_args[i]
                         if f is not None:
                             args[i] = f(self)

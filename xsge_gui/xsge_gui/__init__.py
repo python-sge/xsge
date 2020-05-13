@@ -1,5 +1,4 @@
 # xSGE GUI Toolkit
-# Copyright (C) 2014-2018 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -257,20 +256,20 @@ of the game.
    "triggered" for the purpose of navigating menus.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "1.1.1a0"
+__all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
+           "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
+           "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
+           "TextEntryDialog", "init", "show_message", "get_text_entry",
+           "get_menu_selection"]
+
 
 import os
 import weakref
 
-import six
-
 try:
-    from six.moves.tkinter import Tk
+    from tkinter import Tk
 except ImportError:
     class Tk(object):
         def withdraw(self): pass
@@ -281,12 +280,6 @@ except ImportError:
 
 import sge
 
-
-__all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
-           "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
-           "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
-           "TextEntryDialog", "init", "show_message", "get_text_entry",
-           "get_menu_selection"]
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
 TEXTBOX_MIN_EDGE = 4
@@ -700,7 +693,7 @@ class Window(object):
             except ValueError:
                 i = -1 if d > 0 else 0
 
-            for _ in six.moves.range(len(self.widgets)):
+            for _ in range(len(self.widgets)):
                 i += d
                 i %= len(self.widgets)
                 if self.widgets[i].tab_focus:
@@ -770,28 +763,24 @@ class Window(object):
 
             start = window_border_topleft_sprite.width
             end = self.sprite.width - window_border_topright_sprite.width
-            for i in six.moves.range(start, end,
-                                     window_border_top_sprite.width):
+            for i in range(start, end, window_border_top_sprite.width):
                 self.sprite.draw_sprite(window_border_top_sprite, 0, i, 0)
 
             start = window_border_bottomleft_sprite.width
             end = self.sprite.width - window_border_bottomright_sprite.width
             y = self.sprite.height - window_border_bottom_sprite.height
-            for i in six.moves.range(start, end,
-                                     window_border_bottom_sprite.width):
+            for i in range(start, end, window_border_bottom_sprite.width):
                 self.sprite.draw_sprite(window_border_bottom_sprite, 0, i, y)
 
             start = window_border_topleft_sprite.height
             end = self.sprite.height - window_border_bottomleft_sprite.height
-            for i in six.moves.range(start, end,
-                                     window_border_left_sprite.height):
+            for i in range(start, end, window_border_left_sprite.height):
                 self.sprite.draw_sprite(window_border_left_sprite, 0, 0, i)
 
             start = window_border_topright_sprite.height
             end = self.sprite.height - window_border_bottomright_sprite.height
             x = self.sprite.width - window_border_right_sprite.width
-            for i in six.moves.range(start, end,
-                                     window_border_right_sprite.height):
+            for i in range(start, end, window_border_right_sprite.height):
                 self.sprite.draw_sprite(window_border_right_sprite, 0, x, i)
 
             self.sprite.draw_sprite(window_border_topleft_sprite, 0, 0, 0)
@@ -1631,7 +1620,7 @@ class MenuWindow(Window):
                    background_color=background_color)
 
         ih = height - 2 * margin
-        for i in six.moves.range(len(item_sprites)):
+        for i in range(len(item_sprites)):
             n_spr, s_spr = item_sprites[i]
             iy = n_spr.origin_y + margin + ih * i / len(item_sprites)
             MenuItem(self, origin_x, iy, i, sprite_normal=n_spr,
@@ -1690,7 +1679,7 @@ class MessageDialog(Dialog):
               height=label_h)
 
         y = height - button_h - DIALOG_PADDING
-        for i in six.moves.range(len(buttons)):
+        for i in range(len(buttons)):
             x = i * (button_w + DIALOG_PADDING) + DIALOG_PADDING
             button = Button(self, x, y, 0, buttons[i], width=button_w)
 
@@ -2479,7 +2468,7 @@ class Button(Widget):
         right = sprite_w - button_right_sprite.width
         self.sprite_normal = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_normal.draw_lock()
-        for i in six.moves.range(left, right, button_sprite.width):
+        for i in range(left, right, button_sprite.width):
             self.sprite_normal.draw_sprite(button_sprite, 0, i, 0)
         self.sprite_normal.draw_sprite(button_left_sprite, 0, 0, 0)
         self.sprite_normal.draw_sprite(button_right_sprite, 0, right, 0)
@@ -2495,7 +2484,7 @@ class Button(Widget):
         right = sprite_w - button_selected_right_sprite.width
         self.sprite_selected = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_selected.draw_lock()
-        for i in six.moves.range(left, right, button_selected_sprite.width):
+        for i in range(left, right, button_selected_sprite.width):
             self.sprite_selected.draw_sprite(button_selected_sprite, 0, i, 0)
         self.sprite_selected.draw_sprite(button_selected_left_sprite, 0, 0, 0)
         self.sprite_selected.draw_sprite(button_selected_right_sprite, 0,
@@ -2512,7 +2501,7 @@ class Button(Widget):
         right = sprite_w - button_pressed_right_sprite.width
         self.sprite_pressed = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_pressed.draw_lock()
-        for i in six.moves.range(left, right, button_pressed_sprite.width):
+        for i in range(left, right, button_pressed_sprite.width):
             self.sprite_pressed.draw_sprite(button_pressed_sprite, 0, i, 0)
         self.sprite_pressed.draw_sprite(button_pressed_left_sprite, 0, 0, 0)
         self.sprite_pressed.draw_sprite(button_pressed_right_sprite, 0, right,
@@ -2698,11 +2687,11 @@ class ProgressBar(DecorativeWidget):
 
         self.sprite.draw_sprite(progressbar_container_left_sprite, 0, 0, 0)
 
-        for x in six.moves.range(left, right,
+        for x in range(left, right,
                                  progressbar_container_sprite.width):
             self.sprite.draw_sprite(progressbar_container_sprite, 0, x, 0)
 
-        for x in six.moves.range(left, left + pixels,
+        for x in range(left, left + pixels,
                                  progressbar_sprite.width):
             self.sprite.draw_sprite(progressbar_sprite, 0, x, y)
 
@@ -2764,7 +2753,7 @@ class TextBox(Widget):
 
         self.sprite.draw_sprite(textbox_left_sprite, 0, 0, 0)
 
-        for i in six.moves.range(left, right, textbox_sprite.width):
+        for i in range(left, right, textbox_sprite.width):
             self.sprite.draw_sprite(textbox_sprite, 0, i, 0)
 
         self.sprite.draw_erase(right, 0, self.sprite.width - right,
