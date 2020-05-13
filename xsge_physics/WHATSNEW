@@ -5,6 +5,14 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+0.13.2
+------------------------------------------------------------------------
+
+Misc changes:
+* Removed Python 2 support.
+* Modified the platformer example to use ulvl instead of xsge_tmx.
+
+
 0.13.1
 ------------------------------------------------------------------------
 

@@ -373,7 +373,7 @@ class Handler(sge.dsp.Object):
     """
 
     def __init__(self):
-        super(Handler, self).__init__(0, 0, visible=False, tangible=False)
+        super().__init__(0, 0, visible=False, tangible=False)
         self.windows = []
         self.keyboard_focused_window = None
         self.__joystick_prev = {}
@@ -1332,7 +1332,7 @@ class Dialog(Window):
             parent = self.parent()
             if parent is not None:
                 screenshot = sge.gfx.Sprite.from_screenshot()
-                super(Dialog, self).show()
+                super().show()
                 parent.keyboard_focused_window = self
                 while self in parent.windows:
                     self.move_to_front()
@@ -1526,8 +1526,8 @@ class MenuWindow(Window):
 
     def __init__(self, parent, x, y, width, height, title="",
                  background_color=sge.gfx.Color("#0000"), border=False):
-        super(MenuWindow, self).__init__(parent, x, y, width, height, title,
-                                         background_color, border)
+        super().__init__(parent, x, y, width, height, title, background_color,
+                         border)
         self.choice = None
 
     def event_step(self, time_passed, delta_mult):
@@ -1672,8 +1672,7 @@ class MessageDialog(Dialog):
 
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super(MessageDialog, self).__init__(parent, x, y, width, height,
-                                            title=title)
+        super().__init__(parent, x, y, width, height, title=title)
         label_h = max(1, height - button_h - DIALOG_PADDING * 3)
         Label(self, DIALOG_PADDING, DIALOG_PADDING, 0, message, width=label_w,
               height=label_h)
@@ -1736,8 +1735,7 @@ class TextEntryDialog(Dialog):
 
         x = sge.game.width / 2 - width / 2
         y = sge.game.height / 2 - height / 2
-        super(TextEntryDialog, self).__init__(parent, x, y, width, height,
-                                              title=title)
+        super().__init__(parent, x, y, width, height, title=title)
         label_h = max(1, height - button_h - textbox_h - DIALOG_PADDING * 4)
 
         x = DIALOG_PADDING
@@ -2359,7 +2357,7 @@ class Label(DecorativeWidget):
 
     def __init__(self, parent, x, y, z, text, font=None, width=None,
                  height=None, color=None, halign="left", valign="top"):
-        super(Label, self).__init__(parent, x, y, z)
+        super().__init__(parent, x, y, z)
         self.text = text
         self.font = font
         self.width = width
@@ -2401,7 +2399,7 @@ class ProgressiveLabel(Label):
         self.full_text = full_text
         self.rate = rate
         self.__time_passed = 0
-        super(ProgressiveLabel, self).__init__(
+        super().__init__(
             parent, x, y, z, "", font=font, width=width, height=height,
             color=color, halign=halign, valign=valign)
 
@@ -2445,7 +2443,7 @@ class Button(Widget):
     """
 
     def __init__(self, parent, x, y, z, text, width=None, halign="center"):
-        super(Button, self).__init__(parent, x, y, z)
+        super().__init__(parent, x, y, z)
         self.text = text
         self.width = width
         self.halign = halign
@@ -2574,7 +2572,7 @@ class CheckBox(Widget):
     """
 
     def __init__(self, parent, x, y, z, enabled=False):
-        super(CheckBox, self).__init__(parent, x, y, z)
+        super().__init__(parent, x, y, z)
         self.enabled = enabled
         self.__pressed = False
 
@@ -2666,8 +2664,7 @@ class ProgressBar(DecorativeWidget):
     """
 
     def __init__(self, parent, x, y, z, width=128, progress=0):
-        super(ProgressBar, self).__init__(parent, x, y, z,
-                                          sge.gfx.Sprite(width=1, height=1))
+        super().__init__(parent, x, y, z, sge.gfx.Sprite(width=1, height=1))
         self.width = width
         self.progress = progress
         self.redraw()
@@ -2728,8 +2725,7 @@ class TextBox(Widget):
     """
 
     def __init__(self, parent, x, y, z, width=32, text="", text_limit=1000):
-        super(TextBox, self).__init__(parent, x, y, z,
-                                      sge.gfx.Sprite(width=1, height=1))
+        super().__init__(parent, x, y, z, sge.gfx.Sprite(width=1, height=1))
         self.width = width
         self.text = text
         self.text_limit = text_limit
@@ -3097,7 +3093,7 @@ class MenuItem(Widget):
 
     def __init__(self, parent, x, y, z, sprite_normal=None,
                  sprite_selected=None):
-        super(MenuItem, self).__init__(parent, x, y, z, sprite=sprite_normal)
+        super().__init__(parent, x, y, z, sprite=sprite_normal)
         self.sprite_normal = self.sprite
         if sprite_selected is not None:
             self.sprite_selected = sprite_selected

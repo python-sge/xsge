@@ -41,7 +41,7 @@ for other types of games.
 """
 
 
-__version__ = "0.13.1"
+__version__ = "0.13.2a0"
 __all__ = ["Collider", "Wall", "SolidLeft", "SolidRight", "SolidTop",
            "SolidBottom", "Solid", "SlopeTopLeft", "SlopeTopRight",
            "SlopeBottomLeft", "SlopeBottomRight", "MobileWall"]

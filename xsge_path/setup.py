@@ -20,7 +20,7 @@ objects move in a certain way.
 """.strip()
 
 setup(name="xsge_path",
-      version="1.0.1",
+      version="1.0.2",
       description="xSGE Path",
       long_description=long_description,
       author="Layla Marchant",

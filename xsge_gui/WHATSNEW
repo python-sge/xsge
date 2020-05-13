@@ -8,6 +8,9 @@ information. This file is offered as-is, without any warranty.
 1.1.1
 ------------------------------------------------------------------------
 
+Misc changes:
+* Removed Python 2 support.
+
 Bugfixes:
 - Chance of crash from a user going through too many recursive dialogs
 

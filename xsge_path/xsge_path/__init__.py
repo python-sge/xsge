@@ -27,7 +27,7 @@ objects move in a certain way.
 """
 
 
-__version__ = "1.0.1"
+__version__ = "1.0.2a0"
 __all__ = ["Path"]
 
 
@@ -71,8 +71,8 @@ class Path(sge.dsp.Object):
         arguments passed to ``kwargs`` are passed as the corresponding
         arguments to the constructor method of the parent class.
         """
-        super(Path, self).__init__(
-            x, y, z=z, visible=visible, tangible=tangible, **kwargs)
+        super().__init__(x, y, z=z, visible=visible, tangible=tangible,
+                         **kwargs)
         self.points = list(points)
         self.__objects = {}
 
@@ -236,9 +236,8 @@ class PathLink(Path):
         corresponding arguments to the constructor method of the parent
         class.
         """
-        super(PathLink, self).__init__(
-            x, y, points=points, z=z, visible=visible, tangible=tangible,
-            **kwargs)
+        super().__init__(x, y, points=points, z=z, visible=visible,
+                         tangible=tangible, **kwargs)
         self.next_path = next_path
         self.next_speed = next_speed
         self.next_accel = next_accel

@@ -24,7 +24,7 @@ This extension provides particle effects for the SGE.
 """
 
 
-__version__ = "0.1a0"
+__version__ = "0.2a0"
 __all__ = ["Particle", "AnimationParticle", "TimedParticle", "BubbleParticle",
            "AnimationBubbleParticle", "TimedBubbleParticle", "Emitter"]
 
@@ -47,7 +47,7 @@ class Particle(sge.dsp.Object):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of the parent class.
         """
-        super(Particle, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
+        super().__init__(x, y, z=z, tangible=tangible, **kwargs)
 
 
 class AnimationParticle(Particle):
@@ -62,7 +62,7 @@ class AnimationParticle(Particle):
     """
 
     def event_animation_end(self):
-        super(AnimationParticle, self).event_animation_end()
+        super().event_animation_end()
         self.destroy()
 
 
@@ -105,17 +105,16 @@ class TimedParticle(Particle):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of the parent class.
         """
-        super(TimedParticle, self).__init__(x, y, z=z, tangible=tangible,
-                                            **kwargs)
+        super().__init__(x, y, z=z, tangible=tangible, **kwargs)
         self.__life = life
 
     def event_create(self):
-        super(TimedParticle, self).event_create()
+        super().event_create()
         self.alarms["__life"] = self.life
         
 
     def event_alarm(self, alarm_id):
-        super(TimedParticle, self).event_alarm(alarm_id)
+        super().event_alarm(alarm_id)
         if alarm_id == "__life":
             self.destroy()
 
@@ -155,14 +154,13 @@ class BubbleParticle(Particle):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of the parent class.
         """
-        super(BubbleParticle, self).__init__(x, y, z=z, tangible=tangible,
-                                             **kwargs)
+        super().__init__(x, y, z=z, tangible=tangible, **kwargs)
         self.turn_factor = turn_factor
         self.min_angle = min_angle
         self.max_angle = max_angle
 
     def event_step(self, time_passed, delta_mult):
-        super(BubbleParticle, self).event_step(time_passed, delta_mult)
+        super().event_step(time_passed, delta_mult)
 
         f = self.turn_factor * delta_mult
         self.move_direction += f * random.uniform(-1, 1)
@@ -287,7 +285,7 @@ class Emitter(sge.dsp.Object):
         ``kwargs`` are passed as the corresponding arguments to the
         constructor method of :class:`sge.dsp.Object`.
         """
-        super(Emitter, self).__init__(x, y, z=z, tangible=tangible, **kwargs)
+        super().__init__(x, y, z=z, tangible=tangible, **kwargs)
         self.__interval = interval
         self.chance = chance
         self.particle_cls = particle_cls
@@ -297,7 +295,7 @@ class Emitter(sge.dsp.Object):
         self.particle_lambda_kwargs = particle_lambda_kwargs
 
     def event_create(self):
-        super(Emitter, self).event_create()
+        super().event_create()
         self.alarms["__emitter"] = self.interval
 
     def event_alarm(self, alarm_id):

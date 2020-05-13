@@ -19,7 +19,7 @@ This extension provides particle effects for the SGE.
 """.strip()
 
 setup(name="xsge_particle",
-      version="0.1",
+      version="0.2",
       description="xSGE Particles",
       long_description=long_description,
       author="Layla Marchant",

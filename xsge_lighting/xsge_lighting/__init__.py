@@ -25,7 +25,7 @@ They should work with any implementation that follows the specification.
 This extension provides a simple interface for lighting.
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2a0"
 __all__ = ["project_light", "clear_lights", "project_darkness"]
 
 

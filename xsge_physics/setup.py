@@ -21,7 +21,7 @@ for other types of games.
 """.strip()
 
 setup(name="xsge_physics",
-      version="0.13.1",
+      version="0.13.2",
       description="xSGE Physics Framework",
       long_description=long_description,
       author="Layla Marchant",
