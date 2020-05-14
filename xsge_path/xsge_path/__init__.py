@@ -27,7 +27,7 @@ objects move in a certain way.
 """
 
 
-__version__ = "1.0.2a0"
+__version__ = "1.0.2"
 __all__ = ["Path"]
 
 
