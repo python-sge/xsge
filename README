@@ -13,7 +13,8 @@ have.
 xSGE extensions are not dependent on any particular SGE implementation.
 They should work with any implementation that follows the specification.
 
-This extension provides a simple interface for lighting.
+Each extension is contained in its own sub-directory.  See the
+individual directories for more information.
 
 INSTALLATION
 
@@ -25,11 +26,6 @@ First, install the dependencies:
 Once you have all the dependencies, install this package with the
 included setup.py script, e.g. with "python setup.py install".
 
-Alternatively, you can just place the "xsge_lighting" folder into the
-same directory as the Python program that uses it. This can be a good
-idea for the distribution of a game, since it reduces the number of
-dependencies the user needs to install.
-
-USAGE
-
-The documentation for this package can be found in the "doc" folder.
+The provided setup.py script simply serves as a proxy for using the
+setup.py scripts in all sub-directories.  To install only some of these
+xSGE extensions, install each one individually with its own setup.py
