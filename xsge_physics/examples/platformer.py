@@ -169,11 +169,11 @@ types = {"player": Player, "solid": Solid, "unisolid": SolidTop,
          "slope_bottomright": SlopeBottomRight}
 
 tmx = ulvl.TMX.load(os.path.join(DATA, "level.tmx"))
-tilewidth = int(tmx.meta["tilewidth"])
-tileheight = int(tmx.meta["tileheight"])
-width = int(tmx.meta["width"]) * tilewidth
-height = int(tmx.meta["height"]) * tileheight
-backgroundcolor = tmx.meta["backgroundcolor"]
+tilewidth = tmx.meta["tilewidth"]
+tileheight = tmx.meta["tileheight"]
+width = tmx.meta["width"] * tilewidth
+height = tmx.meta["height"] * tileheight
+backgroundcolor = tmx.meta.get("backgroundcolor", "gray")
 
 tile_sprites = sge.gfx.Sprite.from_tileset(
     os.path.join(DATA, "tiles.png"), x=2, y=2, columns=5, rows=4, xsep=1,
@@ -196,17 +196,13 @@ background = sge.gfx.Background(layers, sge.gfx.Color(backgroundcolor))
 objects = []
 for obj in tmx.objects:
     cls = types[obj.type]
-    x = int(obj.meta["x"])
-    y = int(obj.meta["y"])
-    if obj.meta["gid"]:
+    x = obj.meta["x"]
+    y = obj.meta["y"]
+    if "gid" in obj.meta:
         x -= tilewidth - 2
         y -= tileheight
-    width = obj.meta["width"]
-    if width is not None:
-        width = int(width)
-    height = obj.meta["height"]
-    if height is not None:
-        height = int(height)
+    width = obj.meta.get("width")
+    height = obj.meta.get("height")
     objects.append(cls(x, y, bbox_x=0, bbox_y=0, bbox_width=width,
                        bbox_height=height))
 
