@@ -1,4 +1,4 @@
-include WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in
+include WHATSNEW WHATSNEW.* VERSION_NUMBERING MANIFEST.in requirements.txt
 recursive-include doc *
 recursive-include doc-src *
 recursive-include examples *

@@ -24,7 +24,7 @@ This extension provides particle effects for the SGE.
 """
 
 
-__version__ = "0.2a0"
+__version__ = "1.0a0"
 __all__ = ["Particle", "AnimationParticle", "TimedParticle", "BubbleParticle",
            "AnimationBubbleParticle", "TimedBubbleParticle", "Emitter"]
 
