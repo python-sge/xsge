@@ -1,5 +1,4 @@
 # xSGE Tiled Library
-# Copyright (c) 2014-2016 Julie Marchant <onpon4@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,22 +31,17 @@ To load a tile map, simply use :func:`load`.  See the documentation for
 this function for more information.
 """
 
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 __version__ = "0.1"
+__all__ = ["load"]
 
+
+import json
 import os
 
 import sge
-import six
 import tmx
 import xsge_path
-
-
-__all__ = ["load"]
 
 
 class Decoration(sge.dsp.Object):
@@ -170,9 +164,9 @@ class Polyline(xsge_path.Path):
     """
 
 
-def load(fname, cls=sge.dsp.Room, types=None, z=0):
+def load(f, cls=sge.dsp.Room, types=None, z=0):
     """
-    Load JSON tilemap ``fname`` and return a room of the class ``cls``.
+    Load JSON tilemap ``f`` and return a room of the class ``cls``.
 
     The way the map generates the room, in general, is to convert all
     tiles, objects, and image layers into :class:`sge.dsp.Object`
@@ -238,38 +232,34 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
     if types is None:
         types = {}
 
-    tilemap = tmx.TileMap.load(fname)
+    tilemap = json.load(f)
 
     tile_cls = {}
     tile_sprites = {}
     tile_kwargs = {}
-    for tileset in sorted(tilemap.tilesets, key=lambda T: T.firstgid):
-        if tileset.image is not None:
-            if tileset.image.source is not None:
-                source = tileset.image.source
-            else:
-                _file = tempfile.NamedTemporaryFile(
-                    suffix=".{}".format(tileset.image.format))
-                _file.write(tileset.image.data)
-                source = _file.name
+    for tileset in sorted(tilemap.get("tilesets", []),
+                          key=lambda T: T.firstgid):
+        source = tileset.get("image")
+        if source is not None:
+            margin = tileset.get("margin", 0)
+            spacing = tileset.get("spacing", 0)
+            tilewidth = tileset.get("tilewidth", 32)
+            tileheight = tileset.get("tileheight", 32)
 
             n, e = os.path.splitext(os.path.basename(source))
             d = os.path.dirname(source)
             fs = sge.gfx.Sprite(n, d)
-            fwidth = fs.width - tileset.margin
-            fheight = fs.height - tileset.margin
+            fwidth = fs.width - margin
+            fheight = fs.height - margin
 
-            columns = int((fwidth - tileset.margin + tileset.spacing) /
-                          (tileset.tilewidth + tileset.spacing))
-            rows = int((fheight - tileset.margin + tileset.spacing) /
-                       (tileset.tileheight + tileset.spacing))
+            columns = int((fwidth-margin + spacing) / (tilewidth+spacing))
+            rows = int((fheight-margin + spacing) / (tileheight+spacing))
 
             ts_sprite = sge.gfx.Sprite.from_tileset(
-                source, x=tileset.margin, y=tileset.margin, columns=columns,
-                rows=rows, xsep=tileset.spacing, ysep=tileset.spacing,
-                width=tileset.tilewidth, height=tileset.tileheight)
+                source, x=margin, y=margin, columns=columns, rows=rows,
+                xsep=spacing, ysep=spacing, width=tilewidth, height=tileheight)
 
-            for i in six.moves.range(ts_sprite.frames):
+            for i in range(ts_sprite.frames):
                 gid = tileset.firstgid + i
                 if tileset.name in types:
                     tile_cls[gid] = types[tileset.name]
@@ -283,9 +273,10 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                 tile_sprites[gid] = t_sprite
 
         tileset_kwargs = {}
-        for prop in tileset.properties:
-            tileset_kwargs[prop.name] = _nconvert(prop.value)
+        for prop in tileset.get("properties", {}):
+            tileset_kwargs[prop.get("name")] = prop.get("value")
 
+        # TODO (``tileset`` is now a dictionary, continue conversion here)
         for tile in tileset.tiles:
             i = tileset.firstgid + tile.id
 
@@ -299,7 +290,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                 while spr.frames < len(tile.animation):
                     spr.append_frame()
 
-                for j in six.moves.range(len(tile.animation)):
+                for j in range(len(tile.animation)):
                     frame = tile.animation[j]
                     frame_spr = tile_sprites[tileset.firstgid + frame.tileid]
                     w = max(spr.width, frame_spr.width)
@@ -358,7 +349,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
             row = []
             tile_row = []
 
-            for i in six.moves.range(len(layer.tiles)):
+            for i in range(len(layer.tiles)):
                 tile = layer.tiles[i]
                 if tile.gid:
                     cls = tile_cls.get(tile.gid, default_cls)
