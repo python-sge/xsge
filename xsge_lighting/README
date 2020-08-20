@@ -23,7 +23,7 @@ First, install the dependencies:
 - Seclusion Game Engine 1.0 or later <https://python-sge.github.io>
 
 Once you have all the dependencies, install this package with the
-included setup.py script, e.g. with "python setup.py install".
+included setup.py script, e.g. with "python3 setup.py install".
 
 Alternatively, you can just place the "xsge_lighting" folder into the
 same directory as the Python program that uses it. This can be a good

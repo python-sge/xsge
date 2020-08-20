@@ -13,8 +13,10 @@ have.
 xSGE extensions are not dependent on any particular SGE implementation.
 They should work with any implementation that follows the specification.
 
-This extension provides a simple toolkit for adding GUIs to a SGE game
-as well as support for modal dialog boxes.
+This extension provides support for loading the JSON format of the
+`Tiled Map Editor <http://www.mapeditor.org/>`_.  This allows you to use
+Tiled to edit your game's world (e.g. levels), rather than building a
+level editor yourself.
 
 INSTALLATION
 
@@ -26,11 +28,11 @@ First, install the dependencies:
 Once you have all the dependencies, install this package with the
 included setup.py script, e.g. with "python3 setup.py install".
 
-Alternatively, you can just place the "xsge_gui" folder into the same
-directory as the Python program that uses it. This can be a good idea
-for the distribution of a game, since it reduces the number of
+Alternatively, you can just place the "xsge_tiled" folder into the
+same directory as the Python program that uses it. This can be a good
+idea for the distribution of a game, since it reduces the number of
 dependencies the user needs to install.
 
 USAGE
 
-The documentation for xSGE can be found in the "doc" folder.
+The documentation for this package can be found in the "doc" folder.
