@@ -40,7 +40,6 @@ import json
 import os
 
 import sge
-import tmx
 import xsge_path
 
 
@@ -244,8 +243,6 @@ def load(f, cls=sge.dsp.Room, types=None, z=0):
     tilemap_height = tilemap.get("height", 1)
     tilemap_tilewidth = tilemap.get("tilewidth", 32)
     tilemap_tileheight = tilemap.get("tileheight", 32)
-    tilemap_orientation = tilemap.get("orientation", "orthogonal")
-    tilemap_renderorder = tilemap.get("renderorder", "right-down")
 
     tile_cls = {}
     tile_sprites = {}
@@ -339,10 +336,13 @@ def load(f, cls=sge.dsp.Room, types=None, z=0):
     else:
         background = None
 
+    tilemap_orientation = tilemap.get("orientation", "orthogonal")
+    tilemap_renderorder = tilemap.get("renderorder", "right-down")
+
     objects = []
     views = []
     for layer in tilemap.get("layers", []):
-        if tilemap.get("type") == "tilelayer":
+        if layer.get("type") == "tilelayer":
             tile_grid_tiles = []
 
             default_cls = types.get(layer.get("name"), Decoration)
@@ -463,8 +463,6 @@ def load(f, cls=sge.dsp.Room, types=None, z=0):
                     section_length=tilemap_width, tile_width=tilemap_tilewidth,
                     tile_height=tilemap_tileheight)
                 objects.append(Decoration(0, 0, z, sprite=tile_grid))
-                    
-        # TODO (tilemap is now a dict, continue conversion here)
         elif layer.get("type") == "objectgroup":
             default_kwargs = {"z": z}
 
