@@ -163,9 +163,9 @@ class Polyline(xsge_path.Path):
     """
 
 
-def load(f, cls=sge.dsp.Room, types=None, z=0):
+def load(fname, cls=sge.dsp.Room, types=None, z=0):
     """
-    Load JSON tilemap ``f`` and return a room of the class ``cls``.
+    Load JSON tilemap ``fname`` and return a room of the class ``cls``.
 
     The way the map generates the room, in general, is to convert all
     tiles, objects, and image layers into :class:`sge.dsp.Object`
@@ -238,7 +238,9 @@ def load(f, cls=sge.dsp.Room, types=None, z=0):
     if types is None:
         types = {}
 
-    tilemap = json.load(f)
+    with open(fname, 'r') as f:
+        tilemap = json.load(f)
+
     tilemap_width = tilemap.get("width", 1)
     tilemap_height = tilemap.get("height", 1)
     tilemap_tilewidth = tilemap.get("tilewidth", 32)
@@ -249,6 +251,11 @@ def load(f, cls=sge.dsp.Room, types=None, z=0):
     tile_kwargs = {}
     for tileset in sorted(tilemap.get("tilesets", []),
                           key=lambda T: T.firstgid):
+        if tileset.setdefault("source") is not None:
+            tsf = os.path.join(os.path.dirname(fname), tileset["source"])
+            with open(tsf, 'r') as f:
+                tileset = json.load(f)
+
         source = tileset.get("image")
         firstgid = tileset.get("firstgid", 1)
         if source is not None:
