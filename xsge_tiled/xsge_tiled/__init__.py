@@ -289,7 +289,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
 
     c = tilemap.get("backgroundcolor")
     if c:
-        color = _get_color(c)
+        color = t_get_color(c)
         background = sge.gfx.Background([], color)
     else:
         background = None
@@ -333,12 +333,16 @@ def t_get_tilesets(tilemap, tmdir, types):
     tile_sprites = {}
     tile_kwargs = {}
     for tileset in tilemap.get("tilesets", []):
+        # Must get this first because it's level data, not tileset data.
+        firstgid = tileset.get("firstgid", 1)
+
         tsdir = tmdir
         if tileset.setdefault("source"):
-            with open(tileset["source"]) as f:
+            fname = os.path.join(tmdir, tileset["source"])
+            tsdir = os.path.dirname(fname)
+            with open(fname) as f:
                 tileset = json.load(f)
 
-        firstgid = tileset.get("firstgid", 1)
         ts_kwargs = t_get_properties(tileset.get("properties", []))
 
         ts_cls = None
@@ -378,16 +382,15 @@ def t_get_tilesets(tilemap, tmdir, types):
                 tile_sprites[gid] = ts_sprites[i]
                 if ts_cls:
                     tile_cls[gid] = ts_cls
-                if ts_kwargs:
-                    tile_kwargs[gid] = ts_kwargs
+                tile_kwargs[gid] = ts_kwargs.copy()
 
         for tile in tileset.get("tiles", []):
             gid = firstgid + tile.get("id", 0)
 
-            if gid not in tile_cls:
+            if ts_cls and gid not in tile_cls:
                 tile_cls[gid] = ts_cls
             if gid not in tile_kwargs:
-                tile_kwargs[gid] = ts_kwargs
+                tile_kwargs[gid] = ts_kwargs.copy()
 
             animation = tile.get("animation", [])
             if animation:
@@ -444,8 +447,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
             layer.get("layers", []), tilemap, tmdir, tile_cls, tile_sprites,
             tile_kwargs, types, z)
     elif type_ == "tilelayer":
-        default_cls = types.get(
-            layer.get("name"), types.get(layer.get("type"), Decoration))
+        default_cls = types.get(layer.get("name"), Decoration)
         default_kwargs = t_get_properties(layer.get("properties", []))
 
         objects.extend(t_parse_tilechunk(
@@ -460,7 +462,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
         # Note: unlike the others, we don't fall back to the Decoration
         # class here and instead leave it as None. This is because the
         # default default will depend on object type.
-        default_cls = types.get(layer.get("name"), types.get(layer.get("type")))
+        default_cls = types.get(layer.get("name"))
         default_kwargs = t_get_properties(layer.get("properties", []))
         default_kwargs["z"] = z
 
@@ -469,7 +471,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
         ty = layer.get("y", 0)
         yoffset = layer.get("offsety", 0) + ty*tilemap["tileheight"]
 
-        if layer.get("name") == "views" or layer.get("type") == "views":
+        if layer.get("name") == "views":
             for obj in layer.get("objects", []):
                 x = obj.get("x", 0) + xoffset
                 y = obj.get("y", 0) + yoffset
@@ -578,8 +580,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
                     kwargs["sprite"] = sprite
                     objects.append(cls(x + xoffset, y + yoffset, **kwargs))
     elif type_ == "imagelayer":
-        cls = types.get(
-            layer.get("name"), types.get(layer.get("type"), Decoration))
+        cls = types.get(layer.get("name"), Decoration)
         kwargs = t_get_properties(layer.get("properties", []))
         kwargs["z"] = z
 
@@ -627,7 +628,7 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
         if tiles[i]:
             gid, hflip, vflip, dflip = t_gid_parse(tiles[i])
             cls = tile_cls.get(gid, default_cls)
-            kwargs = default_kwargs
+            kwargs = default_kwargs.copy()
             kwargs["z"] = z
             kwargs["sprite"] = tile_sprites.get(gid)
             if hflip:
@@ -662,7 +663,8 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
                 kwargs.update(tile_kwargs.get(gid, {}))
                 x = (i % width) * tilemap["tilewidth"]
                 y = (i // width) * tilemap["tileheight"]
-                y += tilemap["tileheight"] - kwargs["sprite"].height
+                if kwargs["sprite"] is not None:
+                    y += tilemap["tileheight"] - kwargs["sprite"].height
 
                 obj = cls(x + xoffset, y + yoffset, **kwargs)
                 objects.append(obj)
