@@ -501,7 +501,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
                 gid = obj.get("gid")
                 if gid:
                     if cls is None:
-                        cls = tile_cls.get(gid, default_cls)
+                        cls = tile_cls.get(gid)
                     kwargs["sprite"] = tile_sprites.get(gid)
                     if kwargs["sprite"] is not None:
                         sw = kwargs["sprite"].width
@@ -516,6 +516,13 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
                             kwargs["image_yscale"] = height / sh
 
                     kwargs.update(tile_kwargs.get(gid, {}))
+
+                # We do this here to ensure that non-gid objects get
+                # asigned the default class if no other was picked.  We
+                # do it down here to ensure that layer class doesn't
+                # override gid class or object name/type class.
+                if cls is None:
+                    cls = default_cls
 
                 # We do this after that other stuff to make sure
                 # user-defined kwargs get priority over automatically
