@@ -32,7 +32,7 @@ this function for more information.
 """
 
 
-__version__ = "0.1"
+__version__ = "1.0a0"
 __all__ = ["load"]
 
 

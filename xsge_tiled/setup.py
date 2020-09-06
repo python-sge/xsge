@@ -22,7 +22,7 @@ level editor yourself.
 """.strip()
 
 setup(name="xsge_tiled",
-      version="0.1",
+      version="1.0a0",
       description="xSGE Tiled Library",
       long_description=long_description,
       author="Layla Marchant",
@@ -40,6 +40,6 @@ setup(name="xsge_tiled",
       packages=["xsge_tiled"],
       package_dir={"xsge_tiled": "xsge_tiled"},
       package_data={"xsge_tiled": ["COPYING"]},
-      requires=["sge (>=1.0, <2.0)"],
+      requires=["sge (>=1.0, <2.0)", "xsge_path (>=1.0, <2.0)"],
       provides=["xsge_tiled"],
      )

@@ -5,6 +5,15 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
+1.2
+------------------------------------------------------------------------
+
+Misc changes:
+* Added outline options to MenuWindow.from_text.
+* Added selection_prefix and selection_suffix options to
+  MenuWindow.from_text for easy colorblind accessibility.
+
+
 1.1.1
 ------------------------------------------------------------------------
 

@@ -257,7 +257,7 @@ of the game.
 """
 
 
-__version__ = "1.1.1"
+__version__ = "1.2a0"
 __all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
            "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
            "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
@@ -1557,7 +1557,10 @@ class MenuWindow(Window):
     def from_text(cls, parent, x, y, items, font_normal=None,
                   color_normal=None, font_selected=None, color_selected=None,
                   background_color=sge.gfx.Color("#0000"), height=None,
-                  margin=0, halign="left", valign="top"):
+                  margin=0, halign="left", valign="top", outline_normal=None,
+                  outline_selected=None, outline_thickness_normal=0,
+                  outline_thickness_selected=0, selection_prefix="",
+                  selection_suffix=""):
         """
         Return a menu created automatically from a list of strings.
 
@@ -1585,6 +1588,22 @@ class MenuWindow(Window):
         - ``valign`` -- The vertical alignment of the menu.  See the
           documentation for :meth:`sge.gfx.Sprite.draw_text` for more
           information.
+        - ``outline_normal`` -- The default outline color to use.  See
+          the documentation for :meth:`sge.gfx.Sprite.draw_text` for
+          more information.
+        - ``outline_selected`` -- The outline color to use for the
+          currently selected item.  See the documentation for
+          :meth:`sge.gfx.Sprite.draw_text` for more information.
+        - ``outline_thickness_normal`` -- The default outline thickness
+          to use. See the documentation for
+          :meth:`sge.gfx.Sprite.draw_text` for more information.
+        - ``outline_thickness_selected`` -- The outline thickness to use
+          for the currently selected item. See the documentation for
+          :meth:`sge.gfx.Sprite.draw_text` for more information.
+        - ``selection_prefix`` -- A prefix to prepend to the text of the
+          current selection.  Useful for colorblind accessibility.
+        - ``selection_suffix`` -- A suffix to append to the text of the
+          current selection.  Useful for colorblind accessibility.
         """
         if font_selected is None: font_selected = font_normal
         if color_selected is None: color_selected = color_normal
@@ -1592,12 +1611,15 @@ class MenuWindow(Window):
         item_h = 0
         item_sprites = []
         for item in items:
+            item_selected = "".join([selection_prefix, item, selection_suffix])
             n_spr = sge.gfx.Sprite.from_text(
                 font_normal, item, color=color_normal, halign=halign,
-                valign=valign)
+                valign=valign, outline=outline_normal,
+                outline_thickness=outline_thickness_normal)
             s_spr = sge.gfx.Sprite.from_text(
-                font_selected, item, color=color_selected, halign=halign,
-                valign=valign)
+                font_selected, item_selected, color=color_selected,
+                halign=halign, valign=valign, outline=outline_selected,
+                outline_thickness=outline_thickness_selected)
             width = max(width, n_spr.width, s_spr.width)
             item_h = max(item_h, n_spr.height, s_spr.height)
             item_sprites.append((n_spr, s_spr))
@@ -3371,7 +3393,11 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
                        color_normal=None, font_selected=None,
                        color_selected=None,
                        background_color=sge.gfx.Color("#0000"), height=None,
-                       margin=0, halign="left", valign="top"):
+                       margin=0, halign="left", valign="top",
+                       outline_normal=None, outline_selected=None,
+                       outline_thickness_normal=0,
+                       outline_thickness_selected=0, selection_prefix="",
+                       selection_suffix=""):
     """
     Show a menu and return the index of the menu item selected.
 
@@ -3383,7 +3409,7 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
       the dialog is shown.
     - ``default`` -- The index of the item to select by default.
 
-    See the documentation for :class:`xsge_gui.MenuDialog.from_text` for
+    See the documentation for :class:`xsge_gui.MenuWindow.from_text` for
     more information.
     """
     if items:
@@ -3393,13 +3419,16 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
         else:
             destroy_parent = False
 
-        w = MenuDialog.from_text(parent, x, y, items, font_normal=font_normal,
-                                 color_normal=color_normal,
-                                 font_selected=font_selected,
-                                 color_selected=color_selected,
-                                 background_color=background_color,
-                                 height=height, margin=margin, halign=halign,
-                                 valign=valign)
+        w = MenuDialog.from_text(
+            parent, x, y, items, font_normal=font_normal,
+            color_normal=color_normal, font_selected=font_selected,
+            color_selected=color_selected, background_color=background_color,
+            height=height, margin=margin, halign=halign, valign=valign,
+            outline_normal=outline_normal, outline_selected=outline_selected,
+            outline_thickness_normal=outline_thickness_normal,
+            outline_thickness_selected=outline_thickness_selected,
+            selection_prefix=selection_prefix,
+            selection_suffix=selection_suffix)
         default %= len(w.widgets)
         w.keyboard_selected_widget = w.widgets[default]
         w.show()
