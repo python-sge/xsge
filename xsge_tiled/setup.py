@@ -22,13 +22,13 @@ level editor yourself.
 """.strip()
 
 setup(name="xsge_tiled",
-      version="1.0a0",
+      version="1.0",
       description="xSGE Tiled Library",
       long_description=long_description,
       author="Layla Marchant",
       author_email="diligentcircle@riseup.net",
       url="https://python-sge.github.io",
-      classifiers=["Development Status :: 3 - Alpha",
+      classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
                    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",

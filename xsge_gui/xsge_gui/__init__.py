@@ -257,7 +257,7 @@ of the game.
 """
 
 
-__version__ = "1.2a0"
+__version__ = "1.2"
 __all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
            "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
            "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",

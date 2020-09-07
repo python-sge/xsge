@@ -32,7 +32,7 @@ this function for more information.
 """
 
 
-__version__ = "1.0a0"
+__version__ = "1.0"
 __all__ = ["load"]
 
 
@@ -234,6 +234,7 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
       are valid keys in ``types``, the class used depends on what kind
       of object it is:
 
+      - Point objects default to :class:`Point`.
       - Rectangle objects default to :class:`Rectangle`.
       - Ellipse objects default to :class:`Ellipse`.
       - Polygon objects default to :class:`Polygon`.
@@ -326,7 +327,7 @@ def t_get_tilesets(tilemap, tmdir, types):
     - A dictionary linking Tiled GID keys to keyword argument
       dictionaries based on the properties of the tileset and tiles.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     tile_cls = {}
@@ -435,7 +436,7 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
     - A list of views retrieved by the layer.
     - The next z index to be used by another layer.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     objects = []
@@ -615,7 +616,7 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
     """
     Parse a chunk of a layer and return a list of objects generated.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     encoding = layer.get("encoding", "csv")
@@ -699,7 +700,7 @@ def t_get_properties(properties):
     Convert Tiled properties list ``properties`` into a dictionary of
     keyword arguments and return said dictionary.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     kwargs = {}
@@ -722,7 +723,7 @@ def t_gid_parse(gid):
     - Whether or not the tile is vertically flipped.
     - Whether or not the tile is "diagonally" flipped.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     rgid = (gid - (gid & 1<<31) - (gid & 1<<30) - (gid & 1<<29))
@@ -737,7 +738,7 @@ def t_get_color(value):
     Return a sge.gfx.Color object corresponding to s, based on Tiled's
     color formatting.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     if value.startswith("#"):
@@ -766,7 +767,7 @@ def t_data_decode(data, encoding, compression):
       compression methods are ``"gzip"`` and ``"zlib"``.
       Set to ``None`` for no compression.
 
-    This is a low-level library used internally by this library; you
+    This is a low-level function used internally by this library; you
     don't typically need to use it.
     """
     if isinstance(data, str):
