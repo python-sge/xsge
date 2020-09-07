@@ -1,6 +1,6 @@
-****************
-xSGE TMX Library
-****************
+******************
+xSGE Tiled Library
+******************
 
 .. This file has been dedicated to the public domain, to the extent
    possible under applicable law, via CC0. See
@@ -31,16 +31,16 @@ xsge_tiled Functions
 
 .. autofunction:: xsge_tiled.load
 
-.. autofunction:: t_get_tilesets
+.. autofunction:: xsge_tiled.t_get_tilesets
 
-.. autofunction:: t_parse_layer
+.. autofunction:: xsge_tiled.t_parse_layer
 
-.. autofunction:: t_parse_tilechunk
+.. autofunction:: xsge_tiled.t_parse_tilechunk
 
-.. autofunction:: t_get_properties
+.. autofunction:: xsge_tiled.t_get_properties
 
-.. autofunction:: t_gid_parse
+.. autofunction:: xsge_tiled.t_gid_parse
 
-.. autofunction:: t_get_color
+.. autofunction:: xsge_tiled.t_get_color
 
-.. autofunction:: t_data_decode
+.. autofunction:: xsge_tiled.t_data_decode
