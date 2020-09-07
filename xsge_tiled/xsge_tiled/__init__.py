@@ -704,7 +704,12 @@ def t_get_properties(properties):
     """
     kwargs = {}
     for property_ in properties:
-        kwargs[property_.get("name")] = property_.get("value")
+        value = property_.get("value")
+        type_ = property_.get("type")
+        if type_ == "color":
+            value = t_get_color(value)
+
+        kwargs[property_.get("name")] = value
     return kwargs
 
 
