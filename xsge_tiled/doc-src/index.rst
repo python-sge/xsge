@@ -16,6 +16,8 @@ xsge_tiled Classes
 
 .. autoclass:: xsge_tiled.Decoration
 
+.. autoclass:: xsge_tiled.Point
+
 .. autoclass:: xsge_tiled.Rectangle
 
 .. autoclass:: xsge_tiled.Ellipse
@@ -28,3 +30,17 @@ xsge_tiled Functions
 ====================
 
 .. autofunction:: xsge_tiled.load
+
+.. autofunction:: t_get_tilesets
+
+.. autofunction:: t_parse_layer
+
+.. autofunction:: t_parse_tilechunk
+
+.. autofunction:: t_get_properties
+
+.. autofunction:: t_gid_parse
+
+.. autofunction:: t_get_color
+
+.. autofunction:: t_data_decode

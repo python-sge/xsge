@@ -1683,8 +1683,8 @@ class MessageDialog(Dialog):
     def __init__(self, parent, message="", title="Message", buttons=("Ok",),
                  default=-1, width=320, height=None):
         """See :func:`xsge_gui.show_message`."""
-        button_w = max(1, int(round((width - DIALOG_PADDING *
-                                     (len(buttons) + 1)) / len(buttons))))
+        button_w = max(1, round((width - DIALOG_PADDING*(len(buttons) + 1))
+                                / len(buttons)))
         button_h = button_sprite.height
         label_w = max(1, width - DIALOG_PADDING * 2)
 
@@ -2478,10 +2478,10 @@ class Button(Widget):
     def redraw(self):
         h = button_sprite.height
         if self.width is None:
-            w = int(round(button_font.get_width(self.text, height=h)))
+            w = round(button_font.get_width(self.text, height=h))
             sprite_w = w + button_left_sprite.width + button_right_sprite.width
         else:
-            sprite_w = int(round(self.width))
+            sprite_w = round(self.width)
             w = sprite_w - button_left_sprite.width - button_right_sprite.width
 
         left = button_left_sprite.width
@@ -2697,9 +2697,9 @@ class ProgressBar(DecorativeWidget):
         self.sprite.height = progressbar_container_sprite.height
         left = progressbar_container_left_sprite.width
         right = self.width - progressbar_container_right_sprite.width
-        y = int(round((progressbar_container_sprite.height -
-                       progressbar_sprite.height) / 2))
-        pixels = int(round(self.progress * (right - left)))
+        y = round((progressbar_container_sprite.height
+                   - progressbar_sprite.height) / 2)
+        pixels = round(self.progress * (right-left))
 
         self.sprite.draw_lock()
         self.sprite.draw_clear()
@@ -3131,7 +3131,7 @@ class MenuItem(Widget):
             else:
                 spr = self.sprite_normal
 
-            sge.game.project_sprite(spr, int(round(self.__frame)),
+            sge.game.project_sprite(spr, round(self.__frame),
                                     parent.x + self.x, parent.y + self.y)
         else:
             self.destroy()
