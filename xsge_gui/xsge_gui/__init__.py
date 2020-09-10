@@ -257,7 +257,7 @@ of the game.
 """
 
 
-__version__ = "1.2"
+__version__ = "1.2.1a0"
 __all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
            "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
            "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
@@ -289,7 +289,7 @@ DIALOG_PADDING = 8
 window_background_color = sge.gfx.Color("#A4A4A4")
 keyboard_focused_box_color = sge.gfx.Color((0, 0, 0, 170))
 text_color = sge.gfx.Color("black")
-button_text_color = sge.gfx.Color("black")
+button_text_color = sge.gfx.Color("white")
 textbox_text_color = sge.gfx.Color("black")
 textbox_text_selected_color = sge.gfx.Color("white")
 textbox_highlight_color = sge.gfx.Color("blue")
