@@ -8,6 +8,9 @@ information. This file is offered as-is, without any warranty.
 2.0
 ------------------------------------------------------------------------
 
+Additions:
++ Tiled 1.4 tintcolor support
+
 Misc changes:
 * Simplified definition of generic Decoration, Point, Rectangle, and
   Ellipse __init__ arguments to take advantage of the keyword argument

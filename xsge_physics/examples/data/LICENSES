@@ -3,9 +3,9 @@ non-functional data files found in this directory.
 
 ========================================================================
 
-level.tmx
+level.json
 tiles.png
-tiles.tsx
+tiles.json
 
-Author: Layla Marchant <https://onpon4.github.io>
+Author: The Diligent Circle <https://onpon4.github.io>
 License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>

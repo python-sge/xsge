@@ -340,7 +340,7 @@ def t_get_tilesets(tilemap, tmdir, types):
 
 
 def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
-                  types, z):
+                  types, z, *, tintcolor=None):
     """
     Parse a layer and return a tuple containing two values:
 
@@ -354,27 +354,29 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
     objects = []
     views = []
 
+    tintcolor = layer.get("tintcolor", tintcolor)
+
     type_ = layer.get("type")
     if type_ == "group":
         objects, views, z = t_parse_layer(
             layer.get("layers", []), tilemap, tmdir, tile_cls, tile_sprites,
-            tile_kwargs, types, z)
+            tile_kwargs, types, z, tintcolor=tintcolor)
     elif type_ == "tilelayer":
         default_cls = types.get(layer.get("name"), Decoration)
         default_kwargs = t_get_properties(layer.get("properties", []))
 
         objects.extend(t_parse_tilechunk(
             layer, tilemap, layer, tile_cls, tile_sprites, tile_kwargs,
-            default_cls, default_kwargs, types, z))
+            default_cls, default_kwargs, types, z, tintcolor))
 
         for chunk in layer.get("chunks", []):
             objects.extend(t_parse_tilechunk(
                 chunk, tilemap, layer, tile_cls, tile_sprites, tile_kwargs,
-                default_cls, default_kwargs, types, z))
+                default_cls, default_kwargs, types, z, tintcolor))
     elif type_ == "objectgroup":
         # Note: unlike the others, we don't fall back to the Decoration
         # class here and instead leave it as None. This is because the
-        # default default will depend on object type.
+        # default will depend on object type.
         default_cls = types.get(layer.get("name"))
         default_kwargs = t_get_properties(layer.get("properties", []))
         default_kwargs["z"] = z
@@ -427,6 +429,14 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
                             height = sh
                         elif sh and height != sh:
                             kwargs["image_yscale"] = height / sh
+
+                        if tintcolor:
+                            sprite = kwargs["sprite"].copy()
+                            sprite.draw_rectangle(
+                                0, 0, sprite.width, sprite.height,
+                                fill=t_get_color(tintcolor),
+                                blend_mode=sge.BLEND_RGBA_MULTIPLY)
+                            kwargs["sprite"] = sprite
 
                     kwargs.update(tile_kwargs.get(gid, {}))
 
@@ -514,6 +524,10 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
             name, ext = os.path.splitext(os.path.basename(image))
             d = os.path.dirname(fname)
             sprite = sge.gfx.Sprite(name, d)
+            if tintcolor:
+                sprite.draw_rectangle(0, 0, sprite.width, sprite.height,
+                                      fill=t_get_color(tintcolor),
+                                      blend_mode=sge.BLEND_RGBA_MULTIPLY)
         else:
             sprite = None
 
@@ -524,7 +538,8 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
 
 
 def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
-                      tile_kwargs, default_cls, default_kwargs, types, z):
+                      tile_kwargs, default_cls, default_kwargs, types, z,
+                      tintcolor):
     """
     Parse a chunk of a layer and return a list of objects generated.
 
@@ -558,6 +573,13 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
             if dflip:
                 kwargs["image_yscale"] = -kwargs.get("image_yscale", 1)
                 kwargs["image_rotation"] = 270
+
+            if tintcolor and kwargs["sprite"]:
+                sprite = kwargs["sprite"].copy()
+                sprite.draw_rectangle(0, 0, sprite.width, sprite.height,
+                                      fill=t_get_color(tintcolor),
+                                      blend_mode=sge.BLEND_RGBA_MULTIPLY)
+                kwargs["sprite"] = sprite
 
             if (cls == Decoration and kwargs["sprite"]
                     and kwargs["sprite"].width == tilemap["tilewidth"]
