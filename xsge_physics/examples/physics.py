@@ -16,6 +16,9 @@ import sge
 import xsge_physics
 
 
+SPEED = 2
+
+
 class Game(sge.dsp.Game):
 
     def event_key_press(self, key, char):
@@ -30,56 +33,56 @@ class Player(xsge_physics.Collider):
 
     def event_step(self, time_passed, delta_mult):
         sge.game.window_text = "({}, {})".format(self.x, self.y)
-        self.xvelocity = (sge.keyboard.get_pressed("right") -
-                          sge.keyboard.get_pressed("left")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("down") -
-                          sge.keyboard.get_pressed("up")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("right")
+                          - sge.keyboard.get_pressed("left")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("down")
+                          - sge.keyboard.get_pressed("up")) * SPEED
 
 
 class Square(xsge_physics.Solid, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
-        self.xvelocity = (sge.keyboard.get_pressed("d") -
-                          sge.keyboard.get_pressed("a")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("s") -
-                          sge.keyboard.get_pressed("w")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("d")
+                          - sge.keyboard.get_pressed("a")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("s")
+                          - sge.keyboard.get_pressed("w")) * SPEED
 
 
 class DiamondTopLeft(xsge_physics.SlopeTopLeft, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
-        self.xvelocity = (sge.keyboard.get_pressed("l") -
-                          sge.keyboard.get_pressed("j")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("k") -
-                          sge.keyboard.get_pressed("i")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("l")
+                          - sge.keyboard.get_pressed("j")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("k")
+                          - sge.keyboard.get_pressed("i")) * SPEED
 
 
 class DiamondTopRight(xsge_physics.SlopeTopRight, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
-        self.xvelocity = (sge.keyboard.get_pressed("l") -
-                          sge.keyboard.get_pressed("j")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("k") -
-                          sge.keyboard.get_pressed("i")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("l")
+                          - sge.keyboard.get_pressed("j")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("k")
+                          - sge.keyboard.get_pressed("i")) * SPEED
 
 
 class DiamondBottomLeft(xsge_physics.SlopeBottomLeft, xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
-        self.xvelocity = (sge.keyboard.get_pressed("l") -
-                          sge.keyboard.get_pressed("j")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("k") -
-                          sge.keyboard.get_pressed("i")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("l")
+                          - sge.keyboard.get_pressed("j")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("k")
+                          - sge.keyboard.get_pressed("i")) * SPEED
 
 
 class DiamondBottomRight(xsge_physics.SlopeBottomRight,
                          xsge_physics.MobileWall):
 
     def event_step(self, time_passed, delta_mult):
-        self.xvelocity = (sge.keyboard.get_pressed("l") -
-                          sge.keyboard.get_pressed("j")) * 4
-        self.yvelocity = (sge.keyboard.get_pressed("k") -
-                          sge.keyboard.get_pressed("i")) * 4
+        self.xvelocity = (sge.keyboard.get_pressed("l")
+                          - sge.keyboard.get_pressed("j")) * SPEED
+        self.yvelocity = (sge.keyboard.get_pressed("k")
+                          - sge.keyboard.get_pressed("i")) * SPEED
 
 
 def main():
@@ -141,6 +144,17 @@ def main():
     slope2_1 = xsge_physics.SlopeTopRight(100, 500, 0, sprite=slope2_sprite)
     slope2_2 = xsge_physics.SlopeTopRight(116, 532, 0, sprite=slope2_sprite)
     slope2_3 = xsge_physics.SlopeTopRight(84, 468, 0, sprite=slope2_sprite)
+    slope2_4 = xsge_physics.SlopeTopRight(68, 436, 0, sprite=slope2_sprite)
+    slope2_5 = xsge_physics.SlopeTopRight(52, 404, 0, sprite=slope2_sprite)
+    slope2_6 = xsge_physics.SlopeTopRight(36, 372, 0, sprite=slope2_sprite)
+    slope2b_1 = xsge_physics.SlopeBottomLeft(36, 372, 0, sprite=slope4_sprite)
+    slope2b_2 = xsge_physics.SlopeBottomLeft(52, 388, 0, sprite=slope4_sprite)
+    slope2b_3 = xsge_physics.SlopeBottomLeft(68, 404, 0, sprite=slope4_sprite)
+    slope2b_4 = xsge_physics.SlopeBottomLeft(84, 420, 0, sprite=slope4_sprite)
+    slope2b_5 = xsge_physics.SlopeBottomLeft(100, 436, 0, sprite=slope4_sprite)
+    slope2b_6 = xsge_physics.SlopeBottomLeft(116, 452, 0, sprite=slope4_sprite)
+    slope2b_7 = xsge_physics.SlopeBottomLeft(132, 468, 0, sprite=slope4_sprite)
+    slope2b_8 = xsge_physics.SlopeBottomLeft(148, 484, 0, sprite=slope4_sprite)
     slope3_1 = xsge_physics.SlopeBottomRight(100, 100, 0, sprite=slope3_sprite)
     slope3_2 = xsge_physics.SlopeBottomRight(116, 84, 0, sprite=slope3_sprite)
     slope3_3 = xsge_physics.SlopeBottomRight(84, 116, 0, sprite=slope3_sprite)
@@ -155,6 +169,8 @@ def main():
     objects = [player, bottom_1, bottom_2, bottom_3, top_1, top_2, top_3,
                left_1, left_2, left_3, right_1, right_2, right_3,
                slope1_1, slope1_2, slope1_3, slope2_1, slope2_2, slope2_3,
+               slope2_4, slope2_5, slope2_6, slope2b_1, slope2b_2, slope2b_3,
+               slope2b_4, slope2b_5, slope2b_6, slope2b_7, slope2b_8,
                slope3_1, slope3_2, slope3_3, slope4_1, slope4_2, slope4_3,
                square, diamond_tl, diamond_tr, diamond_bl, diamond_br]
 
