@@ -14,10 +14,9 @@
 
 import os
 
-import ulvl
-
 import sge
 import xsge_physics
+import xsge_tiled
 
 
 DATA = os.path.join(os.path.dirname(__file__), "data")
@@ -46,12 +45,6 @@ class Player(xsge_physics.Collider):
 
     on_floor = False
     on_slope = False
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("sprite", tile_sprites[1])
-        kwargs["bbox_x"] = 4
-        kwargs["bbox_width"] = 8
-        super().__init__(*args, **kwargs)
 
     def event_step(self, time_passed, delta_mult):
         self.on_floor = self.get_bottom_touching_wall()
@@ -111,103 +104,64 @@ class Player(xsge_physics.Collider):
 
 class Solid(xsge_physics.Solid):
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
 class SolidTop(xsge_physics.SolidTop):
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
 class SlopeTopLeft(xsge_physics.SlopeTopLeft):
 
     xsticky_top = True
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
 class SlopeTopRight(xsge_physics.SlopeTopRight):
 
     xsticky_top = True
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
 class SlopeBottomLeft(xsge_physics.SlopeBottomLeft):
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
 class SlopeBottomRight(xsge_physics.SlopeBottomRight):
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("visible", False)
-        kwargs.setdefault("checks_collisions", False)
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, z=0, *, visible=False, checks_collisions=False,
+                 **kwargs):
+        super().__init__(x, y, z, visible=visible,
+                         checks_collisions=checks_collisions, **kwargs)
 
 
-Game(640, 480)
+Game(640, 480, delta=False)
 
 types = {"player": Player, "solid": Solid, "unisolid": SolidTop,
          "slope_topleft": SlopeTopLeft, "slope_topright": SlopeTopRight,
          "slope_bottomleft": SlopeBottomLeft,
          "slope_bottomright": SlopeBottomRight}
-
-tmx = ulvl.TMX.load(os.path.join(DATA, "level.tmx"))
-tilewidth = tmx.meta["tilewidth"]
-tileheight = tmx.meta["tileheight"]
-width = tmx.meta["width"] * tilewidth
-height = tmx.meta["height"] * tileheight
-backgroundcolor = tmx.meta.get("backgroundcolor", "gray")
-
-tile_sprites = sge.gfx.Sprite.from_tileset(
-    os.path.join(DATA, "tiles.png"), x=2, y=2, columns=5, rows=4, xsep=1,
-    ysep=1, width=16, height=16).get_spritelist()
-
-layers = []
-for dlayer in tmx.layers:
-    tiles = []
-    for i in range(len(dlayer.tiles)):
-        tid = dlayer.tiles[i]
-        if tid:
-            tiles.append(tile_sprites[tid - 1])
-        else:
-            tiles.append(None)
-    tilegrid = sge.gfx.TileGrid(tiles, section_length=dlayer.columns,
-                                tile_width=tilewidth, tile_height=tileheight)
-    layers.append(sge.gfx.BackgroundLayer(tilegrid, 0, 0))
-background = sge.gfx.Background(layers, sge.gfx.Color(backgroundcolor))
-
-objects = []
-for obj in tmx.objects:
-    cls = types[obj.type]
-    x = obj.meta["x"]
-    y = obj.meta["y"]
-    if "gid" in obj.meta:
-        x -= tilewidth - 2
-        y -= tileheight
-    width = obj.meta.get("width")
-    height = obj.meta.get("height")
-    objects.append(cls(x, y, bbox_x=0, bbox_y=0, bbox_width=width,
-                       bbox_height=height))
-
-sge.game.start_room = sge.dsp.Room(objects=objects, width=width, height=height,
-                                   background=background)
+sge.game.start_room = xsge_tiled.load(os.path.join(DATA, "level.json"),
+                                      types=types)
 
 
 if __name__ == "__main__":

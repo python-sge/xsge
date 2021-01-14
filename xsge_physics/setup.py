@@ -21,7 +21,7 @@ for other types of games.
 """.strip()
 
 setup(name="xsge_physics",
-      version="0.13.2",
+      version="0.13.3a0",
       description="xSGE Physics Framework",
       long_description=long_description,
       author="Layla Marchant",
@@ -39,6 +39,6 @@ setup(name="xsge_physics",
       packages=["xsge_physics"],
       package_dir={"xsge_physics": "xsge_physics"},
       package_data={"xsge_physics": ["COPYING"]},
-      requires=["sge (>=1.0, <2.0)"],
+      requires=["sge (>=1.0, <3.0)"],
       provides=["xsge_physics"],
      )
