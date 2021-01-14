@@ -32,7 +32,7 @@ this function for more information.
 """
 
 
-__version__ = "1.0"
+__version__ = "2.0a0"
 __all__ = ["load"]
 
 
@@ -54,31 +54,10 @@ class Decoration(sge.dsp.Object):
     check for collisions by default.
     """
 
-    def __init__(self, x, y, z=0, sprite=None, visible=True, active=False,
-                 checks_collisions=False, tangible=False, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None, image_blend_mode=None):
-        super(Decoration, self).__init__(
-            x, y, z=z, sprite=sprite, visible=visible, active=active,
-            checks_collisions=checks_collisions, tangible=tangible,
-            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
-            bbox_height=bbox_height, regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend,
-            image_blend_mode=image_blend_mode)
+    def __init__(self, x, y, z=0, *, checks_collisions=False, tangible=False,
+                 **kwargs):
+        super().__init__(checks_collisions=checks_collisions,
+                         tangible=tangible, **kwargs)
 
 
 class Point(sge.dsp.Object):
@@ -88,31 +67,8 @@ class Point(sge.dsp.Object):
     :class:`sge.dsp.Object`, except that it is invisible by default.
     """
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=True, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None, image_blend_mode=None):
-        super().__init__(
-            x, y, z=z, sprite=sprite, visible=visible, active=active,
-            checks_collisions=checks_collisions, tangible=tangible,
-            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
-            bbox_height=bbox_height, regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend,
-            image_blend_mode=image_blend_mode)
+    def __init__(self, x, y, z=0, *, visible=False, **kwargs):
+        super().__init__(x, y, z=z, visible=visible, **kwargs)
 
 
 class Rectangle(sge.dsp.Object):
@@ -122,31 +78,8 @@ class Rectangle(sge.dsp.Object):
     :class:`sge.dsp.Object`, except that it is invisible by default.
     """
 
-    def __init__(self, x, y, z=0, sprite=None, visible=False, active=True,
-                 checks_collisions=True, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=False,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None, image_blend_mode=None):
-        super().__init__(
-            x, y, z=z, sprite=sprite, visible=visible, active=active,
-            checks_collisions=checks_collisions, tangible=tangible,
-            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
-            bbox_height=bbox_height, regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend,
-            image_blend_mode=image_blend_mode)
+    def __init__(self, x, y, z=0, *, visible=False, **kwargs):
+        super().__init__(x, y, z=z, visible=visible, **kwargs)
 
 
 class Ellipse(sge.dsp.Object):
@@ -157,31 +90,10 @@ class Ellipse(sge.dsp.Object):
     ellipse collision detection by default.
     """
 
-    def __init__(self, x, y, z=0, sprite=None, visible=True, active=True,
-                 checks_collisions=True, tangible=True, bbox_x=None,
-                 bbox_y=None, bbox_width=None, bbox_height=None,
-                 regulate_origin=False, collision_ellipse=True,
-                 collision_precise=False, xvelocity=0, yvelocity=0,
-                 xacceleration=0, yacceleration=0, xdeceleration=0,
-                 ydeceleration=0, image_index=0, image_origin_x=None,
-                 image_origin_y=None, image_fps=None, image_xscale=1,
-                 image_yscale=1, image_rotation=0, image_alpha=255,
-                 image_blend=None, image_blend_mode=None):
-        super().__init__(
-            x, y, z=z, sprite=sprite, visible=visible, active=active,
-            checks_collisions=checks_collisions, tangible=tangible,
-            bbox_x=bbox_x, bbox_y=bbox_y, bbox_width=bbox_width,
-            bbox_height=bbox_height, regulate_origin=regulate_origin,
-            collision_ellipse=collision_ellipse,
-            collision_precise=collision_precise, xvelocity=xvelocity,
-            yvelocity=yvelocity, xacceleration=xacceleration,
-            yacceleration=yacceleration, xdeceleration=xdeceleration,
-            ydeceleration=ydeceleration, image_index=image_index,
-            image_origin_x=image_origin_x, image_origin_y=image_origin_y,
-            image_fps=image_fps, image_xscale=image_xscale,
-            image_yscale=image_yscale, image_rotation=image_rotation,
-            image_alpha=image_alpha, image_blend=image_blend,
-            image_blend_mode=image_blend_mode)
+    def __init__(self, x, y, z=0, *, visible=True, collision_ellipse=True,
+                 **kwargs):
+        super().__init__(x, y, z=z, visible=visible,
+                         collision_ellipse=collision_ellipse, **kwargs)
 
 
 class Polygon(xsge_path.Path):

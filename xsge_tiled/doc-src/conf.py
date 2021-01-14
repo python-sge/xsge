@@ -21,7 +21,7 @@
 
 project = 'xSGE Tiled Library'
 copyright = ''
-author = 'Layla Marchant'
+author = 'The Diligent Circle'
 
 # The short X.Y version
 version = '1.0'
@@ -133,7 +133,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'xsge_tiled.tex', 'xsge\\_tiled Documentation',
-     'Layla Marchant', 'manual'),
+     'The Diligent Circle', 'manual'),
 ]
 
 

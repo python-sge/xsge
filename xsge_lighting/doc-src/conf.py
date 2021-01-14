@@ -21,7 +21,7 @@
 
 project = 'xSGE Lighting Library'
 copyright = ''
-author = 'Layla Marchant'
+author = 'The Diligent Circle'
 
 # The short X.Y version
 version = '1.0'
@@ -133,7 +133,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'xsge_lighting.tex', 'xsge\\_lighting Documentation',
-     'Layla Marchant', 'manual'),
+     'The Diligent Circle', 'manual'),
 ]
 
 

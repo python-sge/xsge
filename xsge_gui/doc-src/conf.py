@@ -21,7 +21,7 @@
 
 project = 'xSGE GUI Toolkit'
 copyright = ''
-author = 'Layla Marchant'
+author = 'The Diligent Circle'
 
 # The short X.Y version
 version = '1.2'
@@ -133,7 +133,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'xsge_gui.tex', 'xsge\\_gui Documentation',
-     'Layla Marchant', 'manual'),
+     'The Diligent Circle', 'manual'),
 ]
 
 
