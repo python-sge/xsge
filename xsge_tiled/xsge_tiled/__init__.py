@@ -56,7 +56,7 @@ class Decoration(sge.dsp.Object):
 
     def __init__(self, x, y, z=0, *, checks_collisions=False, tangible=False,
                  **kwargs):
-        super().__init__(checks_collisions=checks_collisions,
+        super().__init__(x, y, z, checks_collisions=checks_collisions,
                          tangible=tangible, **kwargs)
 
 
@@ -68,7 +68,7 @@ class Point(sge.dsp.Object):
     """
 
     def __init__(self, x, y, z=0, *, visible=False, **kwargs):
-        super().__init__(x, y, z=z, visible=visible, **kwargs)
+        super().__init__(x, y, z, visible=visible, **kwargs)
 
 
 class Rectangle(sge.dsp.Object):
@@ -79,7 +79,7 @@ class Rectangle(sge.dsp.Object):
     """
 
     def __init__(self, x, y, z=0, *, visible=False, **kwargs):
-        super().__init__(x, y, z=z, visible=visible, **kwargs)
+        super().__init__(x, y, z, visible=visible, **kwargs)
 
 
 class Ellipse(sge.dsp.Object):
@@ -92,7 +92,7 @@ class Ellipse(sge.dsp.Object):
 
     def __init__(self, x, y, z=0, *, visible=True, collision_ellipse=True,
                  **kwargs):
-        super().__init__(x, y, z=z, visible=visible,
+        super().__init__(x, y, z, visible=visible,
                          collision_ellipse=collision_ellipse, **kwargs)
 
 
