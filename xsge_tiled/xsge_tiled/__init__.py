@@ -183,6 +183,10 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
        will be added later either when it makes it into the Pyhton
        Standard Library or, if that doesn't happen, when it's clear what
        zstd library to use.
+
+    .. note::
+
+       Only orthogonal, staggered, and hexagonal tilemaps are supported.
     """
     if types is None:
         types = {}
@@ -199,6 +203,22 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
                    * tilemap.setdefault("tileheight", 32))
     tilemap.setdefault("renderorder", "right-down")
     tilemap.setdefault("orientation", "orthogonal")
+    tilemap.setdefault("staggeraxis", "y")
+    tilemap.setdefault("staggerindex", "odd")
+    tilemap.setdefault("hexsidelength", 12)
+
+    if tilemap["orientation"] == "staggered":
+        if tilemap["staggeraxis"] == "x":
+            room_width = room_width/2 + tilemap["tilewidth"]/2
+        else:
+            room_height = room_height/2 + tilemap["tileheight"]/2
+    elif tilemap["orientation"] == "hexagonal":
+        if tilemap["staggeraxis"] == "x":
+            room_width = (room_width/2 + tilemap["tilewidth"]/2
+                          + tilemap["width"]*tilemap["hexsidelength"])
+        else:
+            room_height = (room_height/2 + tilemap["tileheight"]/2
+                           + tilemap["height"]*tilemap["hexsidelength"])
 
     c = tilemap.get("backgroundcolor")
     if c:
@@ -209,14 +229,15 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
 
     tmdir = os.path.dirname(fname)
 
-    tile_cls, tile_sprites, tile_kwargs = t_get_tilesets(tilemap, tmdir, types)
+    (tile_cls, tile_sprites, tile_kwargs,
+     tile_objectalignment) = t_get_tilesets(tilemap, tmdir, types)
 
     objects = []
     views = []
     for layer in tilemap.get("layers", []):
         new_objects, new_views, z = t_parse_layer(
-            layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs, types,
-            z)
+            layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
+            tile_objectalignment, types, z)
         objects.extend(new_objects)
         views.extend(new_views)
 
@@ -238,13 +259,21 @@ def t_get_tilesets(tilemap, tmdir, types):
     - A dictionary linking Tiled GID keys to SGE sprites.
     - A dictionary linking Tiled GID keys to keyword argument
       dictionaries based on the properties of the tileset and tiles.
+    - A dictionary linkint Tiled GID keys to objectalignment values
+      specified in Tiled.
 
     This is a low-level function used internally by this library; you
     don't typically need to use it.
+
+    .. warning::
+
+       Due to its nature, this function's return value is subject to
+       being extended with additional tuple values without notice.
     """
     tile_cls = {}
     tile_sprites = {}
     tile_kwargs = {}
+    tile_objectalignment = {}
     for tileset in tilemap.get("tilesets", []):
         # Must get this first because it's level data, not tileset data.
         firstgid = tileset.get("firstgid", 1)
@@ -263,6 +292,8 @@ def t_get_tilesets(tilemap, tmdir, types):
             ts_cls = types[tileset["name"]]
         elif tileset.setdefault("type") in types:
             ts_cls = types[tileset["type"]]
+
+        ts_objectalignment = tileset.get("objectalignment")
 
         image = tileset.get("image")
         if image:
@@ -296,6 +327,7 @@ def t_get_tilesets(tilemap, tmdir, types):
                 if ts_cls:
                     tile_cls[gid] = ts_cls
                 tile_kwargs[gid] = ts_kwargs.copy()
+                tile_objectalignment[gid] = ts_objectalignment
 
         for tile in tileset.get("tiles", []):
             gid = firstgid + tile.get("id", 0)
@@ -336,13 +368,13 @@ def t_get_tilesets(tilemap, tmdir, types):
             tile_kwargs[gid].update(
                 t_get_properties(tile.get("properties", [])))
 
-    return tile_cls, tile_sprites, tile_kwargs
+    return tile_cls, tile_sprites, tile_kwargs, tile_objectalignment
 
 
 def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
-                  types, z, *, tintcolor=None):
+                  tile_objectalignment, types, z, *, tintcolor=None):
     """
-    Parse a layer and return a tuple containing two values:
+    Parse a layer and return a tuple containing three values:
 
     - A list of objects retrieved by the layer.
     - A list of views retrieved by the layer.
@@ -350,6 +382,11 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
 
     This is a low-level function used internally by this library; you
     don't typically need to use it.
+
+    .. warning::
+
+       Due to its nature, this function's return value is subject to
+       being extended with additional tuple values without notice.
     """
     objects = []
     views = []
@@ -456,9 +493,37 @@ def t_parse_layer(layer, tilemap, tmdir, tile_cls, tile_sprites, tile_kwargs,
                 if gid:
                     if cls is None:
                         cls = Decoration
-                    if tilemap["orientation"] != "orthogonal":
+
+                    alignment = tile_objectalignment.get(gid)
+                    if alignment == "topleft":
+                        # Nothing to do, that's our native origin
+                        pass
+                    elif alignment == "top":
                         x -= width / 2
-                    y -= height
+                    elif alignment == "topright":
+                        x -= width
+                    elif alignment == "left":
+                        y -= height / 2
+                    elif alignment == "center":
+                        x -= width / 2
+                        y -= width / 2
+                    elif alignment == "right":
+                        x -= width
+                        y -= width / 2
+                    elif alignment == "bottomleft":
+                        y -= height
+                    elif alignment == "bottom":
+                        x -= width / 2
+                        y -= height
+                    elif alignment == "bottomright":
+                        x -= width
+                        y -= height
+                    else:
+                        # "Unspecified" alignment
+                        if tilemap["orientation"] != "orthogonal":
+                            x -= width / 2
+                        y -= height
+
                     objects.append(cls(x + xoffset, y + yoffset, **kwargs))
                 elif obj.get("point"):
                     if cls is None:
@@ -556,6 +621,19 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
     width = chunk.get("width", tilemap["width"])
     height = chunk.get("height", tilemap["height"])
 
+    orientation = tilemap["orientation"]
+    tilewidth = tilemap["tilewidth"]
+    tileheight = tilemap["tileheight"]
+    staggeraxis = tilemap["staggeraxis"]
+    staggerindex = tilemap["staggerindex"]
+    hexsidelength = tilemap["hexsidelength"]
+
+    can_tile = (orientation != "isometric")
+    if ((orientation == "staggered" and (staggeraxis == "x"
+                                         or staggerindex == "even"))
+            or (orientation == "hexagonal" and staggerindex == "even"):
+        can_tile = False
+
     tile_grid_tiles = []
     objects = []
 
@@ -581,9 +659,9 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
                                       blend_mode=sge.BLEND_RGBA_MULTIPLY)
                 kwargs["sprite"] = sprite
 
-            if (cls == Decoration and kwargs["sprite"]
-                    and kwargs["sprite"].width == tilemap["tilewidth"]
-                    and kwargs["sprite"].height == tilemap["tileheight"]
+            if (can_tile and cls == Decoration and kwargs["sprite"]
+                    and kwargs["sprite"].width == tilewidth
+                    and kwargs["sprite"].height == tileheight
                     and not tile_kwargs.setdefault(gid, {})):
                 if hflip or vflip or dflip:
                     id_ = (gid, hflip, vflip, dflip)
@@ -603,10 +681,39 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
                 tile_grid_tiles.append(sprite)
             else:
                 kwargs.update(tile_kwargs.get(gid, {}))
-                x = (i % width) * tilemap["tilewidth"]
-                y = (i // width) * tilemap["tileheight"]
-                if kwargs["sprite"] is not None:
-                    y += tilemap["tileheight"] - kwargs["sprite"].height
+                column = i % width
+                row = i // width
+                if orientation == "staggered":
+                    x = column * tilewidth
+                    y = row * tileheight
+                    tmeven = (staggerindex == "even")
+                    if staggeraxis == "x":
+                        x /= 2
+                        even = (column % 2 == 0)
+                    else:
+                        y /= 2
+                        even = (row % 2 == 0)
+
+                    if tmeven == even:
+                        y += tileheight / 2
+                elif orientation == "hexagonal":
+                    tmeven = (staggerindex == "even")
+                    if staggeraxis == "x":
+                        x = column * (tilewidth - (tilewidth-hexsidelength)/2)
+                        y = row * tileheight
+                        even = (column % 2 == 0)
+                    else:
+                        x = column * tilewidth
+                        y -= row * (tileheight - (tileheight-hexsidelength)/2)
+                        even = (row % 2 == 0)
+
+                    if tmeven == even:
+                        y += tileheight / 2
+                else:
+                    x = column * tilewidth
+                    y = row * tileheight
+                    if kwargs["sprite"] is not None:
+                        y += tileheight - kwargs["sprite"].height
 
                 obj = cls(x + xoffset, y + yoffset, **kwargs)
                 objects.append(obj)
@@ -616,14 +723,22 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
             tile_grid_tiles.append(None)
 
     if any(tile_grid_tiles):
-        if tilemap["orientation"] == "staggered":
+        meta = 0
+        if orientation == "staggered":
             render_method = "isometric"
+        elif orientation == "hexagonal":
+            if staggeraxis == "x":
+                render_method = "hexagonal"
+                meta = (tilewidth-hexsidelength) / 2
+            else:
+                render_method = "isohex"
+                meta = (tileheight-hexsidelength) / 2
         else:
             render_method = "orthogonal"
 
         tile_grid = sge.gfx.TileGrid(
-            tile_grid_tiles, render_method=render_method, section_length=width,
-            tile_width=tilemap["tilewidth"], tile_height=tilemap["tileheight"])
+            tile_grid_tiles, render_method, width, tilemap["tilewidth"],
+            tilemap["tileheight"], meta)
         objects.append(Decoration(xoffset, yoffset, z, sprite=tile_grid))
 
     return objects

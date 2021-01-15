@@ -10,11 +10,15 @@ information. This file is offered as-is, without any warranty.
 
 Additions:
 + Tiled 1.4 tintcolor support
++ Tiled 1.4 objectalignment support
++ Hexagonal tiling support
 
 Misc changes:
 * Simplified definition of generic Decoration, Point, Rectangle, and
   Ellipse __init__ arguments to take advantage of the keyword argument
   requirement introduced in SGE 2.0.
+* Position for staggered and hexagonal tiling of things which cannot go
+  into the TileGrid are now properly positioned.
 
 
 1.0
