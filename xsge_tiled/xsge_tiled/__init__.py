@@ -186,7 +186,18 @@ def load(fname, cls=sge.dsp.Room, types=None, z=0):
 
     .. note::
 
-       Only orthogonal, staggered, and hexagonal tilemaps are supported.
+       Only orthogonal, staggered, and hexagonal maps are supported.
+       For best results, the following conditions should be adhered to:
+
+       - Stagger index should be set to "odd".
+       - For non-hexagonal staggered maps, stagger axis should be set to
+         "y". (Does not apply to hexagonal maps; in the case of
+         hexagonal maps, both "x" and "y" will work just as well.)
+
+       Maps which do not adhere to these conditions will still render
+       correctly, but adhering to these conditions will allow
+       :class:`sge.gfx.TileGrid` to be used, which allows for better
+       performance.
     """
     if types is None:
         types = {}

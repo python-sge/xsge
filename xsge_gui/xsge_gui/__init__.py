@@ -257,7 +257,7 @@ of the game.
 """
 
 
-__version__ = "1.2.1"
+__version__ = "1.3a0"
 __all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
            "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
            "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
@@ -679,7 +679,6 @@ class Window(object):
         self.widgets = []
         self.keyboard_focused_widget = None
         self._border_grab = None
-        self._close_button_pressed = False
         self.__joystick_prev = {}
 
         self.sprite = sge.gfx.Sprite(width=1, height=1)
@@ -1179,17 +1178,10 @@ class Window(object):
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
-        border_x = self.x - window_border_left_sprite.width
-        close_button_w = window_border_topright_sprite.width
-        close_button_x = (border_x + self.sprite.width - close_button_w)
-        if close_button_x <= x < close_button_x + close_button_w:
-            if button == "left":
-                self._close_button_pressed = True
-        else:
-            if button == "left":
-                self._border_grab = (self.x - x, self.y - y)
-            elif button == "middle":
-                self.move_to_back()
+        if button == "left":
+            self._border_grab = (self.x - x, self.y - y)
+        elif button == "middle":
+            self.move_to_back()
 
     def event_titlebar_mouse_button_release(self, button):
         """
@@ -1199,18 +1191,10 @@ class Window(object):
         """
         x = sge.mouse.get_x()
         y = sge.mouse.get_y()
-        border_x = self.x - window_border_left_sprite.width
-        close_button_w = window_border_topright_sprite.width
-        close_button_x = (border_x + self.sprite.width - close_button_w)
-        if close_button_x <= x < close_button_x + close_button_w:
-            if button == "left":
-                if self._close_button_pressed:
-                    self.event_close()
-        else:
-            if button == "left":
-                if self._border_grab is not None:
-                    self.x = x + self._border_grab[0]
-                    self.y = y + self._border_grab[1]
+        if button == "left":
+            if self._border_grab is not None:
+                self.x = x + self._border_grab[0]
+                self.y = y + self._border_grab[1]
 
         self.event_global_mouse_button_release(button)
 
@@ -1245,7 +1229,6 @@ class Window(object):
         :class:`sge.input.MouseButtonRelease` for more information.
         """
         if button == "left":
-            self._close_button_pressed = False
             self._border_grab = None
 
     def event_global_joystick_axis_move(self, js_name, js_id, axis, value):
@@ -1296,15 +1279,6 @@ class Window(object):
         :class:`sge.inputJoystickEvent` for more information.
         """
         pass
-
-    def event_close(self):
-        """
-        Called when the "X" button in the top-right corner of the window
-        is pressed.
-
-        By default, this calls :meth:`xsge_gui.Window.destroy`.
-        """
-        self.destroy()
 
 
 class Dialog(Window):
