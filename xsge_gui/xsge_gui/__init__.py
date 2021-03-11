@@ -104,6 +104,13 @@ of the game.
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
 
+   .. note::
+
+      Sprites which represent the same thing in a different form, such
+      as the "selected" variants of button sprites, must be the same
+      size as the regular variants.  Using different inconsistent sizes
+      may lead to unexpected results.
+
 .. data:: next_window_keys
 
    A list of keys which, when pressed, will give keyboard focus to the
@@ -2498,61 +2505,124 @@ class Button(Widget):
         left = button_left_sprite.width
         right = sprite_w - button_right_sprite.width
         top = button_top_sprite.height
+        bottom = sprite_h - button_bottom_sprite.height
         self.sprite_normal = sge.gfx.Sprite(width=sprite_w, height=sprite_h)
         self.sprite_normal.draw_lock()
         self.sprite_normal.draw_rectangle(left, top, w, h, fill=button_color)
-        for i in range(left, right, button_top_sprite.width):
+        for i in range(int(button_topleft_sprite.width),
+                       int(sprite_w - button_topright_sprite.width),
+                       int(button_top_sprite.width)):
             self.sprite_normal.draw_sprite(button_top_sprite, 0, i, 0)
-            self.sprite_normal.draw_sprite(button_bottom_sprite, 0, i, top + h)
-        self.sprite_normal.draw_sprite(button_left_sprite, 0, 0, 0)
-        self.sprite_normal.draw_sprite(button_right_sprite, 0, right, 0)
+        for i in range(int(button_bottomleft_sprite.width),
+                       int(sprite_w - button_bottomright_sprite.width),
+                       int(button_bottom_sprite.width)):
+            self.sprite_normal.draw_sprite(button_bottom_sprite, 0, i, bottom)
+        for i in range(int(button_topleft_sprite.height),
+                       int(sprite_h - button_bottomleft_sprite.height),
+                       int(button_left_sprite.height)):
+            self.sprite_normal.draw_sprite(button_left_sprite, 0, 0, i)
+        for i in range(int(button_topright_sprite.height),
+                       int(sprite_h - button_bottomright_sprite.height),
+                       int(button_left_sprite.height)):
+            self.sprite_normal.draw_sprite(button_right_sprite, 0, right, i)
+        self.sprite_normal.draw_sprite(button_topleft_sprite, 0, 0, 0)
+        self.sprite_normal.draw_sprite(button_topright_sprite, 0,
+                                       sprite_w - button_topright_sprite.width,
+                                       0)
+        self.sprite_normal.draw_sprite(
+            button_bottomleft_sprite, 0, 0,
+            sprite_h - button_bottomleft_sprite.height)
+        self.sprite_normal.draw_sprite(
+            button_bottomright_sprite, 0,
+            sprite_w - button_bottomright_sprite.width,
+            sprite_h - button_bottomright_sprite.height)
         self.sprite_normal.draw_text(button_font, self.text, sprite_w / 2,
                                      sprite_h / 2, width=w, height=h,
                                      color=button_text_color,
                                      halign=self.halign, valign="middle")
         self.sprite_normal.draw_unlock()
 
-        sprite_w = (w + button_selected_left_sprite.width +
-                    button_selected_right_sprite.width)
-        left = button_selected_left_sprite.width
-        right = sprite_w - button_selected_right_sprite.width
         self.sprite_selected = sge.gfx.Sprite(width=sprite_w, height=sprite_h)
         self.sprite_selected.draw_lock()
         self.sprite_selected.draw_rectangle(left, top, w, h,
                                             fill=button_selected_color)
-        for i in range(left, right, button_selected_top_sprite.width):
+        for i in range(int(button_selected_topleft_sprite.width),
+                       int(sprite_w - button_selected_topright_sprite.width),
+                       int(button_selected_top_sprite.width)):
             self.sprite_selected.draw_sprite(button_selected_top_sprite, 0, i,
                                              0)
+        for i in range(int(button_selected_bottomleft_sprite.width),
+                       int(sprite_w - button_selected_bottomright_sprite.width),
+                       int(button_selected_bottom_sprite.width)):
             self.sprite_selected.draw_sprite(button_selected_bottom_sprite, 0,
-                                             i, top + h)
-        self.sprite_selected.draw_sprite(button_selected_left_sprite, 0, 0, 0)
-        self.sprite_selected.draw_sprite(button_selected_right_sprite, 0,
-                                         right, 0)
-        self.sprite_selected.draw_text(button_font, self.text, sprite_w / 2,
-                                       sprite_h / 2, width=w, height=h,
-                                       color=button_text_color,
-                                       halign=self.halign, valign="middle")
+                                             i, bottom)
+        for i in range(int(button_selected_topleft_sprite.height),
+                       int(sprite_h - button_selected_bottomleft_sprite.height),
+                       int(button_selected_left_sprite.height)):
+            self.sprite_selected.draw_sprite(button_selected_left_sprite, 0, 0,
+                                             i)
+        for i in range(
+                int(button_selected_topright_sprite.height),
+                int(sprite_h - button_selected_bottomright_sprite.height),
+                int(button_selected_left_sprite.height)):
+            self.sprite_selected.draw_sprite(button_selected_right_sprite, 0,
+                                             right, i)
+        self.sprite_selected.draw_sprite(button_selected_topleft_sprite, 0, 0,
+                                         0)
+        self.sprite_selected.draw_sprite(
+            button_selected_topright_sprite, 0,
+            sprite_w - button_selected_topright_sprite.width, 0)
+        self.sprite_selected.draw_sprite(
+            button_selected_bottomleft_sprite, 0, 0,
+            sprite_h - button_selected_bottomleft_sprite.height)
+        self.sprite_selected.draw_sprite(
+            button_selected_bottomright_sprite, 0,
+            sprite_w - button_selected_bottomright_sprite.width,
+            sprite_h - button_selected_bottomright_sprite.height)
+        self.sprite_selected.draw_text(
+            button_font, self.text, sprite_w / 2, sprite_h / 2, width=w,
+            height=h, color=button_text_color, halign=self.halign,
+            valign="middle")
         self.sprite_selected.draw_unlock()
 
-        sprite_w = (w + button_pressed_left_sprite.width +
-                    button_pressed_right_sprite.width)
-        left = button_pressed_left_sprite.width
-        right = sprite_w - button_pressed_right_sprite.width
-        self.sprite_pressed = sge.gfx.Sprite(width=sprite_w, height=h)
+        self.sprite_pressed = sge.gfx.Sprite(width=sprite_w, height=sprite_h)
         self.sprite_pressed.draw_lock()
-        self.sprite_selected.draw_rectangle(left, top, w, h,
-                                            fill=button_pressed_color)
-        for i in range(left, right, button_pressed_top_sprite.width):
+        self.sprite_pressed.draw_rectangle(left, top, w, h,
+                                           fill=button_pressed_color)
+        for i in range(int(button_pressed_topleft_sprite.width),
+                       int(sprite_w - button_pressed_topright_sprite.width),
+                       int(button_pressed_top_sprite.width)):
             self.sprite_pressed.draw_sprite(button_pressed_top_sprite, 0, i, 0)
+        for i in range(int(button_pressed_bottomleft_sprite.width),
+                       int(sprite_w - button_pressed_bottomright_sprite.width),
+                       int(button_pressed_bottom_sprite.width)):
             self.sprite_pressed.draw_sprite(button_pressed_bottom_sprite, 0, i,
-                                            top + h)
-        self.sprite_pressed.draw_sprite(button_pressed_left_sprite, 0, 0, 0)
-        self.sprite_pressed.draw_sprite(button_pressed_right_sprite, 0, right,
-                                        0)
-        self.sprite_pressed.draw_text(button_font, self.text, sprite_w / 2,
-                                      sprite_h / 2, width=w, height=h,
-                                      color=button_text_color,
-                                      halign=self.halign, valign="middle")
+                                            bottom)
+        for i in range(int(button_pressed_topleft_sprite.height),
+                       int(sprite_h - button_pressed_bottomleft_sprite.height),
+                       int(button_pressed_left_sprite.height)):
+            self.sprite_pressed.draw_sprite(button_pressed_left_sprite, 0, 0,
+                                            i)
+        for i in range(int(button_pressed_topright_sprite.height),
+                       int(sprite_h - button_pressed_bottomright_sprite.height),
+                       int(button_pressed_left_sprite.height)):
+            self.sprite_pressed.draw_sprite(button_pressed_right_sprite, 0,
+                                            right, i)
+        self.sprite_pressed.draw_sprite(button_pressed_topleft_sprite, 0, 0, 0)
+        self.sprite_pressed.draw_sprite(
+            button_pressed_topright_sprite, 0,
+            sprite_w - button_pressed_topright_sprite.width, 0)
+        self.sprite_pressed.draw_sprite(
+            button_pressed_bottomleft_sprite, 0, 0,
+            sprite_h - button_pressed_bottomleft_sprite.height)
+        self.sprite_pressed.draw_sprite(
+            button_pressed_bottomright_sprite, 0,
+            sprite_w - button_pressed_bottomright_sprite.width,
+            sprite_h - button_pressed_bottomright_sprite.height)
+        self.sprite_pressed.draw_text(
+            button_font, self.text, sprite_w / 2, sprite_h / 2, width=w,
+            height=h, color=button_text_color, halign=self.halign,
+            valign="middle")
         self.sprite_pressed.draw_unlock()
 
     def refresh(self):
@@ -3250,13 +3320,13 @@ def init():
     global window_border_topleft_sprite
     global window_border_topright_sprite
 
-    default_font = sge.gfx.Font([os.path.join(DATA, "DroidSans.ttf"),
-                                 "Droid Sans"], size=12)
-    button_font = sge.gfx.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
-                                "Droid Sans"], size=12)
+    default_font = sge.gfx.Font([os.path.join(DATA, "Roboto-Regular.ttf"),
+                                 "Roboto"], size=16)
+    button_font = sge.gfx.Font([os.path.join(DATA, "Roboto-Bold.ttf"),
+                                "Roboto Bold"], size=16)
     textbox_font = default_font
-    title_font = sge.gfx.Font([os.path.join(DATA, "DroidSans-Bold.ttf"),
-                               "Droid Sans"], size=14)
+    title_font = sge.gfx.Font([os.path.join(DATA, "Roboto-Bold.ttf"),
+                               "Roboto Bold"], size=20)
 
     try:
         button_left_sprite = sge.gfx.Sprite("button_left", DATA)
