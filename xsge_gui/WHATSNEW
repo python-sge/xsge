@@ -5,11 +5,39 @@ information. This file is offered as-is, without any warranty.
 
 ========================================================================
 
-1.3
+2.0
 ------------------------------------------------------------------------
+
+Additions:
++ xsge_gui.RadioButton.group
++ xsge_gui.button_bottom_sprite
++ xsge_gui.button_bottomleft_sprite
++ xsge_gui.button_bottomright_sprite
++ xsge_gui.button_top_sprite
++ xsge_gui.button_topleft_sprite
++ xsge_gui.button_topright_sprite
++ xsge_gui.button_pressed_bottom_sprite
++ xsge_gui.button_pressed_bottomleft_sprite
++ xsge_gui.button_pressed_bottomright_sprite
++ xsge_gui.button_pressed_top_sprite
++ xsge_gui.button_pressed_topleft_sprite
++ xsge_gui.button_pressed_topright_sprite
++ xsge_gui.button_selected_bottom_sprite
++ xsge_gui.button_selected_bottomleft_sprite
++ xsge_gui.button_selected_bottomright_sprite
++ xsge_gui.button_selected_top_sprite
++ xsge_gui.button_selected_topleft_sprite
++ xsge_gui.button_selected_topright_sprite
++ xsge_gui.button_color
++ xsge_gui.button_pressed_color
++ xsge_gui.button_selected_color
++ xsge_gui.Button.get_height
 
 Removals:
 - xsge_gui.Window.event_close
+- xsge_gui.button_sprite
+- xsge_gui.button_pressed_sprite
+- xsge_gui.button_selected_sprite
 
 Misc changes:
 * Windows no longer implicitly have a "close" button in the top-right.

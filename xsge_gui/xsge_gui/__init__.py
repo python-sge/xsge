@@ -32,6 +32,9 @@ of the game.
 .. data:: window_background_color
           keyboard_focused_box_color
           text_color
+          button_color
+          button_pressed_color
+          button_selected_color
           button_text_color
           textbox_text_color
           textbox_text_selected_color
@@ -51,15 +54,30 @@ of the game.
    sure to call :meth:`redraw` on all windows and widgets that would be
    affected; some changes might not become visible until you do.
 
-.. data:: button_sprite
-          button_left_sprite
+.. data:: button_left_sprite
           button_right_sprite
-          button_pressed_sprite
+          button_bottom_sprite
+          button_bottomleft_sprite
+          button_bottomright_sprite
+          button_top_sprite
+          button_topleft_sprite
+          button_topright_sprite
           button_pressed_left_sprite
           button_pressed_right_sprite
-          button_selected_sprite
+          button_pressed_bottom_sprite
+          button_pressed_bottomleft_sprite
+          button_pressed_bottomright_sprite
+          button_pressed_top_sprite
+          button_pressed_topleft_sprite
+          button_pressed_topright_sprite
           button_selected_left_sprite
           button_selected_right_sprite
+          button_selected_bottom_sprite
+          button_selected_bottomleft_sprite
+          button_selected_bottomright_sprite
+          button_selected_top_sprite
+          button_selected_topleft_sprite
+          button_selected_topright_sprite
           checkbox_off_sprite
           checkbox_on_sprite
           progressbar_sprite
@@ -257,7 +275,7 @@ of the game.
 """
 
 
-__version__ = "1.3a0"
+__version__ = "2.0a0"
 __all__ = ["Handler", "Window", "Dialog", "Widget", "DecorativeWidget",
            "Label", "Button", "CheckBox", "RadioButton", "ProgressBar",
            "TextBox", "MenuItem", "MenuWindow", "MenuDialog", "MessageDialog",
@@ -289,6 +307,9 @@ DIALOG_PADDING = 8
 window_background_color = sge.gfx.Color("#A4A4A4")
 keyboard_focused_box_color = sge.gfx.Color((0, 0, 0, 170))
 text_color = sge.gfx.Color("black")
+button_color = sge.gfx.Color("#5E5E5E")
+button_pressed_color = button_color
+button_selected_color = button_color
 button_text_color = sge.gfx.Color("white")
 textbox_text_color = sge.gfx.Color("black")
 textbox_text_selected_color = sge.gfx.Color("white")
@@ -298,15 +319,30 @@ default_font = None
 button_font = None
 textbox_font = None
 title_font = None
-button_sprite = None
 button_left_sprite = None
 button_right_sprite = None
-button_pressed_sprite = None
+button_bottom_sprite = None
+button_bottomleft_sprite = None
+button_bottomright_sprite = None
+button_top_sprite = None
+button_topleft_sprite = None
+button_topright_sprite = None
 button_pressed_left_sprite = None
 button_pressed_right_sprite = None
-button_selected_sprite = None
+button_pressed_bottom_sprite = None
+button_pressed_bottomleft_sprite = None
+button_pressed_bottomright_sprite = None
+button_pressed_top_sprite = None
+button_pressed_topleft_sprite = None
+button_pressed_topright_sprite = None
 button_selected_left_sprite = None
 button_selected_right_sprite = None
+button_selected_bottom_sprite = None
+button_selected_bottomleft_sprite = None
+button_selected_bottomright_sprite = None
+button_selected_top_sprite = None
+button_selected_topleft_sprite = None
+button_selected_topright_sprite = None
 checkbox_off_sprite = None
 checkbox_on_sprite = None
 progressbar_sprite = None
@@ -582,7 +618,7 @@ class Handler(sge.dsp.Object):
                                              input_id, value)
 
 
-class Window(object):
+class Window:
 
     """
     Window objects are used to contain widgets.  They can be moved
@@ -1659,7 +1695,7 @@ class MessageDialog(Dialog):
         """See :func:`xsge_gui.show_message`."""
         button_w = max(1, round((width - DIALOG_PADDING*(len(buttons) + 1))
                                 / len(buttons)))
-        button_h = button_sprite.height
+        button_h = Button.get_height()
         label_w = max(1, width - DIALOG_PADDING * 2)
 
         if height is None:
@@ -1720,7 +1756,7 @@ class TextEntryDialog(Dialog):
                  width=320, height=None):
         """See :func:`xsge_gui.get_text_entry`."""
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
-        button_h = button_sprite.height
+        button_h = Button.get_height()
         textbox_w = max(1, width - DIALOG_PADDING * 2)
         textbox_h = textbox_sprite.height
         label_w = textbox_w
@@ -1786,7 +1822,7 @@ class TextEntryDialog(Dialog):
         self.destroy()
 
 
-class Widget(object):
+class Widget:
 
     """
     Widget objects are things like controls and decorations that exist
@@ -2450,7 +2486,8 @@ class Button(Widget):
         self.redraw()
 
     def redraw(self):
-        h = button_sprite.height
+        sprite_h = self.get_height()
+        h = sprite_h - button_top_sprite.height - button_bottom_sprite.height
         if self.width is None:
             w = round(button_font.get_width(self.text, height=h))
             sprite_w = w + button_left_sprite.width + button_right_sprite.width
@@ -2460,14 +2497,17 @@ class Button(Widget):
 
         left = button_left_sprite.width
         right = sprite_w - button_right_sprite.width
-        self.sprite_normal = sge.gfx.Sprite(width=sprite_w, height=h)
+        top = button_top_sprite.height
+        self.sprite_normal = sge.gfx.Sprite(width=sprite_w, height=sprite_h)
         self.sprite_normal.draw_lock()
-        for i in range(left, right, button_sprite.width):
-            self.sprite_normal.draw_sprite(button_sprite, 0, i, 0)
+        self.sprite_normal.draw_rectangle(left, top, w, h, fill=button_color)
+        for i in range(left, right, button_top_sprite.width):
+            self.sprite_normal.draw_sprite(button_top_sprite, 0, i, 0)
+            self.sprite_normal.draw_sprite(button_bottom_sprite, 0, i, top + h)
         self.sprite_normal.draw_sprite(button_left_sprite, 0, 0, 0)
         self.sprite_normal.draw_sprite(button_right_sprite, 0, right, 0)
         self.sprite_normal.draw_text(button_font, self.text, sprite_w / 2,
-                                     h / 2, width=w, height=h,
+                                     sprite_h / 2, width=w, height=h,
                                      color=button_text_color,
                                      halign=self.halign, valign="middle")
         self.sprite_normal.draw_unlock()
@@ -2476,15 +2516,20 @@ class Button(Widget):
                     button_selected_right_sprite.width)
         left = button_selected_left_sprite.width
         right = sprite_w - button_selected_right_sprite.width
-        self.sprite_selected = sge.gfx.Sprite(width=sprite_w, height=h)
+        self.sprite_selected = sge.gfx.Sprite(width=sprite_w, height=sprite_h)
         self.sprite_selected.draw_lock()
-        for i in range(left, right, button_selected_sprite.width):
-            self.sprite_selected.draw_sprite(button_selected_sprite, 0, i, 0)
+        self.sprite_selected.draw_rectangle(left, top, w, h,
+                                            fill=button_selected_color)
+        for i in range(left, right, button_selected_top_sprite.width):
+            self.sprite_selected.draw_sprite(button_selected_top_sprite, 0, i,
+                                             0)
+            self.sprite_selected.draw_sprite(button_selected_bottom_sprite, 0,
+                                             i, top + h)
         self.sprite_selected.draw_sprite(button_selected_left_sprite, 0, 0, 0)
         self.sprite_selected.draw_sprite(button_selected_right_sprite, 0,
                                          right, 0)
         self.sprite_selected.draw_text(button_font, self.text, sprite_w / 2,
-                                       h / 2, width=w, height=h,
+                                       sprite_h / 2, width=w, height=h,
                                        color=button_text_color,
                                        halign=self.halign, valign="middle")
         self.sprite_selected.draw_unlock()
@@ -2495,13 +2540,17 @@ class Button(Widget):
         right = sprite_w - button_pressed_right_sprite.width
         self.sprite_pressed = sge.gfx.Sprite(width=sprite_w, height=h)
         self.sprite_pressed.draw_lock()
-        for i in range(left, right, button_pressed_sprite.width):
-            self.sprite_pressed.draw_sprite(button_pressed_sprite, 0, i, 0)
+        self.sprite_selected.draw_rectangle(left, top, w, h,
+                                            fill=button_pressed_color)
+        for i in range(left, right, button_pressed_top_sprite.width):
+            self.sprite_pressed.draw_sprite(button_pressed_top_sprite, 0, i, 0)
+            self.sprite_pressed.draw_sprite(button_pressed_bottom_sprite, 0, i,
+                                            top + h)
         self.sprite_pressed.draw_sprite(button_pressed_left_sprite, 0, 0, 0)
         self.sprite_pressed.draw_sprite(button_pressed_right_sprite, 0, right,
                                         0)
         self.sprite_pressed.draw_text(button_font, self.text, sprite_w / 2,
-                                      h / 2, width=w, height=h,
+                                      sprite_h / 2, width=w, height=h,
                                       color=button_text_color,
                                       halign=self.halign, valign="middle")
         self.sprite_pressed.draw_unlock()
@@ -2513,6 +2562,19 @@ class Button(Widget):
                                     parent.y + self.y)
         else:
             self.destroy()
+
+    @staticmethod
+    def get_height():
+        """
+        Return the height of a button given the current button images
+        and font.
+        """
+        return max((button_font.linesize + button_top_sprite.height
+                    + button_bottom_sprite.height),
+                   (button_left_sprite.height + button_topleft_sprite.height
+                    + button_bottomleft_sprite.height),
+                   (button_right_sprite.height + button_topright_sprite.height
+                    + button_bottomright_sprite.height))
 
     def event_step(self, time_passed, delta_mult):
         parent = self.parent()
@@ -2605,14 +2667,25 @@ class CheckBox(Widget):
 class RadioButton(CheckBox):
 
     """
-    This widget is mostly like :class:`xsge_gui.CheckBox`, but clicking
-    on it while it is on will not turn it off, and only one radio button
-    can be on at any given time (i.e. enabling one radio button on a
-    window will disable all others on the same window).
+    This widget is mostly like :class:`xsge_gui.CheckBox`, but only one
+    radio button in its group (determined by the :attr:`group`
+    attribute) can be on at any given time (i.e. enabling one radio
+    button on a window will disable all others on the same group in the
+    same window).
+
+    .. attribute:: group
+
+       Any value (typically a string) indicating the group of the radio
+       button.  Only one radio button with a particular group value can
+       be selected at once.
 
     See the documentation for :class:`xsge_gui.CheckBox` for more
     information.
     """
+
+    def __init__(self, parent, x, y, z, enabled=False, group=None):
+        super().__init__(parent, x, y, z, enabled)
+        self.group = group
 
     def event_step(self, time_passed, delta_mult):
         if self.enabled:
@@ -2623,21 +2696,23 @@ class RadioButton(CheckBox):
     def event_press_enter(self):
         # Enable the radiobutton, disable any others, and call
         # event_toggle.
-        if not self.enabled:
-            self.enabled = True
+        self.enabled = not self.enabled
+        if self.enabled:
             parent = self.parent()
             if parent is not None:
                 for widget in parent.widgets:
-                    if widget is not self and isinstance(widget, RadioButton):
-                        if widget.enabled:
-                            widget.enabled = False
-                            widget.event_toggle()
+                    if (widget is not self and isinstance(widget, RadioButton)
+                            and widget.group == self.group and widget.enabled):
+                        widget.enabled = False
+                        widget.event_toggle()
 
-            self.event_toggle()
+        self.event_toggle()
 
     def event_toggle(self):
         """
-        Called when the state of the radiobutton is toggled by the user.
+        Called when the state of the radiobutton is toggled, including
+        when it is toggled off as a result of another radio button in
+        the same group being toggled on.
         """
         pass
 
@@ -3125,15 +3200,33 @@ def init():
     global button_font
     global textbox_font
     global title_font
-    global button_sprite
+    global button_color
+    global button_pressed_color
+    global button_selected_color
     global button_left_sprite
     global button_right_sprite
-    global button_pressed_sprite
+    global button_bottom_sprite
+    global button_bottomleft_sprite
+    global button_bottomright_sprite
+    global button_top_sprite
+    global button_topleft_sprite
+    global button_topright_sprite
     global button_pressed_left_sprite
     global button_pressed_right_sprite
-    global button_selected_sprite
+    global button_pressed_bottom_sprite
+    global button_pressed_bottomleft_sprite
+    global button_pressed_bottomright_sprite
+    global button_pressed_top_sprite
+    global button_pressed_topleft_sprite
+    global button_pressed_topright_sprite
     global button_selected_left_sprite
     global button_selected_right_sprite
+    global button_selected_bottom_sprite
+    global button_selected_bottomleft_sprite
+    global button_selected_bottomright_sprite
+    global button_selected_top_sprite
+    global button_selected_topleft_sprite
+    global button_selected_topright_sprite
     global checkbox_off_sprite
     global checkbox_on_sprite
     global progressbar_sprite
@@ -3166,19 +3259,45 @@ def init():
                                "Droid Sans"], size=14)
 
     try:
-        button_sprite = sge.gfx.Sprite("button", DATA)
         button_left_sprite = sge.gfx.Sprite("button_left", DATA)
         button_right_sprite = sge.gfx.Sprite("button_right", DATA)
-        button_pressed_sprite = sge.gfx.Sprite("button_pressed", DATA)
+        button_bottom_sprite = sge.gfx.Sprite("button_bottom", DATA)
+        button_bottomleft_sprite = sge.gfx.Sprite("button_bottomleft", DATA)
+        button_bottomright_sprite = sge.gfx.Sprite("button_bottomright", DATA)
+        button_top_sprite = sge.gfx.Sprite("button_top", DATA)
+        button_topleft_sprite = sge.gfx.Sprite("button_topleft", DATA)
+        button_topright_sprite = sge.gfx.Sprite("button_topright", DATA)
         button_pressed_left_sprite = sge.gfx.Sprite("button_pressed_left",
                                                     DATA)
         button_pressed_right_sprite = sge.gfx.Sprite("button_pressed_right",
                                                      DATA)
-        button_selected_sprite = sge.gfx.Sprite("button_selected", DATA)
+        button_pressed_bottom_sprite = sge.gfx.Sprite("button_pressed_bottom",
+                                                      DATA)
+        button_pressed_bottomleft_sprite = sge.gfx.Sprite(
+            "button_pressed_bottomleft", DATA)
+        button_pressed_bottomright_sprite = sge.gfx.Sprite(
+            "button_pressed_bottomright", DATA)
+        button_pressed_top_sprite = sge.gfx.Sprite("button_pressed_top", DATA)
+        button_pressed_topleft_sprite = sge.gfx.Sprite(
+            "button_pressed_topleft", DATA)
+        button_pressed_topright_sprite = sge.gfx.Sprite(
+            "button_pressed_topright", DATA)
         button_selected_left_sprite = sge.gfx.Sprite("button_selected_left",
                                                      DATA)
         button_selected_right_sprite = sge.gfx.Sprite("button_selected_right",
                                                       DATA)
+        button_selected_bottom_sprite = sge.gfx.Sprite(
+            "button_selected_bottom", DATA)
+        button_selected_bottomleft_sprite = sge.gfx.Sprite(
+            "button_selected_bottomleft", DATA)
+        button_selected_bottomright_sprite = sge.gfx.Sprite(
+            "button_selected_bottomright", DATA)
+        button_selected_top_sprite = sge.gfx.Sprite("button_selected_top",
+                                                    DATA)
+        button_selected_topleft_sprite = sge.gfx.Sprite(
+            "button_selected_topleft", DATA)
+        button_selected_topright_sprite = sge.gfx.Sprite(
+            "button_selected_topright", DATA)
         checkbox_off_sprite = sge.gfx.Sprite("checkbox_off", DATA)
         checkbox_on_sprite = sge.gfx.Sprite("checkbox_on", DATA)
         progressbar_sprite = sge.gfx.Sprite("progressbar", DATA)
@@ -3209,24 +3328,52 @@ def init():
                                                       DATA)
         window_border_topright_sprite = sge.gfx.Sprite(
             "window_border_topright", DATA)
-    except IOError:
+    except OSError:
         black = sge.gfx.Color("black")
         white = sge.gfx.Color("white")
-        button_sprite = sge.gfx.Sprite(width=1, height=24)
-        button_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
-        button_sprite.draw_rectangle(0, 1, 1, 22, fill=white)
-        button_left_sprite = sge.gfx.Sprite(width=10, height=24)
-        button_left_sprite.draw_rectangle(0, 0, 10, 24, fill=black)
-        button_right_sprite = button_left_sprite
-        button_selected_sprite = sge.gfx.Sprite(width=1, height=24)
-        button_selected_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
-        button_selected_sprite.draw_rectangle(0, 1, 1, 22,
-                                              fill=sge.gfx.Color("aqua"))
+        button_color = white
+        button_pressed_color = sge.gfx.Color("gray")
+        button_selected_color = button_pressed_color
+        button_left_sprite = sge.gfx.Sprite(width=2, height=1)
+        button_left_sprite.draw_rectangle(0, 0, 1, 1, fill=black)
+        button_left_sprite.draw_rectangle(1, 0, 1, 1, fill=white)
+        button_right_sprite = sge.gfx.Sprite(width=2, height=1)
+        button_right_sprite.draw_rectangle(0, 0, 1, 1, fill=white)
+        button_right_sprite.draw_rectangle(1, 0, 1, 1, fill=black)
+        button_bottom_sprite = sge.gfx.Sprite(width=1, height=2)
+        botton_bottom_sprite.draw_rectangle(0, 0, 1, 1, fill=white)
+        button_bottom_sprite.draw_rectangle(0, 1, 1, 1, fill=black)
+        button_bottomleft_sprite = sge.gfx.Sprite(width=2, height=2)
+        button_bottomleft_sprite.draw_rectangle(0, 0, 2, 2, fill=black)
+        button_bottomleft_sprite.draw_rectangle(1, 0, 1, 1, fill=white)
+        button_bottomright_sprite = sge.gfx.Sprite(width=2, height=2)
+        button_bottomright_sprite.draw_rectangle(0, 0, 2, 2, fill=black)
+        button_bottomright_sprite.draw_rectangle(0, 0, 1, 1, fill=white)
+        button_top_sprite = sge.gfx.Sprite(width=1, height=2)
+        botton_top_sprite.draw_rectangle(0, 0, 1, 1, fill=black)
+        button_top_sprite.draw_rectangle(0, 1, 1, 1, fill=white)
+        button_topleft_sprite = sge.gfx.Sprite(width=2, height=2)
+        button_topleft_sprite.draw_rectangle(0, 0, 2, 2, fill=black)
+        button_topleft_sprite.draw_rectangle(1, 1, 1, 1, fill=white)
+        button_topright_sprite = sge.gfx.Sprite(width=2, height=2)
+        button_topright_sprite.draw_rectangle(0, 0, 2, 2, fill=black)
+        button_topright_sprite.draw_rectangle(0, 1, 1, 1, fill=white)
         button_selected_left_sprite = button_left_sprite
         button_selected_right_sprite = button_right_sprite
-        button_pressed_sprite = button_selected_sprite
+        button_selected_bottom_sprite = button_bottom_sprite
+        button_selected_bottomleft_sprite = button_bottomleft_sprite
+        button_selected_bottomright_sprite = button_bottomright_sprite
+        button_selected_top_sprite = button_top_sprite
+        button_selected_topleft_sprite = button_topleft_sprite
+        button_selected_topright_sprite = button_topright_sprite
         button_pressed_left_sprite = button_selected_left_sprite
         button_pressed_right_sprite = button_selected_right_sprite
+        button_pressed_bottom_sprite = button_selected_bottom_sprite
+        button_pressed_bottomleft_sprite = button_selected_bottomleft_sprite
+        button_pressed_bottomright_sprite = button_selected_bottomright_sprite
+        button_pressed_top_sprite = button_selected_top_sprite
+        button_pressed_topleft_sprite = button_selected_topleft_sprite
+        button_pressed_topright_sprite = button_selected_topright_sprite
         checkbox_off_sprite = sge.gfx.Sprite(width=16, height=16)
         checkbox_off_sprite.draw_rectangle(0, 0, 16, 16, fill=white,
                                            outline=black)
@@ -3247,7 +3394,9 @@ def init():
         progressbar_container_right_sprite = progressbar_container_left_sprite
         radiobutton_off_sprite = checkbox_off_sprite
         radiobutton_on_sprite = checkbox_on_sprite
-        textbox_sprite = button_sprite
+        textbox_sprite = sge.gfx.Sprite(width=1, height=24)
+        textbox_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
+        textbox_sprite.draw_rectangle(1, 0, 1, 22, fill=white)
         textbox_left_sprite = sge.gfx.Sprite(width=4, height=24)
         textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill=black)
         textbox_right_sprite = textbox_left_sprite
