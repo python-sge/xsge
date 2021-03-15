@@ -32,12 +32,20 @@ Additions:
 + xsge_gui.button_pressed_color
 + xsge_gui.button_selected_color
 + xsge_gui.Button.get_height
++ xsge_gui.textbox_color
++ xsge_gui.textbox_top_sprite
++ xsge_gui.textbox_topleft_sprite
++ xsge_gui.textbox_topright_sprite
++ xsge_gui.textbox_bottom_sprite
++ xsge_gui.textbox_bottomleft_sprite
++ xsge_gui.textbox_bottomright_sprite
 
 Removals:
 - xsge_gui.Window.event_close
 - xsge_gui.button_sprite
 - xsge_gui.button_pressed_sprite
 - xsge_gui.button_selected_sprite
+- xsge_gui.textbox_sprite
 
 Misc changes:
 * Windows no longer implicitly have a "close" button in the top-right.

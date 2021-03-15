@@ -36,6 +36,7 @@ of the game.
           button_pressed_color
           button_selected_color
           button_text_color
+          textbox_color
           textbox_text_color
           textbox_text_selected_color
           textbox_highlight_color
@@ -88,9 +89,14 @@ of the game.
           progressbar_container_right_sprite
           radiobutton_off_sprite
           radiobutton_on_sprite
-          textbox_sprite
           textbox_left_sprite
           textbox_right_sprite
+          textbox_bottom_sprite
+          textbox_bottomleft_sprite
+          textbox_bottomright_sprite
+          textbox_top_sprite
+          textbox_topleft_sprite
+          textbox_topright_sprite
           window_border_left_sprite
           window_border_right_sprite
           window_border_bottom_sprite
@@ -318,6 +324,7 @@ button_color = sge.gfx.Color("#5E5E5E")
 button_pressed_color = button_color
 button_selected_color = button_color
 button_text_color = sge.gfx.Color("white")
+textbox_color = sge.gfx.Color("#C8C8C8")
 textbox_text_color = sge.gfx.Color("black")
 textbox_text_selected_color = sge.gfx.Color("white")
 textbox_highlight_color = sge.gfx.Color("blue")
@@ -360,9 +367,14 @@ progressbar_container_left_sprite = None
 progressbar_container_right_sprite = None
 radiobutton_off_sprite = None
 radiobutton_on_sprite = None
-textbox_sprite = None
 textbox_left_sprite = None
 textbox_right_sprite = None
+textbox_bottom_sprite = None
+textbox_bottomleft_sprite = None
+textbox_bottomright_sprite = None
+textbox_top_sprite = None
+textbox_topleft_sprite = None
+textbox_topright_sprite = None
 window_border_left_sprite = None
 window_border_right_sprite = None
 window_border_bottom_sprite = None
@@ -1765,7 +1777,7 @@ class TextEntryDialog(Dialog):
         button_w = max(1, (width - DIALOG_PADDING * 3) / 2)
         button_h = Button.get_height()
         textbox_w = max(1, width - DIALOG_PADDING * 2)
-        textbox_h = textbox_sprite.height
+        textbox_h = TextBox.get_height()
         label_w = textbox_w
 
         if height is None:
@@ -2879,23 +2891,48 @@ class TextBox(Widget):
         self.redraw()
 
     def redraw(self):
-        self.sprite.width = self.width
-        self.sprite.height = textbox_sprite.height
+        w = self.width
+        h = self.get_height()
+        self.sprite.width = w
+        self.sprite.height = h
         self._cursor_h = textbox_font.get_height("|")
         left = textbox_left_sprite.width
-        right = self.width - textbox_right_sprite.width
+        right = w - textbox_right_sprite.width
+        top = textbox_top_sprite.height
+        bottom = h - textbox_bottom_sprite.height
 
         self.sprite.draw_lock()
         self.sprite.draw_clear()
 
-        self.sprite.draw_sprite(textbox_left_sprite, 0, 0, 0)
+        self.sprite.draw_rectangle(left, top, w, h, fill=textbox_color)
 
-        for i in range(left, right, textbox_sprite.width):
-            self.sprite.draw_sprite(textbox_sprite, 0, i, 0)
+        for i in range(int(left), int(right), int(textbox_top_sprite.width)):
+            self.sprite.draw_sprite(textbox_top_sprite, 0, i, 0)
 
-        self.sprite.draw_erase(right, 0, self.sprite.width - right,
-                               self.sprite.height)
-        self.sprite.draw_sprite(textbox_right_sprite, 0, right, 0)
+        for i in range(int(left), int(right), int(textbox_bottom_sprite.width)):
+            self.sprite.draw_sprite(textbox_bottom_sprite, 0, i, bottom)
+
+        for i in range(int(top), int(bottom), int(textbox_left_sprite.height)):
+            self.sprite.draw_sprite(textbox_left_sprite, 0, 0, i)
+
+        for i in range(int(top), int(bottom), int(textbox_right_sprite.height)):
+            self.sprite.draw_sprite(textbox_right_sprite, 0, right, i)
+
+        self.sprite.draw_erase(0, 0, textbox_topleft_sprite.width,
+                               textbox_topleft_sprite.height)
+        self.sprite.draw_sprite(textbox_topleft_sprite, 0, 0, 0)
+
+        self.sprite.draw_erase(right, 0, textbox_topright_sprite.width,
+                               textbox_topright_sprite.height)
+        self.sprite.draw_sprite(textbox_topright_sprite, 0, right, 0)
+
+        self.sprite.draw_erase(0, bottom, textbox_bottomleft_sprite.width,
+                               textbox_bottomleft_sprite.height)
+        self.sprite.draw_sprite(textbox_bottomleft_sprite, 0, 0, bottom)
+
+        self.sprite.draw_erase(right, bottom, textbox_bottomright_sprite.width,
+                               textbox_bottomright_sprite.height)
+        self.sprite.draw_sprite(textbox_bottomright_sprite, 0, right, bottom)
 
         self.sprite.draw_unlock()
 
@@ -2929,7 +2966,7 @@ class TextBox(Widget):
                     text_area_w)):
                 tr += 1
 
-            text_y = textbox_sprite.height / 2
+            text_y = self.sprite.height / 2
             cursor_x = textbox_font.get_width(self.text[:self._cursor_pos])
             cursor_y = text_y - self._cursor_h / 2
 
@@ -2944,7 +2981,7 @@ class TextBox(Widget):
                 self._text_x = text_area_w - min_edge - cursor_x
 
             text_sprite = sge.gfx.Sprite(width=text_area_w,
-                                         height=textbox_sprite.height)
+                                         height=self.sprite.height)
             text_sprite.draw_lock()
 
             text_sprite.draw_text(textbox_font, self.text[tl:tr], text_x,
@@ -2980,6 +3017,20 @@ class TextBox(Widget):
                 parent.y + self.y)
         else:
             self.destroy()
+
+    @staticmethod
+    def get_height():
+        """
+        Return the height of a textbox given the current textbox images
+        and font.
+        """
+        return max((textbox_font.linesize + textbox_top_sprite.height
+                    + textbox_bottom_sprite.height),
+                   (textbox_left_sprite.height + textbox_topleft_sprite.height
+                    + textbox_bottomleft_sprite.height),
+                   (textbox_right_sprite.height
+                    + textbox_topright_sprite.height
+                    + textbox_bottomright_sprite.height))
 
     def _show_cursor(self):
         # Forcibly show the cursor (restarting the animation).
@@ -3307,9 +3358,14 @@ def init():
     global progressbar_container_right_sprite
     global radiobutton_off_sprite
     global radiobutton_on_sprite
-    global textbox_sprite
     global textbox_left_sprite
     global textbox_right_sprite
+    global textbox_bottom_sprite
+    global textbox_bottomleft_sprite
+    global textbox_bottomright_sprite
+    global textbox_top_sprite
+    global textbox_topleft_sprite
+    global textbox_topright_sprite
     global window_border_left_sprite
     global window_border_right_sprite
     global window_border_bottom_sprite
@@ -3326,7 +3382,7 @@ def init():
                                 "Roboto Bold"], size=16)
     textbox_font = default_font
     title_font = sge.gfx.Font([os.path.join(DATA, "Roboto-Bold.ttf"),
-                               "Roboto Bold"], size=20)
+                               "Roboto Bold"], size=14)
 
     try:
         button_left_sprite = sge.gfx.Sprite("button_left", DATA)
@@ -3381,9 +3437,15 @@ def init():
             "progressbar_container_right", DATA)
         radiobutton_off_sprite = sge.gfx.Sprite("radiobutton_off", DATA)
         radiobutton_on_sprite = sge.gfx.Sprite("radiobutton_on", DATA)
-        textbox_sprite = sge.gfx.Sprite("textbox", DATA)
         textbox_left_sprite = sge.gfx.Sprite("textbox_left", DATA)
         textbox_right_sprite = sge.gfx.Sprite("textbox_right", DATA)
+        textbox_bottom_sprite = sge.gfx.Sprite("textbox_bottom", DATA)
+        textbox_bottomleft_sprite = sge.gfx.Sprite("textbox_bottomleft", DATA)
+        textbox_bottomright_sprite = sge.gfx.Sprite("textbox_bottomright",
+                                                    DATA)
+        textbox_top_sprite = sge.gfx.Sprite("textbox_top", DATA)
+        textbox_topleft_sprite = sge.gfx.Sprite("textbox_topleft", DATA)
+        textbox_topright_sprite = sge.gfx.Sprite("textbox_topright", DATA)
         window_border_left_sprite = sge.gfx.Sprite("window_border_left", DATA)
         window_border_right_sprite = sge.gfx.Sprite("window_border_right",
                                                     DATA)
@@ -3464,12 +3526,15 @@ def init():
         progressbar_container_right_sprite = progressbar_container_left_sprite
         radiobutton_off_sprite = checkbox_off_sprite
         radiobutton_on_sprite = checkbox_on_sprite
-        textbox_sprite = sge.gfx.Sprite(width=1, height=24)
-        textbox_sprite.draw_rectangle(0, 0, 1, 24, fill=black)
-        textbox_sprite.draw_rectangle(1, 0, 1, 22, fill=white)
-        textbox_left_sprite = sge.gfx.Sprite(width=4, height=24)
-        textbox_left_sprite.draw_rectangle(0, 0, 4, 24, fill=black)
-        textbox_right_sprite = textbox_left_sprite
+        textbox_color = white
+        textbox_left_sprite = button_left_sprite
+        textbox_right_sprite = button_right_sprite
+        textbox_bottom_sprite = button_bottom_sprite
+        textbox_bottomleft_sprite = button_bottomleft_sprite
+        textbox_bottomright_sprite = button_bottomright_sprite
+        textbox_top_sprite = button_top_sprite
+        textbox_topleft_sprite = button_topleft_sprite
+        textbox_topright_sprite = button_topright_sprite
         window_border_left_sprite = sge.gfx.Sprite(width=4, height=1)
         window_border_left_sprite.draw_rectangle(0, 0, 4, 1, fill=black)
         window_border_right_sprite = window_border_left_sprite
