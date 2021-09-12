@@ -642,7 +642,7 @@ def t_parse_tilechunk(chunk, tilemap, layer, tile_cls, tile_sprites,
     can_tile = (orientation != "isometric")
     if ((orientation == "staggered" and (staggeraxis == "x"
                                          or staggerindex == "even"))
-            or (orientation == "hexagonal" and staggerindex == "even"):
+            or (orientation == "hexagonal" and staggerindex == "even")):
         can_tile = False
 
     tile_grid_tiles = []
