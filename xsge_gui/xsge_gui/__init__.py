@@ -1357,11 +1357,8 @@ class Dialog(Window):
         to its parent.  It then starts this dialog's loop.  Call
         :meth:`xsge_gui.Dialog.hide` on this dialog to end the loop.
 
-        During the loop, all keyboard, mouse, and joystick events are
-        swallowed by the dialog, while the close event immediately
-        closes the dialog and then causes :meth:`sge.game.event_close`
-        to be called naturally. However, other paused events behave as
-        would be expected when :meth:`sge.game.pause` is used.
+        The loop suppresses all events, but allows the Quit event to
+        propagate.
         """
         try:
             parent = self.parent()
@@ -1535,13 +1532,6 @@ class Dialog(Window):
                     for window in parent.windows[:]:
                         window.refresh()
 
-                    # Call "paused" step events
-                    sge.game.event_paused_step(time_passed, delta_mult)
-                    sge.game.current_room.event_paused_step(time_passed,
-                                                            delta_mult)
-                    for obj in sge.game.current_room.objects[:]:
-                        obj.event_paused_step(time_passed, delta_mult)
-
                     # Refresh
                     sge.game.refresh()
 
@@ -1593,12 +1583,12 @@ class MenuWindow(Window):
             pass
 
         self.destroy()
-        sge.game.refresh()
+        _refresh_screen(0, 0)
         self.event_choose()
 
     def event_press_escape(self):
         self.destroy()
-        sge.game.refresh()
+        _refresh_screen(0, 0)
         self.event_choose()
 
     def event_choose(self):
@@ -3721,3 +3711,15 @@ def get_menu_selection(x, y, items, parent=None, default=0, font_normal=None,
         return w.choice
     else:
         return None
+
+
+def _refresh_screen(time_passed, delta_mult):
+    # Wrapper for sge.game.refresh() which also calls the paused step
+    # events, in case they make any changes to the screen by way of
+    # window projections. Prevents flickering bugs.
+    sge.game.event_step(time_passed, delta_mult)
+    sge.game.current_room.event_step(time_passed, delta_mult)
+    for obj in sge.game.current_room.objects[:]:
+        obj.event_step(time_passed, delta_mult)
+
+    sge.game.refresh()
