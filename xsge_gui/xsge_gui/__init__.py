@@ -1350,12 +1350,18 @@ class Dialog(Window):
     """
 
     def show(self):
-        """Show this dialog and start its loop.
+        """
+        Show this dialog and start its loop.
 
         Like :meth:`xsge_gui.Window.show`, this method adds the dialog
         to its parent.  It then starts this dialog's loop.  Call
         :meth:`xsge_gui.Dialog.hide` on this dialog to end the loop.
 
+        During the loop, all keyboard, mouse, and joystick events are
+        swallowed by the dialog, while the close event immediately
+        closes the dialog and then causes :meth:`sge.game.event_close`
+        to be called naturally. However, other paused events behave as
+        would be expected when :meth:`sge.game.pause` is used.
         """
         try:
             parent = self.parent()
@@ -1494,6 +1500,16 @@ class Dialog(Window):
                                     event.js_name, event.js_id,
                                     event.input_type, event.input_id,
                                     event.value)
+                        elif isinstance(event, sge.input.KeyboardFocusGain):
+                            sge.game.event_paused_gain_keyboard_focus()
+                        elif isinstance(event, sge.input.KeyboardFocusLose):
+                            sge.game.event_paused_lose_keyboard_focus()
+                        elif isinstance(event, sge.input.MouseFocusGain):
+                            sge.game.event_paused_gain_mouse_focus()
+                        elif isinstance(event, sge.input.MouseFocusLose):
+                            sge.game.event_paused_lose_mouse_focus()
+                        elif isinstance(event, sge.input.WindowResize):
+                            sge.game.event_paused_window_resize()
                         elif isinstance(event, sge.input.QuitRequest):
                             sge.game.input_events.insert(0, event)
                             self.hide()
@@ -1518,6 +1534,13 @@ class Dialog(Window):
 
                     for window in parent.windows[:]:
                         window.refresh()
+
+                    # Call "paused" step events
+                    sge.game.event_paused_step(time_passed, delta_mult)
+                    sge.game.current_room.event_paused_step(time_passed,
+                                                            delta_mult)
+                    for obj in sge.game.current_room.objects[:]:
+                        obj.event_paused_step(time_passed, delta_mult)
 
                     # Refresh
                     sge.game.refresh()
