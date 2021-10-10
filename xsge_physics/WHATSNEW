@@ -10,6 +10,7 @@ information. This file is offered as-is, without any warranty.
 
 Misc changes:
 * Made the platformer example use xsge_tiled now.
+* Relicensed to GNU LGPL.
 
 
 0.13.2

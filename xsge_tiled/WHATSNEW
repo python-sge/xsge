@@ -19,6 +19,7 @@ Misc changes:
   requirement introduced in SGE 2.0.
 * Position for staggered and hexagonal tiling of things which cannot go
   into the TileGrid are now properly positioned.
+* Relicensed to GNU LGPL.
 
 
 1.0

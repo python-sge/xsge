@@ -1,26 +1,23 @@
 # xSGE Physics Framework
 #
 # This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Lesser General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
+# You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-xSGE is a collection of extensions for the SGE licensed under the GNU
-General Public License.  They are designed to give additional features
-to free/libre software games which aren't necessary, but are nice to
-have.
-
-xSGE extensions are not dependent on any particular SGE implementation.
-They should work with any implementation that follows the specification.
+xSGE is a collection of higher-level extensions for the SGE which
+enhance the core functionality in an implementation-independent way.
+Like the SGE itself, they are distribted under the terms of the GNU
+Lesser General Public License.
 
 This extension provides an easy-to-use framework for collision physics.
 This is especially useful for platformers, though it can also be useful

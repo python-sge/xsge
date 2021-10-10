@@ -7,13 +7,10 @@ import sys
 from distutils.core import setup
 
 long_description = """
-xSGE is a collection of extensions for the SGE licensed under the GNU
-General Public License.  They are designed to give additional features
-to free/libre software games which aren't necessary, but are nice to
-have.
-
-xSGE extensions are not dependent on any particular SGE implementation.
-They should work with any implementation that follows the specification.
+xSGE is a collection of higher-level extensions for the SGE which
+enhance the core functionality in an implementation-independent way.
+Like the SGE itself, they are distribted under the terms of the GNU
+Lesser General Public License.
 
 This extension provides a simple toolkit for adding GUIs to a SGE game
 as well as support for modal dialog boxes.
@@ -23,21 +20,21 @@ setup(name="xsge_gui",
       version="2.0a0",
       description="xSGE GUI Toolkit",
       long_description=long_description,
-      author="Layla Marchant",
+      author="The Diligent Circle",
       author_email="diligentcircle@riseup.net",
       url="https://python-sge.github.io",
       classifiers=["Development Status :: 5 - Production/Stable",
                    "Intended Audience :: Developers",
                    "License :: DFSG approved",
-                   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+                   "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
                    "Operating System :: OS Independent",
                    "Programming Language :: Python :: 3",
                    "Topic :: Games/Entertainment",
                    "Topic :: Software Development"],
-      license="GNU General Public License",
+      license="GNU Lesser General Public License",
       packages=["xsge_gui"],
       package_dir={"xsge_gui": "xsge_gui"},
-      package_data={"xsge_gui": ["COPYING", "data/*"]},
-      requires=["sge (>=1.7, <2.0)"],
+      package_data={"xsge_gui": ["COPYING", "COPYING.LESSER", "data/*"]},
+      requires=["sge (>=2.0, <3.0)"],
       provides=["xsge_gui"],
      )

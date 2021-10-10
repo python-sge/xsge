@@ -52,6 +52,7 @@ Misc changes:
 * Default fonts used are now in the Roboto family instead of the
   obsolete Droid Sans.
 * Default fonts are now much larger.
+* Relicensed to GNU LGPL.
 
 
 1.2.1
