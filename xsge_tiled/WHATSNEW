@@ -18,7 +18,7 @@ Misc changes:
   Ellipse __init__ arguments to take advantage of the keyword argument
   requirement introduced in SGE 2.0.
 * Position for staggered and hexagonal tiling of things which cannot go
-  into the TileGrid are now properly positioned.
+  into the TileGrid is now done properly.
 * Relicensed to GNU LGPL.
 
 

@@ -24,9 +24,9 @@ copyright = ''
 author = 'The Diligent Circle'
 
 # The short X.Y version
-version = '1.2'
+version = '2.0'
 # The full version, including alpha/beta/rc tags
-release = '1.2.1'
+release = '2.0'
 
 
 # -- General configuration ---------------------------------------------------

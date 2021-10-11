@@ -19,7 +19,7 @@ level editor yourself.
 """.strip()
 
 setup(name="xsge_tiled",
-      version="2.0a0",
+      version="2.0",
       description="xSGE Tiled Library",
       long_description=long_description,
       author="The Diligent Circle",

@@ -17,7 +17,7 @@ objects move in a certain way.
 """.strip()
 
 setup(name="xsge_path",
-      version="1.0.3a0",
+      version="1.0.3",
       description="xSGE Path",
       long_description=long_description,
       author="The Diligent Circle",

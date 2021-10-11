@@ -22,7 +22,7 @@ Lesser General Public License.
 This extension provides a simple interface for lighting.
 """
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __all__ = ["project_light", "clear_lights", "project_darkness"]
 
 

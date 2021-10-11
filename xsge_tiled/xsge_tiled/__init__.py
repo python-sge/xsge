@@ -29,7 +29,7 @@ this function for more information.
 """
 
 
-__version__ = "2.0a0"
+__version__ = "2.0"
 __all__ = ["load"]
 
 

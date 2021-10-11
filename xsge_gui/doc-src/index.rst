@@ -125,8 +125,6 @@ xsge_gui.Window Event Methods
 
 .. automethod:: xsge_gui.Window.event_global_joystick
 
-.. automethod:: xsge_gui.Window.event_close
-
 xsge_gui.Dialog
 ---------------
 

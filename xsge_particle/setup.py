@@ -16,7 +16,7 @@ This extension provides particle effects for the SGE.
 """.strip()
 
 setup(name="xsge_particle",
-      version="1.0.1a0",
+      version="1.0.1",
       description="xSGE Particles",
       long_description=long_description,
       author="The Diligent Circle",

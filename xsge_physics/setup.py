@@ -18,7 +18,7 @@ for other types of games.
 """.strip()
 
 setup(name="xsge_physics",
-      version="0.13.3a0",
+      version="0.13.3",
       description="xSGE Physics Framework",
       long_description=long_description,
       author="The Diligent Circle",

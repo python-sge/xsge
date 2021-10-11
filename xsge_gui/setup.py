@@ -17,7 +17,7 @@ as well as support for modal dialog boxes.
 """.strip()
 
 setup(name="xsge_gui",
-      version="2.0a0",
+      version="2.0",
       description="xSGE GUI Toolkit",
       long_description=long_description,
       author="The Diligent Circle",
